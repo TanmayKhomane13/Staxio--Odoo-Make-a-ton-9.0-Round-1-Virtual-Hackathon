@@ -1,0 +1,1001 @@
+BRIGHTLOOP SOFTWARE
+COMPANY POLICIES & BUSINESS RULES
+Hackathon Edition
+
+Document purpose
+This document defines the proposed business policies and operational rules for Brightloop Software's Subscription Management System. It is based on the supplied hackathon problem statement and the policy outline reviewed with the team.
+
+Interpretation
+- "Specified" means the rule is directly stated in the hackathon brief or the supplied Brightloop policy draft.
+- "Recommended" means a practical rule proposed to make the system complete and reliable; it is not explicitly mandated by the brief.
+- "To be defined" identifies a business decision the team should confirm before implementation.
+- Where a rule is not specified, do not treat an assumption as an approved company policy.
+
+CONTENTS
+
+1. Company Overview
+2. User Registration, Authentication and Account Policies
+3. User Roles, Permissions and Access Control
+4. Customer Management Policies
+5. Product Management Policies
+6. Plan Management Policies
+7. Quotation and Quotation Template Policies
+8. Subscription Management Policies
+9. Add-on Management Policies
+10. Billing and Invoice Management Policies
+11. Discount Management Policies
+12. Tax Management Policies
+13. Payment Management Policies
+14. Outstanding Payments, Overdue Invoices and Collections
+15. Customer Self-Service Portal Policies
+16. Dashboard, Reporting and Financial Analytics
+17. Notifications, Communication and Customer Support
+18. System Security, Data Integrity and Performance
+Appendix A. User Roles and Permission Matrix
+Appendix B. Status Definitions
+Appendix C. Financial and Billing Rules
+Appendix D. Business Scenarios Requiring Decisions
+Appendix E. Glossary
+
+
+1. COMPANY OVERVIEW
+
+1.1 About Brightloop Software
+Brightloop Software is a software company that provides subscription-based software services to businesses.
+
+1.2 Nature of Business
+Brightloop earns revenue by providing products and services through recurring subscriptions. Customers may subscribe on a daily, weekly, monthly or yearly billing frequency, depending on the plan.
+
+1.3 Customer Categories
+Brightloop serves customers ranging from small businesses on monthly plans to large companies on yearly contracts.
+
+1.4 Products, Plans and Add-ons
+The company offers software, services, add-ons and other products. Products may have variants, such as a brand, that change the product price. Plans define recurring pricing, billing frequency, minimum quantity, availability and permitted subscription actions.
+
+1.5 Subscription Operations
+The system must support the subscription lifecycle from quotation and confirmation through activation, recurring billing, payment collection, renewal and closure.
+
+1.6 Customer Support
+Customers may contact Brightloop's support team for subscription-related and billing-related assistance. The support team should verify the relevant customer, subscription or invoice information before providing assistance.
+
+1.7 Internal Responsibilities
+Administrators configure the system. Internal staff handle day-to-day customer and subscription operations within assigned permissions. Sales representatives prepare quotations and subscription offers. Finance personnel review billing, payments and revenue information.
+
+
+2. USER REGISTRATION, AUTHENTICATION AND ACCOUNT POLICIES
+
+2.1 Customer Registration [Specified]
+- A customer can create an account using their name, email address and password.
+- Each email address can belong to only one account.
+- Mandatory registration fields must be validated before an account is created.
+
+2.2 Password Requirements [Specified]
+- Passwords must contain more than eight characters.
+- Passwords must include at least one uppercase letter.
+- Passwords must include at least one lowercase letter.
+- Passwords must include at least one special character.
+
+2.3 Password Storage [Recommended]
+- Passwords must never be stored in plain text.
+- Passwords must be stored using a suitable secure password-hashing method.
+
+2.4 Login [Specified / Recommended]
+- Users must authenticate before accessing protected system areas.
+- Access must be restricted according to the user's role.
+- Inactive accounts should not be permitted to log in.
+
+2.5 Password Recovery [Specified]
+- A user who forgets their password can request a reset link.
+- The reset link must be sent to the user's registered email address.
+- Reset links should expire after a defined period. The expiry duration is to be defined.
+- Reset tokens should be stored securely and should not be stored in plain text.
+
+2.6 Account Management [Recommended]
+- Account activation and deactivation must be controlled.
+- Account details should be updated only by an authorized user.
+- Customers must only access information belonging to their own account.
+
+2.7 Staff Account Creation [Specified]
+- Only an administrator can create a new staff account.
+- Staff members cannot create additional staff accounts.
+- The system should record which administrator created each staff account.
+
+
+3. USER ROLES, PERMISSIONS AND ACCESS CONTROL
+
+3.1 Role-Based Access
+The system has three primary roles:
+- Admin: controls the system and its configuration.
+- Staff: performs day-to-day operational work with limited access.
+- Customer: accesses their own information through the customer portal.
+
+3.2 Administrator Responsibilities [Specified]
+- Manage products and product variants.
+- Create and manage plans.
+- Configure tax rates.
+- Create and manage discount rules.
+- Create staff accounts.
+- Control system-wide configuration and access.
+
+3.3 Staff Responsibilities [Specified at a high level]
+- Handle day-to-day customer and subscription operations.
+- Prepare quotations and subscription offers.
+- Work with invoices and payment records where permission is granted.
+- Assist customers using verified subscription and invoice information.
+- Staff permissions must remain limited and must not include administrator-only configuration by default.
+
+3.4 Customer Responsibilities [Specified]
+- Register and log in.
+- View their own subscriptions and invoices.
+- Access permitted subscription-management actions through the customer portal.
+- View relevant payment and outstanding-balance information.
+
+3.5 Access Restrictions [Specified / Recommended]
+- Customers must not view another customer's records.
+- Staff must not access administrator-only functions.
+- Every protected action must check the user's role and authorization on the server side.
+- Hiding a button in the user interface is not sufficient access control.
+
+3.6 Staff Permission Matrix [To Be Defined]
+The exact permissions for different staff functions should be confirmed by the team. The problem statement specifies limited staff access but does not provide a complete staff-level permission matrix.
+
+3.7 Activity Tracking [Recommended]
+Record important administrative and financial actions, including the user who performed the action and its timestamp.
+
+
+4. CUSTOMER MANAGEMENT POLICIES
+
+4.1 Customer Records
+A customer record should contain the customer's name, company name where applicable, email, phone number, tax number or GSTIN where applicable, address and payment terms.
+
+4.2 Customer and Login Account Relationship
+A customer business record and a user login account are related but distinct records. A customer record may exist without a customer portal login.
+
+4.3 Customer Email
+Customer contact email should be maintained accurately for business communication. Account email uniqueness must be enforced for login accounts.
+
+4.4 Payment Terms
+Payment terms define the number of days allowed for payment after an invoice date. The system should use the applicable customer or subscription payment terms when determining invoice due dates.
+
+4.5 Customer History
+Authorized staff should be able to review a customer's subscriptions, invoices and recorded payments.
+
+4.6 Customer Information Updates
+Customer information should be updated by authorized users. Changes to customer details must not silently rewrite historical invoice information.
+
+4.7 Customer Activation and Deactivation [Recommended]
+The system should support controlled account deactivation. The treatment of active subscriptions and outstanding invoices when a customer account is deactivated is to be defined.
+
+4.8 Data Access
+Customers may access only their own profile, subscriptions, invoices and payment history.
+
+
+5. PRODUCT MANAGEMENT POLICIES
+
+5.1 Product Creation [Specified]
+The administrator can create products with:
+- Product name.
+- Product type.
+- Sales price.
+- Cost price.
+- Notes or description.
+- Applicable default tax configuration.
+
+5.2 Supported Product Types [Specified]
+- Software.
+- Service.
+- Add-on.
+- Other.
+
+5.3 Product Pricing
+- Sales price is the price charged to the customer.
+- Cost price is maintained separately from sales price.
+- Prices must be non-negative.
+- The system should use a consistent currency and precision for monetary calculations.
+
+5.4 Product Variants [Specified]
+- A product may have variants based on attributes such as brand.
+- Each variant may have a price adjustment.
+- The final variant price is calculated from the base sales price plus the applicable price adjustment.
+
+Example:
+Base product price: Rs. 2,000
+Variant: Odoo
+Variant price adjustment: Rs. 560
+Resulting price: Rs. 2,560
+
+5.5 Product Tax
+A product may have a default tax rate. The applicable tax for a subscription or invoice line must be recorded according to the configured tax rules.
+
+5.6 Product Activation and Deactivation [Recommended]
+Inactive products should not be offered for new subscriptions or quotations. The treatment of products already used in existing subscriptions must preserve historical records.
+
+5.7 Product Modification
+Changes to a product's current price or description should not silently change previously confirmed subscription or invoice line values.
+
+5.8 Product Deletion
+Products referenced by existing plans, subscriptions or invoices should not be physically deleted if doing so would damage historical records. Deactivation is the recommended approach.
+
+
+6. PLAN MANAGEMENT POLICIES
+
+6.1 Plan Creation [Specified]
+A plan should contain:
+- Plan name.
+- Price.
+- Billing frequency.
+- Billing interval.
+- Minimum quantity.
+- Availability start date.
+- Availability end date.
+- Subscription behavior settings.
+
+6.2 Supported Billing Frequencies [Specified]
+- Daily.
+- Weekly.
+- Monthly.
+- Yearly.
+
+6.3 Billing Interval [Recommended]
+Billing frequency and billing interval should be separate settings. For example, a monthly frequency with an interval of two means billing every two months.
+
+6.4 Minimum Quantity [Specified]
+The quantity selected for a plan or its applicable product lines must satisfy the configured minimum quantity.
+
+6.5 Plan Availability [Specified]
+Plans may have an availability start date and end date. A plan should only be offered for new subscriptions during its configured availability period.
+
+6.6 Plan-Level Subscription Rules [Specified]
+The administrator can configure the following separately for each plan:
+- Whether subscriptions close automatically upon expiry.
+- Whether early cancellation is permitted.
+- Whether pausing is permitted.
+- Whether renewal is permitted.
+
+6.7 Plan Product Lines
+- A plan may contain multiple products.
+- Each plan line must specify a product, optional variant, quantity and unit price.
+- Plan product lines should be copied into a newly created subscription.
+- Subscription lines should be independently recorded so that later plan edits do not silently rewrite an existing subscription.
+
+6.8 Plan Activation and Deactivation [Recommended]
+Inactive plans should not be offered for new subscriptions. Existing subscriptions should retain their recorded plan association and historical terms.
+
+6.9 Plan Changes [To Be Defined]
+The team must decide whether changes to a plan's price or included products affect existing subscriptions or only new subscriptions.
+
+
+7. QUOTATION AND QUOTATION TEMPLATE POLICIES
+
+7.1 Quotation Templates [Specified]
+- The system should allow quotation templates to be created.
+- Each template should have a name and an associated plan.
+- Templates may contain product lines, variants, quantities and unit prices.
+- Each template must have a validity period expressed in days.
+- Templates can be activated or deactivated.
+
+7.2 Quotation Creation [Specified]
+- A sales representative can prepare an offer for a customer.
+- The representative may start from an existing quotation template.
+- The selected template should populate the associated plan and product lines.
+- The quotation must be associated with a customer.
+- The quotation should have a validity end date.
+
+7.3 Quotation Validity
+The quotation validity end date should be calculated using the quotation date and the template's validity period.
+
+7.4 Quotation Lifecycle
+A quotation is represented as a subscription record in the Quotation status in the proposed hackathon design. It is not necessarily a separate database entity.
+
+7.5 Quotation Modification [Recommended]
+Authorized users may modify a draft quotation. Changes after confirmation should be controlled and must not rewrite historical records without an explicit process.
+
+7.6 Quotation Expiry
+The system should identify expired quotations and prevent them from being treated as valid offers. Whether an expired quotation can be reactivated or must be recreated is to be defined.
+
+7.7 Quotation Confirmation
+A valid quotation may proceed through confirmation according to the subscription lifecycle and authorized workflow.
+
+
+8. SUBSCRIPTION MANAGEMENT POLICIES
+
+8.1 Subscription Creation
+Each subscription must be associated with:
+- A unique subscription number.
+- A customer.
+- A plan.
+- A start date.
+- An expiry date, where applicable.
+- Payment terms.
+- Product and variant lines.
+- Quantities and unit prices.
+- Applicable tax rates.
+
+8.2 Subscription Number
+Every subscription must have a unique reference number. The proposed format is SUB-00001, with a sequential numeric portion.
+
+8.3 Subscription Lifecycle [Specified]
+Primary lifecycle:
+Draft -> Quotation -> Confirmed -> Active -> Closed
+
+Other possible statuses:
+- Paused.
+- Cancelled.
+- Expired.
+
+8.4 Status Transition Validation [Recommended]
+The system must validate status transitions and prevent invalid changes. The allowed transitions should be consistently enforced in the application and database.
+
+8.5 Activation
+A confirmed subscription may become active. Its next billing date must be initialized according to its billing schedule.
+
+8.6 Recurring Billing
+Active subscriptions should be considered for invoice generation when their next billing date is due. Paused, cancelled, expired or closed subscriptions must not be billed as active subscriptions unless a specifically approved rule says otherwise.
+
+8.7 Renewal [Specified]
+- Renewal is permitted only if the associated plan allows renewal.
+- A renewed subscription should reference the previous subscription.
+- The new subscription period and billing schedule must be established.
+- The renewal workflow must not create duplicate billing.
+
+8.8 Pause [Specified]
+- A subscription can be paused only if its plan allows pausing.
+- A paused subscription must not continue normal recurring billing unless the business explicitly defines otherwise.
+- Resumption should return an eligible subscription to Active.
+
+8.9 Early Cancellation [Specified]
+- Early cancellation is permitted only when the associated plan allows it.
+- Cancellation should be performed by an authorized user or through a permitted customer action.
+- A cancellation reason should be recorded where applicable.
+
+8.10 Expiry and Closure [Specified]
+- Subscriptions follow their configured expiry dates and automatic closure policies.
+- Plans may specify automatic closure upon expiry.
+- Expired subscriptions should not continue normal recurring billing.
+
+8.11 Subscription Product Lines
+Each subscription line should preserve its description, product reference where applicable, variant, quantity, unit price, applicable tax and active/inactive state.
+
+8.12 Subscription Modification [Recommended]
+Changes to subscription lines, quantities, prices and add-ons must follow an explicit business rule. Changes must not silently modify invoices already generated.
+
+8.13 Subscription Status History [Recommended]
+The system should record status changes, including the previous status, new status, subscription reference and timestamp.
+
+8.14 Subscription Visibility
+Authorized internal team members should be able to see the current subscription status. Customers should be able to view their own subscriptions through the portal.
+
+
+9. ADD-ON MANAGEMENT POLICIES
+
+9.1 Add-on Products
+Add-ons are products that may be enabled or disabled in connection with a customer's subscription.
+
+9.2 Add-on Availability
+Only add-ons permitted for the relevant plan or subscription should be offered.
+
+9.3 Add-on Activation
+The system should record when an add-on is activated, its quantity and its applicable price and tax.
+
+9.4 Add-on Deactivation
+The system should record when an add-on is deactivated. Deactivation should not delete historical invoice or subscription records.
+
+9.5 Add-on Billing [To Be Defined]
+The team must decide whether an add-on change takes effect immediately or from the next billing cycle, and whether prorated charges or credits apply.
+
+9.6 Add-on History [Recommended]
+Changes to add-ons should be traceable, including activation, deactivation, quantity and effective date.
+
+
+10. BILLING AND INVOICE MANAGEMENT POLICIES
+
+10.1 Automatic Invoice Generation [Specified]
+Invoices must be generated from subscriptions according to their billing schedules. The system should populate invoice details from the associated customer and subscription.
+
+10.2 Billing Schedule
+Billing frequency and interval determine when recurring invoices become due for generation.
+
+10.3 Billing Period
+Each recurring invoice should identify the billing period it covers through a period start date and end date.
+
+10.4 Invoice Number
+Every invoice must have a unique invoice number. The proposed format is INV-00001.
+
+10.5 Invoice Information [Specified]
+An invoice should contain:
+- Invoice number.
+- Customer name and contact details.
+- Customer address and tax number where applicable.
+- Associated subscription.
+- Invoice date and due date.
+- Billing period.
+- Product descriptions.
+- Quantities.
+- Unit prices.
+- Discounts.
+- Tax names and rates.
+- Tax amounts.
+- Subtotal.
+- Discount total.
+- Tax total.
+- Final payable amount.
+- Amount paid.
+- Outstanding balance.
+
+10.6 Invoice Lifecycle [Specified]
+- Draft.
+- Confirmed.
+- Paid.
+- Cancelled.
+
+10.7 Invoice Confirmation
+Authorized staff can confirm a draft invoice. Once confirmed, its financial line details should be protected from casual modification.
+
+10.8 Invoice Sending and Printing [Specified]
+The team should be able to send and print invoices.
+
+10.9 Invoice Cancellation [Specified]
+Authorized users should be able to cancel an invoice according to the permitted invoice lifecycle. Cancellation should be recorded and must not erase the historical transaction.
+
+10.10 Invoice Due Date
+The due date should be calculated using the invoice date and applicable payment terms.
+
+10.11 Duplicate Invoice Prevention [Specified by the business objective]
+The system must not generate more than one live invoice for the same subscription and billing period.
+
+10.12 Missed Billing Prevention
+The system should identify active subscriptions due for billing and provide a reliable way to process them. Failed invoice generation should be visible and safely retryable.
+
+10.13 Invoice History
+Invoice details and historical financial values must remain traceable.
+
+10.14 Invoice Modification
+Draft invoices may be edited by authorized users. Confirmed invoices should have their lines and financial calculations locked. Corrections should use an explicitly defined cancellation or adjustment process.
+
+10.15 Invoice Generation Safety [Recommended]
+Invoice creation should be safe to retry. Re-running a billing operation must not create a duplicate invoice for a period already billed.
+
+
+11. DISCOUNT MANAGEMENT POLICIES
+
+11.1 Discount Creation [Specified]
+Only administrators can create discount rules.
+
+11.2 Supported Discount Types [Specified]
+- Fixed discount: a fixed monetary amount is deducted from the eligible amount.
+- Percentage discount: a percentage of the eligible amount is deducted.
+
+11.3 Discount Eligibility [Specified]
+Eligibility may depend on:
+- Minimum purchase amount.
+- Minimum quantity.
+- Validity start date.
+- Validity end date.
+- Usage limit.
+
+11.4 Discount Applicability [Specified]
+A discount may apply to:
+- A specific product.
+- An entire subscription.
+
+11.5 Discount Activation
+Only active discounts within their validity period and with remaining usage capacity may be applied.
+
+11.6 Automatic Application [Specified]
+Eligible discounts should be applied automatically to the next applicable invoice without requiring staff to remember to apply them manually.
+
+11.7 Discount Calculation
+The system must calculate the discount against the eligible product or subscription amount. The discount must not reduce the eligible amount below zero.
+
+11.8 Usage Tracking
+The system should track how many times a discount has been used and prevent use beyond its configured limit.
+
+11.9 Expiry and Exhaustion [Specified]
+A discount must stop being applied when it expires, is deactivated or reaches its usage limit.
+
+11.10 Discount History [Recommended]
+Invoices should preserve the discount applied and the amount deducted so that historical totals remain explainable.
+
+11.11 Discount Stacking [To Be Defined]
+The team must decide whether multiple discounts may be applied to the same invoice or line and, if so, in what order.
+
+
+12. TAX MANAGEMENT POLICIES
+
+12.1 Tax Configuration
+Administrators configure the tax rates available to products and subscription lines.
+
+12.2 Configured Tax Rates [Specified]
+Examples include:
+- GST 18%.
+- GST 5%.
+- No Tax.
+
+12.3 Tax Application [Specified]
+Product and subscription invoice lines may have applicable tax rates.
+
+12.4 Automatic Tax Calculation [Specified]
+Taxes must be calculated automatically using the configured tax rate associated with the relevant line.
+
+12.5 Taxable Amount
+The system must identify the amount to which a tax rate applies. The proposed calculation applies discounts before calculating tax on the remaining taxable amount.
+
+12.6 Tax Display
+Tax amounts should be shown separately from the taxable amount and included in the final payable amount.
+
+12.7 Tax Snapshot [Recommended]
+The invoice should preserve the tax name and rate used when it was generated. A later change to a configured tax rate must not silently alter an existing invoice.
+
+12.8 Tax Rounding [To Be Defined]
+The team must select a consistent rounding rule and apply it across invoice lines and totals.
+
+12.9 Tax Type and Jurisdiction [To Be Defined]
+The supplied brief gives example GST rates but does not specify intra-state/inter-state GST splitting, place-of-supply rules or other jurisdiction-specific tax handling. Do not imply that these are implemented unless the team defines them.
+
+
+13. PAYMENT MANAGEMENT POLICIES
+
+13.1 Payment Recording [Specified]
+Payments must be recorded against individual invoices.
+
+13.2 Payment Information [Specified]
+Each payment record should contain:
+- Unique payment number.
+- Invoice reference.
+- Customer reference.
+- Payment method.
+- Payment amount.
+- Payment date.
+- Note.
+- Staff member who recorded the payment, where applicable.
+
+13.3 Payment Number
+Every payment should have a unique payment reference. The proposed format is PAY-00001.
+
+13.4 Supported Payment Methods [Specified]
+- Cash.
+- Bank Transfer.
+- Card.
+- UPI.
+- Cheque.
+- Other.
+
+13.5 Partial Payments [Specified]
+An invoice may receive multiple partial payments.
+
+13.6 Payment Completion [Specified]
+An invoice is fully paid when the total recorded payments equal its payable amount. Its status should then change to Paid.
+
+13.7 Outstanding Balance
+Outstanding balance is the invoice payable amount minus the total payments recorded against it.
+
+13.8 Payment Validation [Recommended]
+- Payments must have a positive amount.
+- A payment must belong to the same customer as the invoice.
+- Payments should only be recorded against invoices eligible to receive payment.
+- A payment must not exceed the remaining invoice balance unless an approved overpayment process exists.
+
+13.9 Payment History
+The system should show all payments associated with an invoice and customer.
+
+13.10 Payment Reconciliation
+Staff should be able to identify the invoice associated with each recorded payment and verify the payment details.
+
+13.11 Payment Corrections [To Be Defined]
+The brief does not specify refunds, reversals, failed cheques or correction of incorrectly recorded payments. The team must define whether these are in scope and how they affect invoice balances.
+
+
+14. OUTSTANDING PAYMENTS, OVERDUE INVOICES AND COLLECTIONS
+
+14.1 Outstanding Invoice Tracking
+The system must show invoices that have not been fully paid.
+
+14.2 Partially Paid Invoices
+An invoice with one or more payments but a remaining balance should be identified as partially paid.
+
+14.3 Overdue Invoice Identification
+An invoice is overdue when its due date has passed and an outstanding balance remains.
+
+14.4 Days Overdue
+The system may calculate the number of days between the due date and the current date for overdue invoices.
+
+14.5 Outstanding Amount
+The outstanding amount is calculated as the invoice total minus payments received.
+
+14.6 Overdue Amount
+The overdue amount is the sum of outstanding balances for invoices whose due dates have passed.
+
+14.7 Payment Follow-up [Recommended]
+Authorized staff should be able to identify customers with overdue invoices and follow up for payment.
+
+14.8 Collections History [Recommended]
+The system should retain relevant payment and follow-up information where implemented.
+
+14.9 Display Status Versus Stored Status
+Partially Paid and Overdue may be calculated display states. The underlying invoice status can remain Confirmed until the full amount is received. Paid and Cancelled remain invoice lifecycle statuses.
+
+
+15. CUSTOMER SELF-SERVICE PORTAL POLICIES
+
+15.1 Customer Access [Specified]
+Customers should have a portal through which they can view and manage their own subscriptions without needing to email Brightloop for every routine action.
+
+15.2 Customer Dashboard [Recommended]
+The portal should summarize the customer's subscriptions, invoices and payment information.
+
+15.3 Subscription Visibility [Specified]
+Customers may view their own:
+- Subscription numbers.
+- Plans.
+- Subscription status.
+- Start and expiry dates.
+- Subscribed products and add-ons.
+- Relevant renewal information.
+
+15.4 Subscription Actions
+Customers may perform or request only those actions permitted by the associated plan and the portal's access rules. These may include eligible pause, resume, renewal or cancellation actions.
+
+15.5 Invoice Visibility [Specified]
+Customers may view their own invoices and relevant payment status.
+
+15.6 Invoice Download and Printing [Recommended]
+The portal should allow customers to download or print their own invoices if this capability is implemented.
+
+15.7 Payment History
+Customers should be able to view payments recorded against their own invoices.
+
+15.8 Outstanding Balance
+Customers should be able to see outstanding balances and overdue invoices associated with their account.
+
+15.9 Customer Data Isolation [Specified]
+A customer must never be able to view another customer's profile, subscriptions, invoices or payment history.
+
+
+16. DASHBOARD, REPORTING AND FINANCIAL ANALYTICS
+
+16.1 Dashboard Purpose [Specified]
+The finance lead needs one place to review active subscriptions, revenue, payments and overdue invoices.
+
+16.2 Dashboard Summary [Specified]
+The dashboard should provide:
+- Number of active subscriptions.
+- Revenue received.
+- Outstanding amount.
+- Number of overdue invoices.
+- Overdue amount.
+
+16.3 Additional Operational Metrics [Recommended]
+- Total customers.
+- Total subscriptions by status.
+- Paused subscriptions.
+- Cancelled subscriptions.
+- Expired subscriptions.
+- Total invoices.
+- Paid invoices.
+- Confirmed invoices.
+- Outstanding invoices.
+
+16.4 Subscription Reports [Recommended]
+- Active subscriptions.
+- Subscriptions by status.
+- Subscriptions by plan.
+- Subscriptions nearing expiry.
+- Upcoming renewals.
+- Subscription trends over time.
+
+16.5 Revenue Reports [Specified / Recommended]
+- Revenue collected by month.
+- Revenue collected by year.
+- Total revenue collected.
+- Amount invoiced.
+- Revenue by plan or product, if supported by the available data.
+
+16.6 Payment Reports [Recommended]
+- Payments by date.
+- Payments by method.
+- Total payments received.
+- Partial payments.
+- Outstanding payments.
+
+16.7 Invoice Reports [Specified / Recommended]
+- Invoices generated.
+- Paid invoices.
+- Outstanding invoices.
+- Overdue invoices.
+- Cancelled invoices.
+- Total overdue amount.
+
+16.8 Discount Reports [Recommended]
+- Active and expired discounts.
+- Discount usage.
+- Discount amounts applied.
+
+16.9 Filters [Specified]
+Reports and dashboard views should support relevant filters, including:
+- Date range.
+- Customer.
+- Subscription status.
+- Plan.
+- Invoice status.
+- Payment method.
+- Product, where applicable.
+
+16.10 Invoiced Versus Collected Revenue
+The system must distinguish between the amount invoiced and the amount actually collected. Generating an invoice does not mean payment has been received.
+
+16.11 Report Export [Optional Enhancement]
+CSV or PDF export may be added if time permits.
+
+
+17. NOTIFICATIONS, COMMUNICATION AND CUSTOMER SUPPORT
+
+17.1 Password Reset Email [Specified]
+A password reset link must be sent to the registered email address.
+
+17.2 Invoice Communication [Specified]
+The team must be able to send invoices.
+
+17.3 Additional Notifications [Recommended]
+If notification functionality is implemented, useful events include:
+- Quotation created or approaching expiry.
+- Subscription confirmed or activated.
+- Subscription approaching expiry.
+- Renewal due.
+- Subscription paused, resumed or cancelled.
+- Invoice generated or sent.
+- Payment received.
+- Invoice partially paid.
+- Invoice overdue.
+
+17.4 Notification Channel [To Be Defined]
+The problem statement does not specify whether notifications must use email, in-app messages or both. The team should select the channel based on implementation time and available services.
+
+17.5 Customer Support
+- Customers may contact Brightloop support for subscription and billing assistance.
+- Support personnel should verify the customer's identity and relevant records.
+- Support responses should be based on the correct subscription or invoice information.
+- Recording support interactions is a recommended enhancement.
+
+
+18. SYSTEM SECURITY, DATA INTEGRITY AND PERFORMANCE
+
+18.1 Authentication
+Protected system functionality must require an authenticated user.
+
+18.2 Authorization
+Every protected operation must verify the user's role and permissions.
+
+18.3 Password Security
+Passwords must be securely hashed and never stored in plain text.
+
+18.4 Customer Data Isolation
+Customer-facing requests must be scoped to the authenticated customer's own records.
+
+18.5 Unique Records
+The system must enforce uniqueness for account emails and generated subscription, invoice and payment numbers.
+
+18.6 Referential Integrity
+Subscriptions, invoices, payments, customers, products and plans must maintain valid relationships.
+
+18.7 Financial Accuracy
+All financial calculations must use consistent precision and rounding rules. The proposed technical design uses integer paise for INR amounts.
+
+18.8 Transaction Safety
+Operations that update financial records should be performed safely so that partial failures do not leave inconsistent records.
+
+18.9 Duplicate Billing Prevention
+A subscription must not be invoiced twice for the same billing period, including when a billing job is retried or run concurrently.
+
+18.10 Payment Integrity
+Payment records must be validated against the relevant invoice and customer. The invoice balance and payment status must remain consistent.
+
+18.11 Status Validation
+Subscription and invoice status transitions must follow defined lifecycle rules.
+
+18.12 Historical Data
+Historical invoices and payments must remain traceable. Later changes to products, plans, discounts or taxes must not silently rewrite completed financial records.
+
+18.13 Audit Trail [Recommended]
+Important changes to subscriptions, invoices, payments, discounts and system configuration should be traceable to the responsible user and timestamp.
+
+18.14 Error Handling
+Failed billing, payment-recording and other critical operations should provide clear errors and should not create duplicate or partially committed financial records.
+
+18.15 Performance [Specified]
+Every page should respond in under two seconds.
+
+18.16 Scalability [Specified]
+The system should remain responsive with thousands of subscriptions.
+
+18.17 Bulk Billing [Specified by scenario]
+The system should handle hundreds of subscriptions due for billing at once without requiring manual invoice entry.
+
+18.18 Database Optimization [Recommended]
+Use appropriate indexes, efficient queries and summary calculations to support dashboard and operational performance.
+
+18.19 Backup and Recovery [Optional Enhancement]
+A backup and recovery process is recommended but is not explicitly required by the supplied problem statement.
+
+
+APPENDIX A. USER ROLES AND PERMISSION MATRIX
+
+The following is a proposed high-level matrix. Exact staff permissions must be finalized by the team.
+
+Function                         Admin       Staff       Customer
+Register customer account        N/A         N/A         Own account
+Create staff account             Yes         No          No
+Manage products                  Yes         Restricted  No
+Manage product variants          Yes         Restricted  No
+Manage plans                     Yes         No          No
+Manage taxes                     Yes         No          No
+Create discount rules            Yes         No          No
+Manage customers                 Yes         Yes         Own profile
+Create quotations                Yes         Yes         No
+View subscriptions               All         Assigned    Own only
+Manage subscriptions             Yes         Yes         Permitted actions
+Generate invoices                Yes         Yes         No
+Send/print invoices              Yes         Yes         Own invoices, if enabled
+Record payments                  Yes         Yes         No, unless gateway is added
+View payment history             Yes         Yes         Own only
+View financial reports           Yes         As allowed  No
+
+"Restricted" and "As allowed" require a team-defined permission policy. Do not assume all staff members have identical access.
+
+
+APPENDIX B. STATUS DEFINITIONS
+
+Subscription statuses:
+- Draft: Subscription record is being prepared.
+- Quotation: Subscription is being presented as an offer to the customer.
+- Confirmed: The offer has been accepted and is awaiting activation or its effective start.
+- Active: Subscription is currently running and eligible for scheduled billing.
+- Paused: Subscription is temporarily suspended according to its plan rules.
+- Cancelled: Subscription has been cancelled.
+- Expired: Subscription has reached its expiry condition.
+- Closed: Subscription lifecycle has been closed.
+
+Invoice statuses:
+- Draft: Invoice is being prepared and may be edited by authorized users.
+- Confirmed: Invoice has been confirmed and is awaiting full payment.
+- Paid: The full payable amount has been recorded as paid.
+- Cancelled: Invoice has been cancelled.
+
+Calculated invoice display states:
+- Partially Paid: At least one payment has been received, but a balance remains.
+- Overdue: The due date has passed and a balance remains.
+- Outstanding: Any unpaid balance remains.
+
+These calculated display states need not be stored as permanent invoice lifecycle statuses.
+
+
+APPENDIX C. FINANCIAL AND BILLING RULES
+
+C1. Line Amount
+Line amount before discount and tax = quantity multiplied by unit price.
+
+C2. Discounted Taxable Amount
+Taxable amount = eligible line amount minus applicable discount.
+
+C3. Tax Amount
+Tax amount = taxable amount multiplied by the applicable tax rate.
+
+C4. Invoice Total
+Invoice total = subtotal minus discount total plus tax total.
+
+C5. Amount Paid
+Amount paid = sum of valid payment records associated with the invoice.
+
+C6. Outstanding Balance
+Outstanding balance = invoice total minus amount paid.
+
+C7. Full Payment
+An invoice is fully paid when the recorded payments equal the payable amount.
+
+C8. Due Date
+Due date = invoice date plus the applicable payment terms.
+
+C9. Variant Price
+Variant price = base product sales price plus variant price adjustment.
+
+C10. Currency and Precision
+The proposed hackathon implementation uses INR and stores money as integer paise. For example, Rs. 560.00 is stored as 56000 paise. The user interface should display amounts in rupees.
+
+C11. Tax Rounding
+The team must define whether tax is rounded per line or at invoice level and apply that method consistently.
+
+
+APPENDIX D. BUSINESS SCENARIOS REQUIRING TEAM DECISIONS
+
+The following questions are not fully answered by the supplied problem statement. Confirm them before implementation.
+
+1. Plan price changes: Do existing subscriptions retain their original price, or do they adopt the new plan price?
+2. Product price changes: Do existing subscription lines retain their original price?
+3. Plan changes: Can a customer switch plans during an active subscription?
+4. Quantity changes: Do quantity changes apply immediately or from the next billing cycle?
+5. Add-on activation: Is an add-on billed immediately or from the next billing cycle?
+6. Add-on removal: Does removal take effect immediately or at the end of the billing period?
+7. Proration: Are partial-period charges or credits supported?
+8. Pause billing: Does pausing extend the expiry date or shift the next billing date?
+9. Resume billing: How is the next billing date calculated after resumption?
+10. Cancellation: What happens to already-issued unpaid invoices after subscription cancellation?
+11. Expiry: Does every expired subscription close automatically, or only plans configured for automatic closure?
+12. Quotation expiry: Can an expired quotation be reactivated?
+13. Discount stacking: Can multiple discounts apply to the same invoice?
+14. Discount usage: Is usage counted per invoice, per customer or per subscription?
+15. Discount timing: Does a discount attached to a subscription remain valid for future invoices after its validity period ends?
+16. Overpayment: Are payments above the outstanding amount rejected, or handled as customer credit?
+17. Refunds: Are refunds and payment reversals in scope?
+18. Payment correction: How can an incorrectly recorded payment be corrected?
+19. Payment gateways: Are online payment collection and gateway integration required, or is manual payment recording sufficient?
+20. Notifications: Which email or in-app notifications are mandatory?
+21. Customer cancellation: Can customers cancel directly, or only request cancellation?
+22. Customer account deactivation: What happens to active subscriptions and outstanding invoices?
+23. Staff permissions: Which operational actions can each staff category perform?
+24. Tax rules: Are GST 5%, GST 18% and No Tax sufficient for the hackathon, or are additional tax rules required?
+25. Tax rounding: Is rounding performed per invoice line or on the final invoice total?
+26. Report export: Are CSV or PDF exports required?
+27. Billing retry: How should failed invoice generation be retried without duplicate billing?
+28. Billing timing: At the start or end of a billing period is the customer invoiced?
+29. First invoice: Is the first invoice generated immediately upon activation or on the next billing date?
+30. Time zone: Which business time zone controls billing dates, due dates and expiry checks?
+
+
+APPENDIX E. GLOSSARY
+
+Admin: User with authority to configure and control the system.
+
+Staff: Internal user with limited operational permissions.
+
+Customer: Business or individual purchasing Brightloop subscription services.
+
+Product: A software product, service, add-on or other item offered by Brightloop.
+
+Variant: A product option, such as a brand, that may change the product price.
+
+Plan: A recurring commercial offering defining price, billing frequency, quantity requirements, availability and subscription rules.
+
+Quotation Template: A reusable configuration containing a plan, product lines and quotation validity period.
+
+Quotation: An offer prepared for a customer. In the proposed hackathon design, it is represented by a subscription in Quotation status.
+
+Subscription: A customer's agreement to receive products or services under a selected plan for a defined period and billing arrangement.
+
+Add-on: An additional product or service that can be enabled or disabled in connection with a subscription.
+
+Billing Frequency: How often a subscription is billed: daily, weekly, monthly or yearly.
+
+Billing Interval: The number of frequency units between billing events.
+
+Invoice: A financial document generated for products or services supplied during a billing period.
+
+Partial Payment: A payment that covers only part of an invoice's payable amount.
+
+Outstanding Balance: The amount of an invoice that remains unpaid.
+
+Overdue Invoice: An invoice with an outstanding balance whose due date has passed.
+
+Discount: A fixed or percentage reduction applied when its eligibility rules are satisfied.
+
+Tax Rate: The configured percentage used to calculate tax on an eligible taxable amount.
+
+Revenue Collected: Money actually received and recorded through payments.
+
+Invoiced Amount: The amount charged through invoices, whether or not it has been paid.
+
+Audit Trail: A record of important actions, including who performed them and when.
+
+
+DOCUMENT CONTROL AND IMPLEMENTATION NOTE
+
+This document is a hackathon-oriented policy and business-rules draft. It is not a legal, tax or accounting compliance specification.
+
+Before implementation:
+1. Review all items marked "To Be Defined".
+2. Confirm the staff permission matrix.
+3. Agree on billing-cycle timing, proration, pause/resume and cancellation behavior.
+4. Agree on discount stacking and usage-counting behavior.
+5. Agree on payment correction, refunds and overpayment handling.
+6. Ensure the frontend, backend and database enforce the same approved rules.
+7. Test the full monthly billing workflow, including retries, partial payments, overdue invoices and reporting.
+
+End of document.
