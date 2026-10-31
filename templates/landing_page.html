@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brightloop - Subscription Management & Recurring Billing</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0077B6',
+                        accent: '#E9EBFF',
+                        bgCustom: '#EDEDED',
+                        surface: '#FFFFFF',
+                        customText: '#202020',
+                        borderCustom: '#DADADA',
+                        statusAccepted: '#0C447C',
+                        statusPreparing: '#633806',
+                        statusReady: '#27500A',
+                        statusServed: '#444441',
+                        statusDelayed: '#791F1F',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="D:\Staxio\Staxio--Odoo-Make-a-ton-9.0-Round-1-Virtual-Hackathon\static\css\style.css">
+</head>
+<body class="bg-[#EDEDED] text-[#202020] min-h-screen flex flex-col selection:bg-accent selection:text-[#1B1B39]">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-[#DADADA]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white text-xl shadow-md">
+                    <i class="fa-solid fa-infinity"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-[#202020]">Staxio</span>
+            </div>
+
+            <!-- Navigation Links with Icons -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-[#202020]">
+                <a href="#plans" class="hover:text-primary transition flex items-center gap-2"><i class="fa-solid fa-layer-group text-xs text-primary"></i> Plans & Engine</a>
+                <a href="#lifecycle" class="hover:text-primary transition flex items-center gap-2"><i class="fa-solid fa-timeline text-xs text-primary"></i> Lifecycle</a>
+                <a href="#roles" class="hover:text-primary transition flex items-center gap-2"><i class="fa-solid fa-shield-halved text-xs text-primary"></i> Permissions</a>
+                <a href="#faq" class="hover:text-primary transition flex items-center gap-2"><i class="fa-solid fa-circle-question text-xs text-primary"></i> FAQ</a>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <a href="#plans" class="bg-primary text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow hover:bg-[#005f92] transition transform active:scale-95 flex items-center gap-2">
+                    <i class="fa-solid fa-user"></i> Log in
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN LANDING PAGE CONTAINER -->
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-28 text-center max-w-4xl">
+            <div class="space-y-6 fade-in-up">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent text-[#1B1B39] text-xs font-bold uppercase tracking-wider mx-auto">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Subscription & Recurring Billing Backbone
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#202020] leading-tight">
+                    Run plans, recurring billing, and subscriptions in one unified system.
+                </h1>
+                <p class="text-lg sm:text-xl text-[#555555] leading-relaxed max-w-2xl mx-auto">
+                    Replace manual spreadsheets and missed renewal reminders with an intelligent engine built specifically for modern SaaS and recurring revenue models.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                    <a href="#plans" class="bg-primary text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-[#005f92] transition flex items-center justify-center gap-3">
+                        <span>Get Started Today</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="#lifecycle" class="bg-surface border border-[#DADADA] font-bold px-8 py-4 rounded-xl hover:bg-[#EDEDED] transition text-center flex items-center justify-center">
+                        Explore Features
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Unique Metric Showcase Grid -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 fade-in-up">
+                <div class="bg-surface p-6 rounded-2xl border border-[#DADADA] shadow-sm">
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Billing Speed</div>
+                    <div class="text-3xl font-extrabold text-[#202020]">&lt; 2 Sec</div>
+                    <p class="text-xs text-gray-500 mt-2">Instant summary queries across thousands of subscriptions.</p>
+                </div>
+                <div class="bg-surface p-6 rounded-2xl border border-[#DADADA] shadow-sm">
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Tax Automation</div>
+                    <div class="text-3xl font-extrabold text-primary">100%</div>
+                    <p class="text-xs text-gray-500 mt-2">Calculated automatically from custom administrator tax rules.</p>
+                </div>
+                <div class="bg-surface p-6 rounded-2xl border border-[#DADADA] shadow-sm">
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Lifecycle Tracking</div>
+                    <div class="text-3xl font-extrabold text-[#202020]">Draft &rarr; Paid</div>
+                    <p class="text-xs text-gray-500 mt-2">Zero skipped invoices and immutable verification trail.</p>
+                </div>
+                <div class="bg-surface p-6 rounded-2xl border border-[#DADADA] shadow-sm">
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Customer Portal</div>
+                    <div class="text-3xl font-extrabold text-emerald-700">Self-Serve</div>
+                    <p class="text-xs text-gray-500 mt-2">Clients manage their own plans and invoices securely.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="plans" class="py-16 bg-surface border-y border-[#DADADA]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-2xl mb-12 fade-in-up">
+                    <h2 class="text-3xl font-extrabold tracking-tight text-[#202020]">Engineered for subscription complexities</h2>
+                    <p class="text-gray-600 mt-2">Every ordinary billing month challenge solved effortlessly by dedicated modules.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-[#EDEDED] p-6 rounded-2xl border border-[#DADADA] hover:shadow-lg transition">
+                        <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center text-primary text-xl mb-4 shadow-sm">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Plans & Variants</h3>
+                        <p class="text-sm text-gray-600">Set billing intervals (daily, weekly, monthly, yearly), minimum quantities, availability dates, and brand variants like Odoo pricing rules.</p>
+                    </div>
+                    <div class="bg-[#EDEDED] p-6 rounded-2xl border border-[#DADADA] hover:shadow-lg transition">
+                        <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center text-primary text-xl mb-4 shadow-sm">
+                            <i class="fa-solid fa-file-invoice"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Automated Billing Day</h3>
+                        <p class="text-sm text-gray-600">Hundreds of invoices generated simultaneously with exact customer details, product lines, taxes, and totals without manual typing.</p>
+                    </div>
+                    <div class="bg-[#EDEDED] p-6 rounded-2xl border border-[#DADADA] hover:shadow-lg transition">
+                        <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center text-primary text-xl mb-4 shadow-sm">
+                            <i class="fa-solid fa-percent"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Dynamic Discounts</h3>
+                        <p class="text-sm text-gray-600">Admin-controlled fixed amount or percentage rules with minimum purchase criteria and usage limits applied automatically on invoices.</p>
+                    </div>
+                    <div class="bg-[#EDEDED] p-6 rounded-2xl border border-[#DADADA] hover:shadow-lg transition">
+                        <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center text-primary text-xl mb-4 shadow-sm">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Payment Reconciliation</h3>
+                        <p class="text-sm text-gray-600">Record incoming payments by method, date, and note against invoices, instantly highlighting overdue accounts before revenue is lost.</p>
+                    </div>
+                    <div class="bg-[#EDEDED] p-6 rounded-2xl border border-[#DADADA] hover:shadow-lg transition">
+                        <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center text-primary text-xl mb-4 shadow-sm">
+                            <i class="fa-solid fa-id-card"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Customer Self-Service Portal</h3>
+                        <p class="text-sm text-gray-600">Customers log in securely to view active subscriptions and invoices without contacting internal support staff.</p>
+                    </div>
+                    <div class="bg-[#EDEDED] p-6 rounded-2xl border border-[#DADADA] hover:shadow-lg transition">
+                        <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center text-primary text-xl mb-4 shadow-sm">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Executive Financial Lead View</h3>
+                        <p class="text-sm text-gray-600">One comprehensive dashboard showing active subscriptions, collected revenue, outstanding amounts, and overdue invoices with filters.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Subscription Lifecycle Section -->
+        <section id="lifecycle" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mb-12">
+                <h2 class="text-3xl font-extrabold tracking-tight text-[#202020]">From Quotation Template to Active Subscription</h2>
+                <p class="text-gray-600 mt-2">Every subscription flows smoothly through structured milestones with complete team visibility.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-surface p-6 rounded-2xl border border-[#DADADA] shadow-sm relative">
+                    <div class="text-xs font-bold text-primary mb-2">STEP 01</div>
+                    <h3 class="font-bold text-lg mb-2">Draft Quotation</h3>
+                    <p class="text-sm text-gray-600">Sales reps start from quotation templates pre-populated with correct plans and product lines.</p>
+                </div>
+                <div class="bg-surface p-6 rounded-2xl border border-[#DADADA] shadow-sm relative">
+                    <div class="text-xs font-bold text-primary mb-2">STEP 02</div>
+                    <h3 class="font-bold text-lg mb-2">Confirmed Offer</h3>
+                    <p class="text-sm text-gray-600">Validated with start dates, expiry dates, and specific payment terms before activation.</p>
+                </div>
+                <div class="bg-surface p-6 rounded-2xl border border-[#DADADA] shadow-sm relative">
+                    <div class="text-xs font-bold text-primary mb-2">STEP 03</div>
+                    <h3 class="font-bold text-lg mb-2">Active Billing</h3>
+                    <p class="text-sm text-gray-600">Automated recurring billing day generates invoices and tracks tax calculations seamlessly.</p>
+                </div>
+                <div class="bg-surface p-6 rounded-2xl border border-[#DADADA] shadow-sm relative">
+                    <div class="text-xs font-bold text-primary mb-2">STEP 04</div>
+                    <h3 class="font-bold text-lg mb-2">Closed / Renewed</h3>
+                    <p class="text-sm text-gray-600">Subscriptions are renewed, paused, or closed cleanly when terms conclude.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roles Section -->
+        <section id="roles" class="py-16 bg-surface border-y border-[#DADADA]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-2xl mb-12">
+                    <h2 class="text-3xl font-extrabold tracking-tight text-[#202020]">Granular Role-Based Access Control</h2>
+                    <p class="text-gray-600 mt-2">Secure permissions ensure users only interact with what their role requires.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-[#EDEDED] p-6 rounded-2xl border border-[#DADADA]">
+                        <div class="text-primary text-2xl mb-3"><i class="fa-solid fa-crown"></i></div>
+                        <h3 class="font-bold text-lg mb-2">Admin</h3>
+                        <p class="text-sm text-gray-600">Controls products, variants, taxes, discount rules, system configurations, and adds new staff members.</p>
+                    </div>
+                    <div class="bg-[#EDEDED] p-6 rounded-2xl border border-[#DADADA]">
+                        <div class="text-primary text-2xl mb-3"><i class="fa-solid fa-users-gear"></i></div>
+                        <h3 class="font-bold text-lg mb-2">Internal Staff Team</h3>
+                        <p class="text-sm text-gray-600">Handles day-to-day customer onboarding, quotation management, and invoice tracking with limited access.</p>
+                    </div>
+                    <div class="bg-[#EDEDED] p-6 rounded-2xl border border-[#DADADA]">
+                        <div class="text-primary text-2xl mb-3"><i class="fa-solid fa-user-check"></i></div>
+                        <h3 class="font-bold text-lg mb-2">Customer Portal</h3>
+                        <p class="text-sm text-gray-600">Provides customers direct access to view their subscriptions, download invoices, and check billing history.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold tracking-tight text-[#202020]">Frequently Asked Questions</h2>
+                <p class="text-gray-600 mt-2">Everything you need to know about Brightloop subscription software.</p>
+            </div>
+
+            <div class="space-y-4">
+                <details class="bg-surface p-5 rounded-xl border border-[#DADADA] group">
+                    <summary class="font-bold cursor-pointer flex justify-between items-center text-sm md:text-base">
+                        <span>How are new customer accounts created?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 group-open:rotate-180 transition"></i>
+                    </summary>
+                    <p class="text-sm text-gray-600 mt-3 pt-3 border-t border-[#DADADA]">
+                        Small businesses sign up online with email and a secure password (>8 chars with uppercase, lowercase, and special character). Each email is unique to a single account with automated password reset links.
+                    </p>
+                </details>
+                <details class="bg-surface p-5 rounded-xl border border-[#DADADA] group">
+                    <summary class="font-bold cursor-pointer flex justify-between items-center text-sm md:text-base">
+                        <span>Can plans be paused, closed early, or renewed?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 group-open:rotate-180 transition"></i>
+                    </summary>
+                    <p class="text-sm text-gray-600 mt-3 pt-3 border-t border-[#DADADA]">
+                        Yes! Admins decide plan by plan whether they close automatically upon ending or can be paused, renewed, or closed early by authorized team members.
+                    </p>
+                </details>
+                <details class="bg-surface p-5 rounded-xl border border-[#DADADA] group">
+                    <summary class="font-bold cursor-pointer flex justify-between items-center text-sm md:text-base">
+                        <span>How do discount rules apply to invoices?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 group-open:rotate-180 transition"></i>
+                    </summary>
+                    <p class="text-sm text-gray-600 mt-3 pt-3 border-t border-[#DADADA]">
+                        Admins create fixed amount or percentage discounts with purchase minimums and usage limits. Once applied, discounts automatically appear on the next invoice without manual tracking.
+                    </p>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface border-t border-[#DADADA] py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+            <div>&copy; 2026 Brightloop Software Inc. All rights reserved.</div>
+            <div class="flex space-x-6">
+                <a href="#plans" class="hover:underline">Privacy Policy</a>
+                <a href="#faq" class="hover:underline">Terms of Service</a>
+                <a href="#lifecycle" class="hover:underline">Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Banner -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-[#202020] text-white px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 text-xs md:text-sm font-semibold flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toast-msg">Action completed successfully.</span>
+    </div>
+
+    <!-- External Animation Script -->
+    <script src="D:\Staxio\Staxio--Odoo-Make-a-ton-9.0-Round-1-Virtual-Hackathon\static\js\animation.js"></script>
+</body>
+</html>
