@@ -17,6 +17,9 @@ __pycache__/
 checkpoints/
 runs/
 
+*.db
+/instance
+
 # IDE and OS files
 .DS_Store
 .vscode/
