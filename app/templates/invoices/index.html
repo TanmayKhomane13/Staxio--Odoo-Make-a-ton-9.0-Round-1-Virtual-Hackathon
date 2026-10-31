@@ -1,0 +1,63 @@
+
+{% extends "base.html" %}
+
+{% block title %}Invoices | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Invoices</h1>
+        <p>Track invoices, payment status, and outstanding balances.</p>
+    </div>
+    <a href="{{ url_for('invoices.create') }}" class="btn btn-primary">
+        + Create Invoice
+    </a>
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Invoice</th>
+                <th>Customer</th>
+                <th>Invoice Date</th>
+                <th>Due Date</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Balance</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices %}
+            <tr>
+                <td>{{ invoice.invoice_number or ('INV-' ~ '%05d'|format(invoice.id)) }}</td>
+                <td>{{ invoice.customer_name }}</td>
+                <td>{{ invoice.invoice_date }}</td>
+                <td>{{ invoice.due_date }}</td>
+                <td>{{ invoice.total_amount|rupees }}</td>
+                <td>{{ invoice.amount_paid|rupees }}</td>
+                <td>{{ invoice.balance_due|rupees }}</td>
+                <td>
+                    <span class="status-badge status-{{ invoice.status }}">
+                        {{ invoice.status|capitalize }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ url_for('invoices.detail', invoice_id=invoice.id) }}">
+                        View
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="9" class="empty-state">
+                    No invoices created yet.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

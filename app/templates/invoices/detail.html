@@ -1,0 +1,164 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ invoice.invoice_number }} | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ invoice.invoice_number }}</h1>
+        <p>{{ invoice.customer_name }} · {{ invoice.invoice_date }}</p>
+    </div>
+    <a href="{{ url_for('invoices.index') }}" class="btn btn-secondary">
+        Back to Invoices
+    </a>
+</div>
+
+<section class="form-card">
+    <div class="page-header">
+        <div>
+            <h2>Invoice Details</h2>
+            <span class="status-badge status-{{ invoice.status }}">
+                {{ invoice.status|capitalize }}
+            </span>
+        </div>
+
+        <div class="form-actions">
+            {% if invoice.status == 'draft' %}
+            <form method="POST"
+                  action="{{ url_for('invoices.confirm', invoice_id=invoice.id) }}">
+                <button class="btn btn-primary" type="submit">
+                    Confirm Invoice
+                </button>
+            </form>
+            {% endif %}
+
+            {% if invoice.status == 'confirmed' %}
+            <a href="{{ url_for('payments.create', invoice_id=invoice.id) }}"
+            class="btn btn-primary">
+                + Record Payment
+            </a>
+            {% endif %}
+            
+            {% if invoice.status in ['draft', 'confirmed'] and current_user.role == 'admin' %}
+            <form method="POST"
+                  action="{{ url_for('invoices.cancel', invoice_id=invoice.id) }}"
+                  onsubmit="return confirm('Cancel this invoice?');">
+                <button class="btn btn-danger" type="submit">
+                    Cancel Invoice
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="detail-grid">
+        <div>
+            <strong>Customer</strong>
+            <p>{{ invoice.customer_name }}</p>
+        </div>
+        <div>
+            <strong>Invoice Date</strong>
+            <p>{{ invoice.invoice_date }}</p>
+        </div>
+        <div>
+            <strong>Due Date</strong>
+            <p>{{ invoice.due_date }}</p>
+        </div>
+        <div>
+            <strong>Customer Tax Number</strong>
+            <p>{{ invoice.customer_tax_number or '—' }}</p>
+        </div>
+        <div>
+            <strong>Billing Period</strong>
+            <p>{{ invoice.period_start or '—' }} to {{ invoice.period_end or '—' }}</p>
+        </div>
+        <div>
+            <strong>Address</strong>
+            <p>{{ invoice.customer_address or '—' }}</p>
+        </div>
+    </div>
+</section>
+
+<section class="form-card">
+    <h2>Invoice Items</h2>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Discount</th>
+                    <th>Tax</th>
+                    <th>Tax Amount</th>
+                    <th>Line Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in lines %}
+                <tr>
+                    <td>{{ line.description }}</td>
+                    <td>{{ line.quantity }}</td>
+                    <td>{{ line.unit_price|rupees }}</td>
+                    <td>{{ line.discount_amount|rupees }}</td>
+                    <td>{{ line.tax_name or 'No tax' }} ({{ line.tax_rate }}%)</td>
+                    <td>{{ line.tax_amount|rupees }}</td>
+                    <td>{{ line.line_total|rupees }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7">No invoice lines.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="invoice-totals">
+        <div><span>Subtotal</span><strong>{{ invoice.subtotal|rupees }}</strong></div>
+        <div><span>Discount</span><strong>{{ invoice.discount_total|rupees }}</strong></div>
+        <div><span>Tax</span><strong>{{ invoice.tax_total|rupees }}</strong></div>
+        <div class="invoice-grand-total">
+            <span>Total</span><strong>{{ invoice.total_amount|rupees }}</strong>
+        </div>
+        <div><span>Amount Paid</span><strong>{{ invoice.amount_paid|rupees }}</strong></div>
+        <div>
+            <span>Balance Due</span>
+            <strong>{{ (invoice.total_amount - invoice.amount_paid)|rupees }}</strong>
+        </div>
+    </div>
+</section>
+
+<section class="form-card">
+    <h2>Payments</h2>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Payment Number</th>
+                    <th>Date</th>
+                    <th>Method</th>
+                    <th>Amount</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.payment_number or ('PAY-' ~ '%05d'|format(payment.id)) }}</td>
+                    <td>{{ payment.payment_date }}</td>
+                    <td>{{ payment.method|replace('_', ' ')|title }}</td>
+                    <td>{{ payment.amount|rupees }}</td>
+                    <td>{{ payment.note or '—' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">No payments recorded for this invoice.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

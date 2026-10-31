@@ -1,0 +1,60 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Subscriptions | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>My Subscriptions</h1>
+        <p>View your subscription plans and their current status.</p>
+    </div>
+    <a href="{{ url_for('portal.index') }}" class="btn btn-secondary">
+        Back to Account
+    </a>
+</div>
+
+<section class="panel">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Subscription</th>
+                    <th>Plan</th>
+                    <th>Frequency</th>
+                    <th>Status</th>
+                    <th>Start Date</th>
+                    <th>Expiry Date</th>
+                    <th>Next Billing</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subscription in subscriptions %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('portal.subscription_detail', subscription_id=subscription.id) }}">
+                            {{ subscription.subscription_number }}
+                        </a>
+                    </td>
+                    <td>{{ subscription.plan_name }}</td>
+                    <td>
+                        {{ subscription.billing_interval }}
+                        {{ subscription.billing_frequency }}
+                    </td>
+                    <td>{{ subscription.status|capitalize }}</td>
+                    <td>{{ subscription.start_date }}</td>
+                    <td>{{ subscription.expiry_date or '—' }}</td>
+                    <td>{{ subscription.next_billing_date or '—' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="empty-state">
+                        No subscriptions found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

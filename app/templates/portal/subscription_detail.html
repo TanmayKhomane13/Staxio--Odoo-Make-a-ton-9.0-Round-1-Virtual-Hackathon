@@ -1,0 +1,125 @@
+
+{% extends "base.html" %}
+
+{% block title %}Subscription Details | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ subscription.subscription_number }}</h1>
+        <p>{{ subscription.plan_name }} subscription details.</p>
+    </div>
+
+    <a href="{{ url_for('portal.subscriptions') }}" class="btn btn-secondary">
+        Back to Subscriptions
+    </a>
+</div>
+
+<section class="panel">
+    <div class="panel-header">
+        <h2>Subscription Information</h2>
+    </div>
+
+    <div class="details-grid">
+        <div>
+            <span class="detail-label">Status</span>
+            <strong>{{ subscription.status|capitalize }}</strong>
+        </div>
+        <div>
+            <span class="detail-label">Plan</span>
+            <strong>{{ subscription.plan_name }}</strong>
+        </div>
+        <div>
+            <span class="detail-label">Billing Frequency</span>
+            <strong>
+                {{ subscription.billing_interval }}
+                {{ subscription.billing_frequency }}
+            </strong>
+        </div>
+        <div>
+            <span class="detail-label">Start Date</span>
+            <strong>{{ subscription.start_date }}</strong>
+        </div>
+        <div>
+            <span class="detail-label">Expiry Date</span>
+            <strong>{{ subscription.expiry_date or '—' }}</strong>
+        </div>
+        <div>
+            <span class="detail-label">Next Billing Date</span>
+            <strong>{{ subscription.next_billing_date or '—' }}</strong>
+        </div>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <h2>Subscribed Items</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Recurring Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in lines %}
+                <tr>
+                    <td>{{ line.product_name or 'Product unavailable' }}</td>
+                    <td>{{ line.description }}</td>
+                    <td>{{ line.quantity }}</td>
+                    <td>₹{{ "%.2f"|format(line.unit_price / 100) }}</td>
+                    <td>
+                        ₹{{ "%.2f"|format((line.quantity * line.unit_price) / 100) }}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        No subscription items found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <h2>Status History</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Previous Status</th>
+                    <th>New Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>{{ event.from_status or 'Created' }}</td>
+                    <td>{{ event.to_status|capitalize }}</td>
+                    <td>{{ event.created_at }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="empty-state">
+                        No status history available.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

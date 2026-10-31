@@ -1,0 +1,64 @@
+
+{% extends "base.html" %}
+
+{% block title %}Subscriptions | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Subscriptions</h1>
+        <p>Manage customer subscriptions and their billing lifecycle.</p>
+    </div>
+    <a href="{{ url_for('subscriptions.create') }}" class="btn btn-primary">
+        + New Subscription
+    </a>
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Subscription</th>
+                <th>Customer</th>
+                <th>Plan</th>
+                <th>Recurring Amount</th>
+                <th>Start Date</th>
+                <th>Next Billing</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in subscriptions %}
+            <tr>
+                <td>{{ item.subscription_number or ('SUB-' ~ '%05d'|format(item.id)) }}</td>
+                <td>{{ item.customer_name }}</td>
+                <td>
+                    {{ item.plan_name }}
+                    <small>{{ item.billing_frequency|capitalize }}</small>
+                </td>
+                <td>{{ item.recurring_amount|rupees }}</td>
+                <td>{{ item.start_date }}</td>
+                <td>{{ item.next_billing_date or '—' }}</td>
+                <td>
+                    <span class="status-badge status-{{ item.status }}">
+                        {{ item.status|replace('_', ' ')|title }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ url_for('subscriptions.detail', subscription_id=item.id) }}">
+                        View
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8" class="empty-state">
+                    No subscriptions found. Create your first subscription to get started.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

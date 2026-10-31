@@ -1,0 +1,164 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ subscription.subscription_number }} | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ subscription.subscription_number }}</h1>
+        <p>{{ subscription.customer_name }} · {{ subscription.plan_name }}</p>
+    </div>
+    <a href="{{ url_for('subscriptions.index') }}" class="btn btn-secondary">
+        Back to Subscriptions
+    </a>
+</div>
+
+<div class="detail-grid">
+    <section class="form-card">
+        <h2>Subscription Details</h2>
+        <dl class="detail-list">
+            <dt>Customer</dt>
+            <dd>{{ subscription.customer_name }}</dd>
+
+            <dt>Email</dt>
+            <dd>{{ subscription.customer_email }}</dd>
+
+            <dt>Plan</dt>
+            <dd>{{ subscription.plan_name }}</dd>
+
+            <dt>Billing Frequency</dt>
+            <dd>{{ subscription.billing_frequency|capitalize }}</dd>
+
+            <dt>Status</dt>
+            <dd>
+                <span class="status-badge status-{{ subscription.status }}">
+                    {{ subscription.status|replace('_', ' ')|title }}
+                </span>
+            </dd>
+
+            <dt>Start Date</dt>
+            <dd>{{ subscription.start_date }}</dd>
+
+            <dt>Expiry Date</dt>
+            <dd>{{ subscription.expiry_date or 'Not set' }}</dd>
+
+            <dt>Next Billing Date</dt>
+            <dd>{{ subscription.next_billing_date or 'Not scheduled' }}</dd>
+
+            <dt>Payment Terms</dt>
+            <dd>{{ subscription.payment_terms_days }} days</dd>
+        </dl>
+    </section>
+
+    <section class="form-card">
+        <h2>Update Status</h2>
+        <form method="POST"
+              action="{{ url_for('subscriptions.update_status', subscription_id=subscription.id) }}">
+            <div class="form-group">
+                <label for="status">New Status</label>
+                <select name="status" id="status" required>
+                    {% if subscription.status == 'draft' %}
+                        <option value="quotation">Quotation</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="cancelled">Cancelled</option>
+                    {% elif subscription.status == 'quotation' %}
+                        <option value="draft">Draft</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="cancelled">Cancelled</option>
+                    {% elif subscription.status == 'confirmed' %}
+                        <option value="active">Active</option>
+                        <option value="cancelled">Cancelled</option>
+                    {% elif subscription.status == 'active' %}
+                        <option value="paused">Paused</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="expired">Expired</option>
+                        <option value="closed">Closed</option>
+                    {% elif subscription.status == 'paused' %}
+                        <option value="active">Active</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="closed">Closed</option>
+                    {% elif subscription.status in ['expired', 'cancelled'] %}
+                        <option value="closed">Closed</option>
+                    {% else %}
+                        <option value="closed" disabled>Closed</option>
+                    {% endif %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="cancellation_reason">Cancellation Reason (optional)</label>
+                <textarea name="cancellation_reason"
+                          id="cancellation_reason"
+                          rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Update Status
+            </button>
+        </form>
+    </section>
+</div>
+
+<section class="form-card">
+    <h2>Subscription Lines</h2>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Tax</th>
+                    <th>Active</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in lines %}
+                <tr>
+                    <td>{{ line.product_name or 'Removed product' }}</td>
+                    <td>{{ line.description }}</td>
+                    <td>{{ line.quantity }}</td>
+                    <td>{{ line.unit_price|rupees }}</td>
+                    <td>{{ line.tax_name or 'No tax' }}</td>
+                    <td>{{ 'Yes' if line.is_active else 'No' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No subscription lines found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="form-card">
+    <h2>Status History</h2>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Previous Status</th>
+                    <th>New Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>{{ event.from_status or 'Created' }}</td>
+                    <td>{{ event.to_status }}</td>
+                    <td>{{ event.created_at }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3">No status changes recorded yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

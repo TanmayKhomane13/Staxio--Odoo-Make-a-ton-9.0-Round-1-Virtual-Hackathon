@@ -1,0 +1,141 @@
+
+{% extends "base.html" %}
+
+{% block title %}Invoice {{ invoice.invoice_number }} | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ invoice.invoice_number }}</h1>
+        <p>Invoice details and payment history.</p>
+    </div>
+
+    <a href="{{ url_for('portal.invoices') }}" class="btn btn-secondary">
+        Back to Invoices
+    </a>
+</div>
+
+<section class="panel">
+    <div class="details-grid">
+        <div>
+            <span class="detail-label">Invoice Date</span>
+            <strong>{{ invoice.invoice_date }}</strong>
+        </div>
+        <div>
+            <span class="detail-label">Due Date</span>
+            <strong>{{ invoice.due_date }}</strong>
+        </div>
+        <div>
+            <span class="detail-label">Status</span>
+            <strong>{{ invoice.status|capitalize }}</strong>
+        </div>
+        <div>
+            <span class="detail-label">Billing Period</span>
+            <strong>
+                {{ invoice.period_start or '—' }}
+                to
+                {{ invoice.period_end or '—' }}
+            </strong>
+        </div>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <h2>Invoice Items</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Discount</th>
+                    <th>Tax</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in lines %}
+                <tr>
+                    <td>{{ line.description }}</td>
+                    <td>{{ line.quantity }}</td>
+                    <td>₹{{ "%.2f"|format(line.unit_price / 100) }}</td>
+                    <td>₹{{ "%.2f"|format(line.discount_amount / 100) }}</td>
+                    <td>₹{{ "%.2f"|format(line.tax_amount / 100) }}</td>
+                    <td>₹{{ "%.2f"|format(line.line_total / 100) }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="empty-state">
+                        No invoice items found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="invoice-totals">
+        <p>Subtotal:
+            <strong>₹{{ "%.2f"|format(invoice.subtotal / 100) }}</strong>
+        </p>
+        <p>Discount:
+            <strong>₹{{ "%.2f"|format(invoice.discount_total / 100) }}</strong>
+        </p>
+        <p>Tax:
+            <strong>₹{{ "%.2f"|format(invoice.tax_total / 100) }}</strong>
+        </p>
+        <p>Total:
+            <strong>₹{{ "%.2f"|format(invoice.total_amount / 100) }}</strong>
+        </p>
+        <p>Paid:
+            <strong>₹{{ "%.2f"|format(invoice.amount_paid / 100) }}</strong>
+        </p>
+        <p>Balance:
+            <strong>
+                ₹{{ "%.2f"|format((invoice.total_amount - invoice.amount_paid) / 100) }}
+            </strong>
+        </p>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <h2>Payment History</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Payment Number</th>
+                    <th>Date</th>
+                    <th>Method</th>
+                    <th>Note</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.payment_number }}</td>
+                    <td>{{ payment.payment_date }}</td>
+                    <td>{{ payment.method|replace('_', ' ')|title }}</td>
+                    <td>{{ payment.note or '—' }}</td>
+                    <td>₹{{ "%.2f"|format(payment.amount / 100) }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        No payments recorded for this invoice.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

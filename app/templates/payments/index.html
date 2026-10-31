@@ -1,0 +1,52 @@
+
+{% extends "base.html" %}
+
+{% block title %}Payments | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Payments</h1>
+        <p>Review collected payments across customer invoices.</p>
+    </div>
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Payment</th>
+                <th>Invoice</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Method</th>
+                <th>Amount</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in payments %}
+            <tr>
+                <td>{{ payment.payment_number or ('PAY-' ~ '%05d'|format(payment.id)) }}</td>
+                <td>
+                    <a href="{{ url_for('invoices.detail', invoice_id=payment.invoice_id) }}">
+                        {{ payment.invoice_number or ('INV-' ~ '%05d'|format(payment.invoice_id)) }}
+                    </a>
+                </td>
+                <td>{{ payment.customer_name }}</td>
+                <td>{{ payment.payment_date }}</td>
+                <td>{{ payment.method|replace('_', ' ')|title }}</td>
+                <td>{{ payment.amount|rupees }}</td>
+                <td>{{ payment.note or '—' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="empty-state">
+                    No payments have been recorded.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

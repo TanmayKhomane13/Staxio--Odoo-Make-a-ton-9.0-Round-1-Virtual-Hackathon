@@ -1,0 +1,56 @@
+
+{% extends "base.html" %}
+
+{% block title %}Create Invoice | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Create Invoice</h1>
+        <p>Generate a draft invoice from an active subscription.</p>
+    </div>
+    <a href="{{ url_for('invoices.index') }}" class="btn btn-secondary">
+        Back
+    </a>
+</div>
+
+<form method="POST" class="form-card">
+    <div class="form-group">
+        <label for="subscription_id">Active Subscription</label>
+        <select name="subscription_id" id="subscription_id" required>
+            <option value="">Select subscription</option>
+            {% for item in subscriptions %}
+            <option value="{{ item.id }}"
+                {% if request.form.get('subscription_id') == item.id|string %}selected{% endif %}>
+                {{ item.subscription_number or ('SUB-' ~ '%05d'|format(item.id)) }}
+                — {{ item.customer_name }} — {{ item.plan_name }}
+            </option>
+            {% endfor %}
+        </select>
+        {% if not subscriptions %}
+        <small>No active subscriptions are available for invoicing.</small>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="invoice_date">Invoice Date</label>
+        <input
+            type="date"
+            id="invoice_date"
+            name="invoice_date"
+            value="{{ request.form.get('invoice_date', today) }}"
+            required>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit"
+                class="btn btn-primary"
+                {% if not subscriptions %}disabled{% endif %}>
+            Generate Draft Invoice
+        </button>
+        <a href="{{ url_for('invoices.index') }}" class="btn btn-secondary">
+            Cancel
+        </a>
+    </div>
+</form>
+{% endblock %}
