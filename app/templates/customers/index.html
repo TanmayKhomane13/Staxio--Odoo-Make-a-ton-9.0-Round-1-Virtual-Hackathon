@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block title %}Customers | Staxio{% endblock %}
@@ -14,8 +13,7 @@
 <section class="panel">
     <h2>Add Customer</h2>
 
-    <form method="POST"
-          action="{{ url_for('customers.create_customer') }}">
+    <form method="POST" action="{{ url_for('customers.create_customer') }}">
         <div class="form-grid">
             <div>
                 <label>Customer Name</label>
@@ -44,8 +42,7 @@
 
             <div>
                 <label>Payment Terms (Days)</label>
-                <input name="payment_terms_days" type="number"
-                       min="0" value="30" required>
+                <input name="payment_terms_days" type="number" min="0" value="30" required>
             </div>
 
             <div class="form-full">
