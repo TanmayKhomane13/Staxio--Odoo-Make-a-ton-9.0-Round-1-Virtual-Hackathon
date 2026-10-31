@@ -1,7 +1,7 @@
 /* static/js/ai-chat.js : load with <script src=".../ai-chat.js" defer> in base.html */
 (() => {
   const $ = (id) => document.getElementById(id);
-  const sidebar = $('aiSidebar'), toggle = $('aiToggle'), backdrop = $('aiBackdrop');
+  const sidebar = $('aiSidebar'), toggle = $('aiChatToggle') || $('aiToggle'), backdrop = $('aiBackdrop');
   const list = $('aiMessages'), form = $('aiForm'), input = $('aiInput'), send = $('aiSend');
   if (!sidebar || !toggle) return;
 
@@ -16,7 +16,7 @@
     backdrop.hidden = !open;
     if (open) setTimeout(() => input.focus(), 250); else toggle.focus();
   }
-  toggle.addEventListener('click', () => setOpen(!sidebar.classList.contains('is-open')));
+  toggle.addEventListener('click', (e) => { e.preventDefault(); setOpen(!sidebar.classList.contains('is-open')); });
   $('aiClose').addEventListener('click', () => setOpen(false));
   backdrop.addEventListener('click', () => setOpen(false));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && sidebar.classList.contains('is-open')) setOpen(false); });

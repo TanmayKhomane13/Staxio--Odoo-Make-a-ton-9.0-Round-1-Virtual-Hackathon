@@ -18,12 +18,21 @@
 
     <div class="topbar-right">
         <span class="topbar-company">{{ company_name }}</span>
-        {% if role in ['admin', 'staff', 'finance_lead'] %}
-            <a href="#" class="nav-link" id="aiChatToggle">
-                <span class="nav-icon">✦</span>
-                <span>AI Assistant</span>
-            </a>
+
+        {% if current_user.role in ['admin', 'staff', 'finance_lead'] %}
+            <button type="button"
+                    id="aiChatToggle"
+                    class="icon-button ai-toggle"
+                    aria-controls="aiSidebar"
+                    aria-expanded="false"
+                    aria-label="Open Staxio AI assistant"
+                    title="AI Assistant">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <path fill="currentColor" d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2zm7 11l.9 2.6 2.6.9-2.6.9L19 20l-.9-2.6-2.6-.9 2.6-.9L19 13zM6 14l.7 2 2 .7-2 .7L6 19.4l-.7-2-2-.7 2-.7L6 14z"/>
+                </svg>
+            </button>
         {% endif %}
+
         <div class="user-menu">
             <div class="user-avatar">
                 {{ current_user.full_name[:1]|upper }}
@@ -31,7 +40,7 @@
 
             <div class="user-details">
                 <strong>{{ current_user.full_name }}</strong>
-                <span>{{ current_user.role|title }}</span>
+                <span>{{ current_user.role|replace('_', ' ')|title }}</span>
             </div>
 
             <form method="POST" action="{{ url_for('auth.logout') }}">
