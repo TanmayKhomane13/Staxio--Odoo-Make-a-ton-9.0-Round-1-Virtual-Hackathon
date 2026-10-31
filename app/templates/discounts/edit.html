@@ -1,0 +1,112 @@
+
+{% extends "base.html" %}
+
+{% block title %}Edit Discount | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Edit Discount</h1>
+        <p>Update discount settings and eligibility.</p>
+    </div>
+
+    <a href="{{ url_for('discounts.index') }}" class="btn btn-secondary">
+        Back
+    </a>
+</div>
+
+<section class="panel">
+    <form method="POST">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="name">Discount Name</label>
+                <input id="name" name="name" type="text"
+                       value="{{ discount.name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="code">Discount Code</label>
+                <input id="code" name="code" type="text"
+                       value="{{ discount.code }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="discount_type">Discount Type</label>
+                <select id="discount_type" name="discount_type" required>
+                    <option value="percentage"
+                        {% if discount.discount_type == 'percentage' %}selected{% endif %}>
+                        Percentage
+                    </option>
+                    <option value="fixed"
+                        {% if discount.discount_type == 'fixed' %}selected{% endif %}>
+                        Fixed Amount
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="discount_value">Discount Value</label>
+                <input id="discount_value" name="discount_value"
+                       type="number" min="0.01" step="0.01"
+                       value="{% if discount.discount_type == 'fixed' %}{{ '%.2f'|format(discount.discount_value / 100) }}{% else %}{{ discount.discount_value }}{% endif %}"
+                       required>
+                <small>Percentage: enter 20 for 20%. Fixed: enter amount in ₹.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="minimum_purchase">Minimum Purchase (₹)</label>
+                <input id="minimum_purchase" name="minimum_purchase"
+                       type="number" min="0" step="0.01"
+                       value="{{ '%.2f'|format(discount.minimum_purchase / 100) }}">
+            </div>
+
+            <div class="form-group">
+                <label for="minimum_quantity">Minimum Quantity</label>
+                <input id="minimum_quantity" name="minimum_quantity"
+                       type="number" min="1" step="1"
+                       value="{{ discount.minimum_quantity or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="product_id">Applicable Product</label>
+                <select id="product_id" name="product_id">
+                    <option value="">All products</option>
+                    {% for product in products %}
+                    <option value="{{ product.id }}"
+                        {% if discount.product_id == product.id %}selected{% endif %}>
+                        {{ product.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="usage_limit">Usage Limit</label>
+                <input id="usage_limit" name="usage_limit"
+                       type="number" min="1" step="1"
+                       value="{{ discount.usage_limit or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="valid_from">Valid From</label>
+                <input id="valid_from" name="valid_from" type="date"
+                       value="{{ discount.valid_from or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="valid_until">Valid Until</label>
+                <input id="valid_until" name="valid_until" type="date"
+                       value="{{ discount.valid_until or '' }}">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                Save Changes
+            </button>
+            <a href="{{ url_for('discounts.index') }}"
+               class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

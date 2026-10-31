@@ -53,22 +53,22 @@ def create_app(test_config=None):
     from app.catalog import catalog_bp
     from app.plans import plans_bp
     from app.customers import customers_bp
-    # from app.blueprints.subscriptions import subscriptions_bp
-    # from app.blueprints.invoices import invoices_bp
-    # from app.blueprints.payments import payments_bp
-    # from app.blueprints.discounts import discounts_bp
-    # from app.blueprints.dashboard import dashboard_bp
-    # from app.blueprints.portal import portal_bp
+    from app.subscriptions import subscriptions_bp
+    from app.invoices import invoices_bp
+    from app.payments import payments_bp
+    from app.discounts import discounts_bp
+    from app.dashboard import dashboard_bp
+    from app.portal import portal_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(catalog_bp)
     app.register_blueprint(plans_bp)
     app.register_blueprint(customers_bp)
-    # app.register_blueprint(subscriptions_bp)
-    # app.register_blueprint(invoices_bp)
-    # app.register_blueprint(payments_bp)
-    # app.register_blueprint(discounts_bp)
-    # app.register_blueprint(dashboard_bp)
-    # app.register_blueprint(portal_bp)
+    app.register_blueprint(subscriptions_bp)
+    app.register_blueprint(invoices_bp)
+    app.register_blueprint(payments_bp)
+    app.register_blueprint(discounts_bp)
+    app.register_blueprint(dashboard_bp)
+    app.register_blueprint(portal_bp)
 
     return app

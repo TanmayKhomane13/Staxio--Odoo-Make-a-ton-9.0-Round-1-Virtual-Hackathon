@@ -1,0 +1,17 @@
+
+{% extends "base.html" %}
+
+{% block title %}Account Not Linked | Staxio{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h1>Customer Account Not Linked</h1>
+    <p>
+        Your login is active, but it has not been linked to a customer
+        account yet. Please contact the billing administrator.
+    </p>
+    <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">
+        Sign Out
+    </a>
+</section>
+{% endblock %}

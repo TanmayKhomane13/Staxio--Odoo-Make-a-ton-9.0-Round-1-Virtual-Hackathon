@@ -17,17 +17,30 @@ from app.security import (
 auth_bp = Blueprint("auth", __name__)
 
 
+def get_user_destination(user):
+    """Redirect users according to their role."""
+    if user["role"] == "customer":
+        return url_for("portal.index")
+
+    return url_for("dashboard.index")
+
+
 @auth_bp.route("/")
 def landing():
-    if current_user():
-        return redirect(url_for("dashboard.index"))
+    user = current_user()
+
+    if user:
+        return redirect(get_user_destination(user))
+
     return render_template("landing.html")
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
-    if current_user():
-        return redirect(url_for("dashboard.index"))
+    user = current_user()
+
+    if user:
+        return redirect(get_user_destination(user))
 
     if request.method == "POST":
         email = normalize_email(request.form.get("email", ""))
@@ -56,7 +69,13 @@ def login():
 
         flash(f"Welcome back, {user['full_name']}.", "success")
 
+        # Customers always enter the customer portal.
+        if user["role"] == "customer":
+            return redirect(url_for("portal.index"))
+
+        # Preserve safe internal redirects for admin and staff.
         destination = request.args.get("next", "")
+
         if destination.startswith("/") and not destination.startswith("//"):
             return redirect(destination)
 
@@ -69,6 +88,7 @@ def login():
 @login_required
 def logout():
     session.clear()
+
     flash("You have been logged out.", "success")
     return redirect(url_for("auth.login"))
 
@@ -76,7 +96,7 @@ def logout():
 @auth_bp.route("/signup", methods=["GET", "POST"])
 def signup():
     if current_user():
-        return redirect(url_for("dashboard.index"))
+        return redirect(get_user_destination(current_user()))
 
     if request.method == "POST":
         name = request.form.get("full_name", "").strip()
@@ -88,13 +108,16 @@ def signup():
 
         if not name or not email:
             flash("Name and email are required.", "error")
+
         elif password != confirm:
             flash("Passwords do not match.", "error")
+
         else:
             valid, message = validate_password(password)
 
             if not valid:
                 flash(message, "error")
+
             else:
                 db = get_db()
 
@@ -116,6 +139,7 @@ def signup():
 
                         user_id = cursor.lastrowid
 
+                        # Link the customer profile to the login account.
                         db.execute(
                             """
                             INSERT INTO customers (
@@ -123,17 +147,25 @@ def signup():
                             )
                             VALUES (?, ?, ?, ?, ?)
                             """,
-                            (user_id, name, company or None, email, phone or None)
+                            (
+                                user_id,
+                                name,
+                                company or None,
+                                email,
+                                phone or None
+                            )
                         )
 
                     flash(
                         "Your account has been created. You can now sign in.",
                         "success"
                     )
+
                     return redirect(url_for("auth.login"))
 
                 except Exception:
                     current_app.logger.exception("Signup failed")
+
                     flash(
                         "An account with this email may already exist.",
                         "error"
@@ -157,7 +189,6 @@ def forgot_password():
             (email,)
         ).fetchone()
 
-        # Always show the same response to avoid revealing registered emails.
         flash(
             "If an active account exists for that email, reset instructions "
             "have been generated.",
@@ -166,6 +197,7 @@ def forgot_password():
 
         if user:
             raw_token = secrets.token_urlsafe(32)
+
             token_hash = hashlib.sha256(
                 raw_token.encode("utf-8")
             ).hexdigest()
@@ -189,23 +221,32 @@ def forgot_password():
                 token=raw_token,
                 _external=True
             )
+
             body = (
                 f"Hello {user['full_name']},\n\n"
-                f"Use this link to reset your Staxio password:\n{reset_url}\n\n"
+                f"Use this link to reset your Staxio password:\n"
+                f"{reset_url}\n\n"
                 "This link expires in 30 minutes."
             )
+
             sent = send_email(
                 user["email"],
                 "Reset your Staxio password",
                 body
             )
+
             if not sent:
                 current_app.logger.info(
                     "DEMO PASSWORD RESET LINK for %s: %s",
                     user["email"],
                     reset_url
                 )
-                flash("Demo mode: check the Flask terminal for the reset link.","info")
+
+                flash(
+                    "Demo mode: check the Flask terminal for the reset link.",
+                    "info"
+                )
+
         return redirect(url_for("auth.forgot_password"))
 
     return render_template("auth/forgot_password.html")
@@ -231,7 +272,10 @@ def reset_password(token):
     ).fetchone()
 
     if not user:
-        flash("This password-reset link is invalid or has expired.", "error")
+        flash(
+            "This password-reset link is invalid or has expired.",
+            "error"
+        )
         return redirect(url_for("auth.forgot_password"))
 
     if request.method == "POST":
@@ -240,11 +284,13 @@ def reset_password(token):
 
         if password != confirm:
             flash("Passwords do not match.", "error")
+
         else:
             valid, message = validate_password(password)
 
             if not valid:
                 flash(message, "error")
+
             else:
                 with db:
                     db.execute(
@@ -255,8 +301,12 @@ def reset_password(token):
                             reset_expires_at = NULL
                         WHERE id = ?
                         """,
-                        (password_hasher.hash(password), user["id"])
+                        (
+                            password_hasher.hash(password),
+                            user["id"]
+                        )
                     )
+
                 flash("Password updated. Please sign in.", "success")
                 return redirect(url_for("auth.login"))
 

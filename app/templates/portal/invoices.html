@@ -1,0 +1,60 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Invoices | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>My Invoices</h1>
+        <p>Review your billing history and outstanding balances.</p>
+    </div>
+
+    <a href="{{ url_for('portal.index') }}" class="btn btn-secondary">
+        Back to Account
+    </a>
+</div>
+
+<section class="panel">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Invoice Number</th>
+                    <th>Invoice Date</th>
+                    <th>Due Date</th>
+                    <th>Total</th>
+                    <th>Paid</th>
+                    <th>Due</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for invoice in invoices %}
+                <tr>
+                    <td>{{ invoice.invoice_number }}</td>
+                    <td>{{ invoice.invoice_date }}</td>
+                    <td>{{ invoice.due_date }}</td>
+                    <td>₹{{ "%.2f"|format(invoice.total_amount / 100) }}</td>
+                    <td>₹{{ "%.2f"|format(invoice.amount_paid / 100) }}</td>
+                    <td>₹{{ "%.2f"|format(invoice.amount_due / 100) }}</td>
+                    <td>{{ invoice.status|capitalize }}</td>
+                    <td>
+                        <a href="{{ url_for('portal.invoice_detail', invoice_id=invoice.id) }}">
+                            View
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="empty-state">
+                        No invoices found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

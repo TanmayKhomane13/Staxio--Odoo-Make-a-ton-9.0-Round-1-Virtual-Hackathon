@@ -1,0 +1,177 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Account | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Welcome, {{ customer.name }}</h1>
+        <p>Manage your subscriptions, invoices and payments.</p>
+    </div>
+</div>
+
+<section class="stats-grid">
+    <div class="stat-card">
+        <span class="stat-label">Total Invoices</span>
+        <strong class="stat-value">{{ summary.invoice_count or 0 }}</strong>
+    </div>
+
+    <div class="stat-card">
+        <span class="stat-label">Total Invoiced</span>
+        <strong class="stat-value">
+            ₹{{ "%.2f"|format((summary.total_invoiced or 0) / 100) }}
+        </strong>
+    </div>
+
+    <div class="stat-card">
+        <span class="stat-label">Total Paid</span>
+        <strong class="stat-value">
+            ₹{{ "%.2f"|format((summary.total_paid or 0) / 100) }}
+        </strong>
+    </div>
+
+    <div class="stat-card">
+        <span class="stat-label">Outstanding</span>
+        <strong class="stat-value">
+            ₹{{ "%.2f"|format(((summary.total_invoiced or 0) - (summary.total_paid or 0)) / 100) }}
+        </strong>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <h2>My Subscriptions</h2>
+        <a href="{{ url_for('portal.subscriptions') }}">View all</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Subscription</th>
+                    <th>Plan</th>
+                    <th>Status</th>
+                    <th>Start Date</th>
+                    <th>Next Billing</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subscription in active_subscriptions %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('portal.subscription_detail', subscription_id=subscription.id) }}">
+                            {{ subscription.subscription_number }}
+                        </a>
+                    </td>
+                    <td>{{ subscription.plan_name }}</td>
+                    <td>{{ subscription.status|capitalize }}</td>
+                    <td>{{ subscription.start_date }}</td>
+                    <td>{{ subscription.next_billing_date or '—' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        You do not have any current subscriptions.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <h2>Outstanding Invoices</h2>
+        <a href="{{ url_for('portal.invoices') }}">View all invoices</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Invoice</th>
+                    <th>Due Date</th>
+                    <th>Amount Due</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for invoice in outstanding %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('portal.invoice_detail', invoice_id=invoice.id) }}">
+                            {{ invoice.invoice_number }}
+                        </a>
+                    </td>
+                    <td>{{ invoice.due_date }}</td>
+                    <td>
+                        ₹{{ "%.2f"|format(invoice.amount_due / 100) }}
+                    </td>
+                    <td>
+                        {% if invoice.display_status == 'overdue' %}
+                            <span class="badge danger">Overdue</span>
+                        {% elif invoice.display_status == 'partially_paid' %}
+                            <span class="badge warning">Partially Paid</span>
+                        {% else %}
+                            <span class="badge muted">Unpaid</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="empty-state">
+                        No outstanding invoices.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <h2>Recent Invoices</h2>
+        <a href="{{ url_for('portal.invoices') }}">View all</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Invoice</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Paid</th>
+                    <th>Due</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for invoice in recent_invoices %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('portal.invoice_detail', invoice_id=invoice.id) }}">
+                            {{ invoice.invoice_number }}
+                        </a>
+                    </td>
+                    <td>{{ invoice.invoice_date }}</td>
+                    <td>₹{{ "%.2f"|format(invoice.total_amount / 100) }}</td>
+                    <td>₹{{ "%.2f"|format(invoice.amount_paid / 100) }}</td>
+                    <td>₹{{ "%.2f"|format(invoice.amount_due / 100) }}</td>
+                    <td>{{ invoice.status|capitalize }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="empty-state">
+                        No invoices available.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

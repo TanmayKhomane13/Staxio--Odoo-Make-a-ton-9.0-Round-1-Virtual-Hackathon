@@ -1,0 +1,103 @@
+
+{% extends "base.html" %}
+
+{% block title %}Record Payment | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Record Payment</h1>
+        <p>Record a payment against a confirmed invoice.</p>
+    </div>
+    <a href="{{ url_for('invoices.detail', invoice_id=invoice.id) }}"
+       class="btn btn-secondary">
+        Back to Invoice
+    </a>
+</div>
+
+<section class="form-card">
+    <div class="detail-grid">
+        <div>
+            <strong>Invoice</strong>
+            <p>{{ invoice.invoice_number or ('INV-' ~ '%05d'|format(invoice.id)) }}</p>
+        </div>
+        <div>
+            <strong>Customer</strong>
+            <p>{{ invoice.customer_name }}</p>
+        </div>
+        <div>
+            <strong>Invoice Total</strong>
+            <p>{{ invoice.total_amount|rupees }}</p>
+        </div>
+        <div>
+            <strong>Already Paid</strong>
+            <p>{{ invoice.amount_paid|rupees }}</p>
+        </div>
+        <div>
+            <strong>Balance Due</strong>
+            <p>{{ invoice.balance_due|rupees }}</p>
+        </div>
+    </div>
+</section>
+
+<form method="POST" class="form-card">
+    <div class="form-grid">
+        <div class="form-group">
+            <label for="amount">Payment Amount (₹)</label>
+            <input
+                type="number"
+                id="amount"
+                name="amount"
+                min="0.01"
+                max="{{ '%.2f'|format(invoice.balance_due / 100) }}"
+                step="0.01"
+                value="{{ request.form.get('amount', '%.2f'|format(invoice.balance_due / 100)) }}"
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="method">Payment Method</label>
+            <select id="method" name="method" required>
+                <option value="">Select method</option>
+                {% for method in methods %}
+                <option value="{{ method }}"
+                    {% if request.form.get('method') == method %}selected{% endif %}>
+                    {{ method|replace('_', ' ')|title }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="payment_date">Payment Date</label>
+            <input
+                type="date"
+                id="payment_date"
+                name="payment_date"
+                value="{{ request.form.get('payment_date', today) }}"
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="note">Reference / Note</label>
+            <input
+                type="text"
+                id="note"
+                name="note"
+                maxlength="500"
+                value="{{ request.form.get('note', '') }}"
+                placeholder="Transaction ID, cheque number, etc.">
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+            Record Payment
+        </button>
+        <a href="{{ url_for('invoices.detail', invoice_id=invoice.id) }}"
+           class="btn btn-secondary">
+            Cancel
+        </a>
+    </div>
+</form>
+{% endblock %}

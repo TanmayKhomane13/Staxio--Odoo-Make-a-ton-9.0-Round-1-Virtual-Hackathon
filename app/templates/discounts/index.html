@@ -1,0 +1,155 @@
+
+{% extends "base.html" %}
+
+{% block title %}Discounts | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Discounts</h1>
+        <p>Manage promotional discounts and subscription offers.</p>
+    </div>
+
+    {% if current_user and current_user.role == 'admin' %}
+    <a class="btn btn-primary" href="{{ url_for('discounts.create') }}">
+        + Create Discount
+    </a>
+    {% endif %}
+</div>
+
+<section class="panel">
+    <div class="panel-header">
+        <h2>All Discounts</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Type</th>
+                    <th>Value</th>
+                    <th>Product</th>
+                    <th>Usage</th>
+                    <th>Validity</th>
+                    <th>Status</th>
+                    {% if current_user and current_user.role == 'admin' %}
+                    <th>Actions</th>
+                    {% endif %}
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for discount in discounts %}
+                <tr>
+                    <td>{{ discount.name }}</td>
+                    <td><strong>{{ discount.code }}</strong></td>
+
+                    <td>
+                        {{ discount.discount_type|capitalize }}
+                    </td>
+
+                    <td>
+                        {% if discount.discount_type == 'percentage' %}
+                            {{ "%.2f"|format(discount.discount_value) }}%
+                        {% else %}
+                            ₹{{ "%.2f"|format(discount.discount_value / 100) }}
+                        {% endif %}
+                    </td>
+
+                    <td>{{ discount.product_name or 'All products' }}</td>
+
+                    <td>
+                        {{ discount.usage_count }}
+                        /
+                        {{ discount.usage_limit if discount.usage_limit else 'Unlimited' }}
+                    </td>
+
+                    <td>
+                        {{ discount.valid_from or 'No start date' }}
+                        <br>
+                        <small>to {{ discount.valid_until or 'No end date' }}</small>
+                    </td>
+
+                    <td>
+                        {% if discount.is_active %}
+                            <span class="badge success">Active</span>
+                        {% else %}
+                            <span class="badge muted">Inactive</span>
+                        {% endif %}
+                    </td>
+
+                    {% if current_user and current_user.role == 'admin' %}
+                    <td>
+                        <div class="action-group">
+                            <a class="btn btn-sm btn-secondary"
+                               href="{{ url_for('discounts.edit', discount_id=discount.id) }}">
+                                Edit
+                            </a>
+
+                            <form method="POST"
+                                  action="{{ url_for('discounts.toggle', discount_id=discount.id) }}">
+                                <button class="btn btn-sm btn-secondary" type="submit">
+                                    {{ 'Deactivate' if discount.is_active else 'Activate' }}
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="9" class="empty-state">
+                        No discounts have been created.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{% if current_user and current_user.role == 'admin' %}
+<section class="panel">
+    <div class="panel-header">
+        <h2>Attach Discount to Subscription</h2>
+    </div>
+
+    <form method="POST" action="{{ url_for('discounts.attach') }}">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="subscription_id">Subscription</label>
+                <select id="subscription_id" name="subscription_id" required>
+                    <option value="">Select subscription</option>
+                    {% for subscription in subscriptions %}
+                    <option value="{{ subscription.id }}">
+                        {{ subscription.subscription_number }} —
+                        {{ subscription.customer_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="discount_id">Discount</label>
+                <select id="discount_id" name="discount_id" required>
+                    <option value="">Select discount</option>
+                    {% for discount in discounts %}
+                        {% if discount.is_active %}
+                        <option value="{{ discount.id }}">
+                            {{ discount.name }} ({{ discount.code }})
+                        </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Attach Discount
+        </button>
+    </form>
+</section>
+{% endif %}
+{% endblock %}
