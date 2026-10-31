@@ -33,7 +33,8 @@
     <div class="ai-messages" id="aiMessages" role="log" aria-live="polite">
         <div class="ai-msg ai-msg--bot">
             <div class="ai-bubble">
-                Hi {{ current_user.full_name.split(' ')[0] }}! How can I help you today?
+    {% set name_part = current_user.full_name.split(' ')[0] if current_user and current_user.full_name else '' %}
+    Hi {{ 'there' if not name_part or name_part|lower == 'system' else name_part }}! How can I help you today?
             </div>
         </div>
     </div>
