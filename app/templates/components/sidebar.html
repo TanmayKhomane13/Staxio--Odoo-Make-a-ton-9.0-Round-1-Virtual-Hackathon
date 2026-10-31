@@ -15,21 +15,36 @@
 
     <!-- Brand -->
     <a class="brand"
-       href="{{ url_for('portal.index') if role == 'customer' and 'portal.index' in available_endpoints else url_for('plans.index') if 'plans.index' in available_endpoints else '#' }}">
+       href="{{
+           url_for('portal.index')
+           if role == 'customer' and 'portal.index' in available_endpoints
+           else url_for('finance.index')
+           if role == 'finance_lead' and 'finance.index' in available_endpoints
+           else url_for('staff.index')
+           if role == 'staff' and 'staff.index' in available_endpoints
+           else url_for('dashboard.index')
+           if role == 'admin' and 'dashboard.index' in available_endpoints
+           else url_for('plans.index')
+           if 'plans.index' in available_endpoints
+           else '#'
+       }}">
         <span class="brand-mark">S</span>
         <span class="brand-name">staxio</span>
         <span class="brand-label">BILLING</span>
     </a>
 
+
     <!-- Role information -->
     <div class="sidebar-role">
         <span class="role-pill role-pill--{{ role }}">
-            {{ role|capitalize }}
+            {{ role|replace('_', ' ')|title }}
         </span>
+
         <span class="role-user">
             {{ current_user.full_name if current_user else 'User' }}
         </span>
     </div>
+
 
     <div class="sidebar-scroll">
 
@@ -51,16 +66,39 @@
                 {{ nav_link('payments.index', 'Payments', '₹') }}
                 {{ nav_link('discounts.index', 'Discounts', '%') }}
 
+
             {% elif role == 'staff' %}
+
+                <p class="sidebar-heading">OVERVIEW</p>
+                {{ nav_link('staff.index', 'Dashboard', '▦') }}
 
                 <p class="sidebar-heading">WORKSPACE</p>
                 {{ nav_link('customers.index', 'Customers', '♙') }}
                 {{ nav_link('catalog.index', 'Product Catalog', '◈') }}
+                {{ nav_link('plans.index', 'Plans', '▤') }}
 
                 <p class="sidebar-heading">BILLING OPERATIONS</p>
                 {{ nav_link('subscriptions.index', 'Subscriptions', '↻') }}
                 {{ nav_link('invoices.index', 'Invoices', '▧') }}
                 {{ nav_link('payments.index', 'Payments', '₹') }}
+
+
+            {% elif role == 'finance_lead' %}
+
+                <p class="sidebar-heading">FINANCE OVERVIEW</p>
+                {{ nav_link('finance.index', 'Finance Dashboard', '▦') }}
+
+                <p class="sidebar-heading">FINANCIAL OPERATIONS</p>
+                {{ nav_link('invoices.index', 'Invoices', '▧') }}
+                {{ nav_link('payments.index', 'Payments & Refunds', '₹') }}
+
+                <p class="sidebar-heading">MONITORING</p>
+                {{ nav_link('subscriptions.index', 'Subscriptions', '↻') }}
+                {{ nav_link('customers.index', 'Customers', '♙') }}
+
+                <p class="sidebar-heading">CATALOG REFERENCE</p>
+                {{ nav_link('catalog.index', 'Product Catalog', '◈') }}
+                {{ nav_link('plans.index', 'Plans', '▤') }}
                 {{ nav_link('discounts.index', 'Discounts', '%') }}
 
 
@@ -76,6 +114,7 @@
         </nav>
     </div>
 
+
     <!-- User and logout -->
     <div class="sidebar-bottom">
 
@@ -88,8 +127,9 @@
                 <span class="sidebar-user-name">
                     {{ current_user.full_name if current_user else 'User' }}
                 </span>
+
                 <span class="sidebar-user-role">
-                    {{ role|capitalize }}
+                    {{ role|replace('_', ' ')|title }}
                 </span>
             </div>
         </div>

@@ -21,7 +21,7 @@ customers_bp = Blueprint(
 
 @customers_bp.route("/")
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff","finance_lead")
 def index():
     db = get_db()
 
@@ -47,7 +47,7 @@ def index():
 
 @customers_bp.route("/create", methods=["POST"])
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff","finance_lead")
 def create_customer():
     db = get_db()
 
@@ -110,7 +110,7 @@ def create_customer():
 
 @customers_bp.route("/<int:customer_id>/update", methods=["POST"])
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff","finance_lead")
 def update_customer(customer_id):
     db = get_db()
 
@@ -181,7 +181,7 @@ def update_customer(customer_id):
 
 @customers_bp.route("/<int:customer_id>")
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff","finance_lead")
 def detail(customer_id):
     db = get_db()
 

@@ -19,6 +19,18 @@ INSERT INTO users (id, full_name, email, password_hash, role, is_active, created
 (4, 'Priya Patel',      'priya@example.com',
  '$2b$12$PLACEHOLDER_REPLACE_WITH_REAL_BCRYPT_HASH_CUST2____', 'customer', 1, 1);
 
+ INSERT INTO users (
+    id, full_name, email, password_hash, role, is_active, created_by
+) VALUES (
+    5,
+    'Neha Kulkarni',
+    'neha@staxio.example',
+    '$2b$12$PLACEHOLDER_REPLACE_WITH_REAL_BCRYPT_HASH_FINANCE',
+    'finance_lead',
+    1,
+    1
+);
+
 -- =====================================================================
 -- 2. Customers
 -- =====================================================================

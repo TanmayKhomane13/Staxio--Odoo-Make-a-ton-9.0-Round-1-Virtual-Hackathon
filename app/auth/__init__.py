@@ -22,6 +22,12 @@ def get_user_destination(user):
     if user["role"] == "customer":
         return url_for("portal.index")
 
+    if user["role"] == "staff":
+        return url_for("staff.index")
+
+    if user["role"] == "finance_lead":
+        return url_for("finance.index")
+
     return url_for("dashboard.index")
 
 

@@ -45,6 +45,7 @@ DEMO_PASSWORDS = {
     "anita@staxio.example": "Staff@12345",
     "ravi@acme.example": "Customer@123",
     "priya@example.com": "Customer@123",
+    "neha@staxio.example": "Finance@12345",
 }
 
 # Same defaults Flask's PasswordHasher typically uses

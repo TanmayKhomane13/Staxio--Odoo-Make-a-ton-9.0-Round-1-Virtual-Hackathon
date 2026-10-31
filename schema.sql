@@ -24,7 +24,7 @@ CREATE TABLE users (
     email              TEXT NOT NULL UNIQUE COLLATE NOCASE
                        CHECK (email COLLATE BINARY = lower(email) AND email LIKE '_%@_%._%'),
     password_hash      TEXT NOT NULL CHECK (length(password_hash) >= 20),
-    role               TEXT NOT NULL CHECK (role IN ('admin','staff','customer')),
+    role               TEXT NOT NULL CHECK (role IN ('admin','staff','customer','finance_lead')),
     is_active          INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0,1)),
     reset_token_hash   TEXT,                 -- sha256 of emailed token
     reset_expires_at   TEXT,

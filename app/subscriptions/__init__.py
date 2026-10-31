@@ -20,7 +20,7 @@ subscriptions_bp = Blueprint(
 
 @subscriptions_bp.route("/")
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff", "finance_lead")
 def index():
     db = get_db()
 
@@ -61,7 +61,7 @@ def index():
 
 @subscriptions_bp.route("/create", methods=["GET", "POST"])
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff", "finance_lead")
 def create():
     db = get_db()
 
@@ -127,7 +127,7 @@ def create():
 
 @subscriptions_bp.route("/<int:subscription_id>")
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff", "finance_lead")
 def detail(subscription_id):
     subscription = get_subscription(subscription_id)
 
@@ -157,7 +157,7 @@ def detail(subscription_id):
 
 @subscriptions_bp.route("/<int:subscription_id>/status", methods=["POST"])
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff", "finance_lead")
 def update_status(subscription_id):
     new_status = request.form.get("status", "").strip()
     reason = request.form.get("cancellation_reason", "").strip()

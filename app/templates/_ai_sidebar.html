@@ -1,0 +1,44 @@
+{# templates/_ai_sidebar.html
+   Include once, just before </body> in base.html:   {% include "_ai_sidebar.html" %}
+   Navbar button (put in your navbar):
+   <button type="button" id="aiToggle" class="ai-toggle" aria-controls="aiSidebar" aria-expanded="false" aria-label="Open Staxio AI assistant">
+     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2zm7 11l.9 2.6L22.5 16.5l-2.6.9L19 20l-.9-2.6-2.6-.9 2.6-.9L19 13zM6 14l.7 2 2 .7-2 .7L6 19.4l-.7-2-2-.7 2-.7L6 14z"/></svg>
+   </button>
+#}
+<div class="ai-backdrop" id="aiBackdrop" hidden></div>
+
+<aside class="ai-sidebar" id="aiSidebar" role="complementary" aria-label="Staxio AI assistant" aria-hidden="true"
+       data-endpoint="{{ url_for('ai_chat.message') }}"
+       data-csrf="{{ csrf_token() if csrf_token is defined else '' }}">
+
+  <header class="ai-header">
+    <div class="ai-title">
+      <span class="ai-dot" aria-hidden="true"></span>
+      <div>
+        <strong>Staxio AI</strong>
+        <small>Ask about subscriptions, invoices, payments</small>
+      </div>
+    </div>
+    <div class="ai-actions">
+      <button type="button" class="ai-icon-btn" id="aiClear" title="Clear chat" aria-label="Clear chat">⟲</button>
+      <button type="button" class="ai-icon-btn" id="aiClose" title="Close" aria-label="Close assistant">✕</button>
+    </div>
+  </header>
+
+  <div class="ai-messages" id="aiMessages" role="log" aria-live="polite">
+    <div class="ai-msg ai-msg--bot">
+      <div class="ai-bubble">Hi {{ session.get('full_name', 'there') }}! How can I help you today?</div>
+    </div>
+  </div>
+
+  <div class="ai-suggestions" id="aiSuggestions">
+    <button type="button" class="ai-chip">Which invoices are overdue?</button>
+    <button type="button" class="ai-chip">Show active subscriptions</button>
+    <button type="button" class="ai-chip">How much revenue this month?</button>
+  </div>
+
+  <form class="ai-form" id="aiForm" autocomplete="off">
+    <textarea id="aiInput" rows="1" placeholder="Type your question…" aria-label="Message" maxlength="1000"></textarea>
+    <button type="submit" class="ai-send" id="aiSend" aria-label="Send">➤</button>
+  </form>
+</aside>

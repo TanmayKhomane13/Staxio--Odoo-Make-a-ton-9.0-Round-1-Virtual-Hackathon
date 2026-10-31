@@ -59,6 +59,9 @@ def create_app(test_config=None):
     from app.discounts import discounts_bp
     from app.dashboard import dashboard_bp
     from app.portal import portal_bp
+    from app.staff import staff_bp
+    from app.finance import finance_bp
+    from app.ai.routes import bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(catalog_bp)
@@ -70,5 +73,8 @@ def create_app(test_config=None):
     app.register_blueprint(discounts_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(portal_bp)
+    app.register_blueprint(staff_bp)
+    app.register_blueprint(finance_bp)
+    app.register_blueprint(bp)
 
     return app

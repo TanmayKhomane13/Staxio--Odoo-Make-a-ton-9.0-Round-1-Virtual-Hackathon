@@ -1,0 +1,563 @@
+
+{% extends "base.html" %}
+
+{% block title %}Staff Dashboard | Staxio{% endblock %}
+
+{% block content %}
+<div class="staff-dashboard">
+
+    <header class="page-header">
+        <div>
+            <p class="eyebrow">STAXIO / OPERATIONS</p>
+            <h1>Staff Dashboard</h1>
+            <p class="muted">
+                Welcome back, {{ user.full_name }}.
+                Here's your billing and subscription overview.
+            </p>
+        </div>
+        <div class="header-actions">
+            <a class="btn btn-primary"
+               href="{{ url_for('subscriptions.index') }}">
+                Manage subscriptions
+            </a>
+            <a class="btn btn-secondary"
+               href="{{ url_for('invoices.index') }}">
+                View invoices
+            </a>
+        </div>
+    </header>
+
+    <section class="stats-grid">
+        <article class="stat-card">
+            <span class="stat-label">Active subscriptions</span>
+            <strong>{{ subscription_summary.active or 0 }}</strong>
+            <span class="stat-note">Currently active</span>
+        </article>
+
+        <article class="stat-card">
+            <span class="stat-label">Pending quotations</span>
+            <strong>{{ subscription_summary.quotations or 0 }}</strong>
+            <span class="stat-note">Awaiting confirmation</span>
+        </article>
+
+        <article class="stat-card">
+            <span class="stat-label">Unpaid invoices</span>
+            <strong>{{ invoice_summary.unpaid or 0 }}</strong>
+            <span class="stat-note">Confirmed invoices</span>
+        </article>
+
+        <article class="stat-card">
+            <span class="stat-label">Overdue invoices</span>
+            <strong>{{ overdue_summary.count or 0 }}</strong>
+            <span class="stat-note">Require follow-up</span>
+        </article>
+    </section>
+
+    <section class="financial-grid">
+        <article class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Outstanding balance</h2>
+                    <p class="muted">Across confirmed invoices</p>
+                </div>
+            </div>
+            <div class="financial-value">
+                ₹{{ "%.2f"|format((invoice_summary.outstanding or 0) / 100) }}
+            </div>
+            <a href="{{ url_for('invoices.index') }}" class="text-link">
+                Review invoices →
+            </a>
+        </article>
+
+        <article class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Overdue balance</h2>
+                    <p class="muted">Past-due confirmed invoices</p>
+                </div>
+            </div>
+            <div class="financial-value overdue-value">
+                ₹{{ "%.2f"|format((overdue_summary.amount or 0) / 100) }}
+            </div>
+            <a href="{{ url_for('invoices.index') }}" class="text-link">
+                Follow up on payments →
+            </a>
+        </article>
+    </section>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Upcoming billing</h2>
+                <p class="muted">Active subscriptions due within 7 days</p>
+            </div>
+            <a class="text-link"
+               href="{{ url_for('subscriptions.index') }}">
+                All subscriptions →
+            </a>
+        </div>
+
+        {% if upcoming_billing %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subscription</th>
+                        <th>Customer</th>
+                        <th>Plan</th>
+                        <th>Billing date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in upcoming_billing %}
+                    <tr>
+                        <td>{{ item.subscription_number }}</td>
+                        <td>{{ item.customer_name }}</td>
+                        <td>{{ item.plan_name }}</td>
+                        <td>{{ item.next_billing_date }}</td>
+                        <td>
+                            <span class="status status-active">
+                                {{ item.status|title }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty-state">
+            No active subscriptions are due in the next 7 days.
+        </p>
+        {% endif %}
+    </section>
+
+    <div class="tables-grid">
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Recent subscriptions</h2>
+                    <p class="muted">Latest subscription activity</p>
+                </div>
+                <a class="text-link"
+                   href="{{ url_for('subscriptions.index') }}">
+                    View all →
+                </a>
+            </div>
+
+            {% if recent_subscriptions %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Subscription</th>
+                            <th>Customer</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in recent_subscriptions %}
+                        <tr>
+                            <td>{{ item.subscription_number }}</td>
+                            <td>
+                                <div>{{ item.customer_name }}</div>
+                                <small>{{ item.plan_name }}</small>
+                            </td>
+                            <td>
+                                <span class="status status-{{ item.status }}">
+                                    {{ item.status|replace('_', ' ')|title }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="empty-state">No subscriptions found.</p>
+            {% endif %}
+        </section>
+
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Recent invoices</h2>
+                    <p class="muted">Latest confirmed invoices</p>
+                </div>
+                <a class="text-link"
+                   href="{{ url_for('invoices.index') }}">
+                    View all →
+                </a>
+            </div>
+
+            {% if recent_invoices %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Invoice</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in recent_invoices %}
+                        <tr>
+                            <td>{{ item.invoice_number }}</td>
+                            <td>{{ item.customer_name }}</td>
+                            <td>
+                                ₹{{ "%.2f"|format(item.total_amount / 100) }}
+                            </td>
+                            <td>
+                                <span class="status status-{{ item.status }}">
+                                    {{ item.status|title }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="empty-state">No confirmed invoices found.</p>
+            {% endif %}
+        </section>
+    </div>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Subscription status overview</h2>
+                <p class="muted">Current operational workload</p>
+            </div>
+        </div>
+
+        <div class="status-overview">
+            <div>
+                <span class="status-dot dot-active"></span>
+                Active
+                <strong>{{ subscription_summary.active or 0 }}</strong>
+            </div>
+            <div>
+                <span class="status-dot dot-confirmed"></span>
+                Confirmed
+                <strong>{{ subscription_summary.confirmed or 0 }}</strong>
+            </div>
+            <div>
+                <span class="status-dot dot-paused"></span>
+                Paused
+                <strong>{{ subscription_summary.paused or 0 }}</strong>
+            </div>
+            <div>
+                <span class="status-dot dot-quotation"></span>
+                Quotations
+                <strong>{{ subscription_summary.quotations or 0 }}</strong>
+            </div>
+            <div>
+                <span class="status-dot dot-draft"></span>
+                Drafts
+                <strong>{{ subscription_summary.drafts or 0 }}</strong>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block extra_css %}
+{{ super() }}
+<style>
+.staff-dashboard {
+    display: grid;
+    gap: 22px;
+    color: var(--text, #20242c);
+}
+
+.staff-dashboard .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.staff-dashboard h1 {
+    margin: 5px 0 8px;
+    font-size: clamp(25px, 3vw, 34px);
+    letter-spacing: -0.8px;
+}
+
+.staff-dashboard h2 {
+    margin: 0 0 6px;
+    font-size: 16px;
+}
+
+.staff-dashboard p {
+    margin-top: 0;
+}
+
+.staff-dashboard .eyebrow {
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    color: var(--muted, #777e8b);
+}
+
+.staff-dashboard .muted,
+.staff-dashboard .stat-note {
+    color: var(--muted, #777e8b);
+    font-size: 13px;
+}
+
+.staff-dashboard .header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.staff-dashboard .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.staff-dashboard .btn-primary {
+    background: var(--accent, #26364d);
+    color: white;
+}
+
+.staff-dashboard .btn-secondary {
+    background: var(--surface, #fff);
+    color: var(--text, #20242c);
+    border: 1px solid var(--border, #e2e5e9);
+}
+
+.staff-dashboard .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.staff-dashboard .stat-card,
+.staff-dashboard .panel {
+    background: var(--card, #fff);
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 12px;
+    padding: 20px;
+    min-width: 0;
+}
+
+.staff-dashboard .stat-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.staff-dashboard .stat-label {
+    color: var(--muted, #777e8b);
+    font-size: 13px;
+}
+
+.staff-dashboard .stat-card strong {
+    font-size: 30px;
+    line-height: 1.1;
+    letter-spacing: -0.7px;
+}
+
+.staff-dashboard .stat-note {
+    font-size: 12px;
+}
+
+.staff-dashboard .financial-grid,
+.staff-dashboard .tables-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.staff-dashboard .panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.staff-dashboard .financial-value {
+    margin: 10px 0 16px;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.7px;
+}
+
+.staff-dashboard .overdue-value {
+    color: var(--danger, #b54747);
+}
+
+.staff-dashboard .text-link {
+    color: var(--accent, #26364d);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.staff-dashboard .text-link:hover {
+    text-decoration: underline;
+}
+
+.staff-dashboard .table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.staff-dashboard table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+}
+
+.staff-dashboard th {
+    color: var(--muted, #777e8b);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.staff-dashboard th,
+.staff-dashboard td {
+    padding: 13px 10px;
+    border-bottom: 1px solid var(--border, #eceef1);
+    white-space: nowrap;
+}
+
+.staff-dashboard th:first-child,
+.staff-dashboard td:first-child {
+    padding-left: 0;
+}
+
+.staff-dashboard tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.staff-dashboard small {
+    display: block;
+    margin-top: 4px;
+    color: var(--muted, #777e8b);
+}
+
+.staff-dashboard .status {
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: var(--surface-secondary, #f1f3f5);
+    color: var(--text, #414752);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.staff-dashboard .status-active,
+.staff-dashboard .status-paid {
+    background: #e7f5ec;
+    color: #237345;
+}
+
+.staff-dashboard .status-confirmed {
+    background: #eaf0fb;
+    color: #315b9b;
+}
+
+.staff-dashboard .status-paused,
+.staff-dashboard .status-quotation {
+    background: #fff4dc;
+    color: #8a6418;
+}
+
+.staff-dashboard .status-cancelled,
+.staff-dashboard .status-expired {
+    background: #fbeaea;
+    color: #a13e3e;
+}
+
+.staff-dashboard .empty-state {
+    padding: 18px 0;
+    margin: 0;
+    color: var(--muted, #777e8b);
+    font-size: 13px;
+}
+
+.staff-dashboard .status-overview {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.staff-dashboard .status-overview > div {
+    display: grid;
+    grid-template-columns: 10px 1fr;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.staff-dashboard .status-overview strong {
+    grid-column: 2;
+    font-size: 22px;
+}
+
+.staff-dashboard .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.staff-dashboard .dot-active { background: #2f9e62; }
+.staff-dashboard .dot-confirmed { background: #4777c5; }
+.staff-dashboard .dot-paused { background: #d69b28; }
+.staff-dashboard .dot-quotation { background: #9a7bd1; }
+.staff-dashboard .dot-draft { background: #9299a5; }
+
+@media (max-width: 1050px) {
+    .staff-dashboard .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .staff-dashboard .status-overview {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .staff-dashboard .financial-grid,
+    .staff-dashboard .tables-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .staff-dashboard .stats-grid {
+        gap: 10px;
+    }
+
+    .staff-dashboard .stat-card,
+    .staff-dashboard .panel {
+        padding: 15px;
+    }
+
+    .staff-dashboard .stat-card strong {
+        font-size: 25px;
+    }
+
+    .staff-dashboard .status-overview {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+</style>
+{% endblock %}

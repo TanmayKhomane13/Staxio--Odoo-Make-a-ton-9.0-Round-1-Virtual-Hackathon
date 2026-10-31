@@ -140,7 +140,7 @@ def parse_discount_form(form):
 
 @discounts_bp.route("/")
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff","finance_lead")
 def index():
     db = get_db()
 

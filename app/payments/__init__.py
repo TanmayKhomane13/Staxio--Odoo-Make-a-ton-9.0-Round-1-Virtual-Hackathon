@@ -116,7 +116,7 @@ def record_payment(invoice_id, method, amount_paise, payment_date, note=None):
 
 @payments_bp.route("/")
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff", "finance_lead")
 def index():
     payments = get_db().execute(
         """
@@ -136,7 +136,7 @@ def index():
 
 @payments_bp.route("/create/<int:invoice_id>", methods=["GET", "POST"])
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff", "finance_lead")
 def create(invoice_id):
     db = get_db()
 

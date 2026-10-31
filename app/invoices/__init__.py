@@ -193,7 +193,7 @@ def _create_invoice(subscription_id, invoice_date):
 
 @invoices_bp.route("/")
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff", "finance_lead")
 def index():
     invoices = get_db().execute(
         """
@@ -212,7 +212,7 @@ def index():
 
 @invoices_bp.route("/create", methods=["GET", "POST"])
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff", "finance_lead")
 def create():
     db = get_db()
 
@@ -264,7 +264,7 @@ def create():
 
 @invoices_bp.route("/<int:invoice_id>")
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff", "finance_lead")
 def detail(invoice_id):
     db = get_db()
 
@@ -310,7 +310,7 @@ def detail(invoice_id):
 
 @invoices_bp.route("/<int:invoice_id>/confirm", methods=["POST"])
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff","finance_lead")
 def confirm(invoice_id):
     db = get_db()
 

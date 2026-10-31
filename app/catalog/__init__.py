@@ -25,7 +25,7 @@ def rupees_to_paise(value):
 
 @catalog_bp.route("/")
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff","finance_lead")
 def index():
     db = get_db()
 
@@ -64,7 +64,7 @@ def index():
 
 @catalog_bp.route("/products/create", methods=["POST"])
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff","finance_lead")
 def create_product():
     db = get_db()
 
@@ -134,7 +134,7 @@ def create_product():
 
 @catalog_bp.route("/products/<int:product_id>/update", methods=["POST"])
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff","finance_lead")
 def update_product(product_id):
     db = get_db()
 
@@ -208,7 +208,7 @@ def update_product(product_id):
 
 @catalog_bp.route("/products/<int:product_id>/toggle", methods=["POST"])
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff","finance_lead")
 def toggle_product(product_id):
     db = get_db()
 
@@ -229,7 +229,7 @@ def toggle_product(product_id):
 
 @catalog_bp.route("/products/<int:product_id>/variants", methods=["POST"])
 @login_required
-@role_required("admin", "staff")
+@role_required("admin", "staff","finance_lead")
 def create_variant(product_id):
     db = get_db()
 
