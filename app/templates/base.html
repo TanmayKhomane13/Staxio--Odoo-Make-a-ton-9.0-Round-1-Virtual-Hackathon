@@ -38,5 +38,14 @@
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/ai-chat.js')}}"></script>
     {% block scripts %}{% endblock %}
+
+    {% if current_user %}
+    {% include "_ai_sidebar.html" %}
+
+    <script
+        src="{{ url_for('static', filename='js/ai-chat.js') }}"
+        defer>
+    </script>
+{% endif %}
 </body>
 </html>

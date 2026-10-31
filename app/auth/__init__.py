@@ -79,6 +79,9 @@ def login():
         if user["role"] == "customer":
             return redirect(url_for("portal.index"))
 
+        if user["role"] == "finance_lead":
+            return redirect(url_for("finance.index"))
+
         # Preserve safe internal redirects for admin and staff.
         destination = request.args.get("next", "")
 
