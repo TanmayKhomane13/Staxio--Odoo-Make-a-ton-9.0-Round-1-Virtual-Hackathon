@@ -2402,3 +2402,68 @@ button {
 }
 
 
+/* ===== Subscription detail page ===== */
+.main-content .detail-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 16px 0 0;
+}
+
+.main-content .detail-list dt {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.main-content .detail-list dd {
+    margin: 6px 0 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.main-content .detail-list .status-badge {
+    margin-top: 0;
+}
+
+.main-content .status-quotation {
+    background: var(--page);
+    color: var(--muted);
+}
+
+.main-content .status-active {
+    background: var(--green-soft);
+    color: var(--green-dark);
+}
+
+.main-content .status-paused {
+    background: #fdf3e1;
+    color: var(--warning);
+}
+
+.main-content .status-expired,
+.main-content .status-closed {
+    background: var(--page);
+    color: var(--muted);
+}
+
+.main-content textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+.main-content textarea:focus {
+    outline: none;
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px var(--green-soft);
+}
