@@ -104,3 +104,22 @@ function staxioLoginInit() {
 }
 
 document.addEventListener('DOMContentLoaded', staxioLoginInit);
+
+// Product catalog animations
+function staxioCatalogInit() {
+    var title = document.querySelector('.page-header h1');
+    if (!title || title.textContent.trim() !== 'Product Catalog') return;
+
+    // Stagger the sections so they appear one after another
+    document.querySelectorAll('.main-content .panel').forEach(function (panel, i) {
+        panel.style.animationDelay = (i * 120) + 'ms';
+    });
+
+    // Stagger the product rows
+    document.querySelectorAll('.main-content tbody tr').forEach(function (row, i) {
+        row.classList.add('catalog-row-animate');
+        row.style.animationDelay = (200 + i * 60) + 'ms';
+    });
+}
+
+document.addEventListener('DOMContentLoaded', staxioCatalogInit);

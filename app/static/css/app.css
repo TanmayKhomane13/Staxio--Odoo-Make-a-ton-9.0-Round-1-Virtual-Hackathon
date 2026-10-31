@@ -1285,3 +1285,299 @@ button {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ===== Product Catalog animations ===== */
+@keyframes catalogRise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes catalogFadeRow {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes catalogPop {
+    0%   { opacity: 0; transform: scale(0.85); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.main-content .page-header {
+    animation: catalogRise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.main-content .panel {
+    animation: catalogRise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.main-content .catalog-row-animate {
+    animation: catalogFadeRow 0.45s ease both;
+}
+
+.main-content table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.main-content table tbody tr:hover {
+    background-color: var(--green-soft);
+}
+
+.main-content .btn {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.main-content .btn:hover {
+    transform: translateY(-1px);
+}
+
+.main-content .btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.main-content .badge {
+    animation: catalogPop 0.35s ease both;
+}
+
+.main-content details summary {
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.main-content details summary:hover {
+    color: var(--green);
+}
+
+.main-content details[open] > form {
+    animation: catalogRise 0.35s ease both;
+}
+
+.main-content input,
+.main-content select {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.main-content input:focus,
+.main-content select:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px var(--green-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .main-content *,
+    .main-content *::before,
+    .main-content *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* ===== Catalog page layout ===== */
+.main-content .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.main-content .page-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--ink);
+    margin: 0;
+}
+
+.main-content .page-header p {
+    color: var(--muted);
+    margin: 6px 0 0;
+}
+
+.main-content .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+}
+
+.main-content .panel h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 16px;
+}
+
+.main-content .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.main-content label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.main-content input,
+.main-content select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    box-sizing: border-box;
+}
+
+.main-content .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.main-content .btn-primary {
+    background: var(--green);
+    color: #fff;
+}
+
+.main-content .btn-primary:hover {
+    background: var(--green-dark);
+}
+
+.main-content .btn-secondary {
+    background: var(--surface);
+    color: var(--ink);
+    border-color: var(--line);
+}
+
+.main-content .btn-secondary:hover {
+    background: var(--page);
+}
+
+.main-content .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+
+.main-content table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.main-content th {
+    text-align: left;
+    background: var(--page);
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 14px;
+}
+
+.main-content td {
+    padding: 12px 14px;
+    border-top: 1px solid var(--line);
+    color: var(--ink);
+    vertical-align: top;
+}
+
+.main-content .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.main-content .badge.success {
+    background: var(--green-soft);
+    color: var(--green-dark);
+}
+
+.main-content .badge.muted {
+    background: var(--page);
+    color: var(--muted);
+}
+
+/* ===== Catalog page animations ===== */
+@keyframes catalogRise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes catalogFadeRow {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes catalogPop {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.main-content .page-header {
+    animation: catalogRise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.main-content .panel {
+    animation: catalogRise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.main-content .panel:nth-of-type(2) { animation-delay: 0.12s; }
+.main-content .panel:nth-of-type(3) { animation-delay: 0.24s; }
+
+.main-content tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.main-content tbody tr:hover {
+    background-color: var(--green-soft);
+}
+
+.main-content .badge {
+    animation: catalogPop 0.35s ease both;
+}
+
+.main-content .btn {
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.main-content .btn:hover {
+    transform: translateY(-1px);
+}
+
+.main-content .btn:active {
+    transform: scale(0.98);
+}
+
+.main-content input:focus,
+.main-content select:focus {
+    outline: none;
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px var(--green-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .main-content *,
+    .main-content *::before,
+    .main-content *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
