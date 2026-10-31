@@ -41,29 +41,29 @@ def normalize_email(email):
     return email.strip().lower()
 
 
-def generate_csrf_token():
-    if "_csrf_token" not in session:
-        session["_csrf_token"] = secrets.token_urlsafe(32)
+# def generate_csrf_token():
+#     if "_csrf_token" not in session:
+#         session["_csrf_token"] = secrets.token_urlsafe(32)
 
-    return session["_csrf_token"]
+#     return session["_csrf_token"]
 
 
-def validate_csrf():
-    if request.method != "POST":
-        return
-    expected = session.get("_csrf_token")
+# def validate_csrf():
+#     if request.method != "POST":
+#         return
+#     expected = session.get("_csrf_token")
 
-    supplied = (
-        request.headers.get("X-CSRF-Token")
-        or request.form.get("csrf_token")
-    )
-    import hmac
-    if (
-        not expected
-        or not supplied
-        or not hmac.compare_digest(expected, supplied)
-    ):
-        abort(400, description="Invalid or expired CSRF token.")
+#     supplied = (
+#         request.headers.get("X-CSRF-Token")
+#         or request.form.get("csrf_token")
+#     )
+#     import hmac
+#     if (
+#         not expected
+#         or not supplied
+#         or not hmac.compare_digest(expected, supplied)
+#     ):
+#         abort(400, description="Invalid or expired CSRF token.")
 
 
 def login_required(view):

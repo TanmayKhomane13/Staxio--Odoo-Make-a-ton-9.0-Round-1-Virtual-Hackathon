@@ -30,7 +30,6 @@
             </div>
 
             <form method="POST" action="{{ url_for('auth.logout') }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button class="text-button logout-button" type="submit">
                     Log out
                 </button>

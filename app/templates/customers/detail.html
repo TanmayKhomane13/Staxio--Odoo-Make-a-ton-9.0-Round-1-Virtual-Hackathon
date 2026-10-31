@@ -1,0 +1,116 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ customer.name }} | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ customer.name }}</h1>
+        <p>{{ customer.company_name or "Individual Customer" }}</p>
+    </div>
+
+    <a href="{{ url_for('customers.index') }}">Back to Customers</a>
+</div>
+
+<section class="panel">
+    <h2>Customer Information</h2>
+
+    <div class="form-grid">
+        <div>
+            <strong>Email</strong>
+            <p>{{ customer.email }}</p>
+        </div>
+
+        <div>
+            <strong>Phone</strong>
+            <p>{{ customer.phone or "—" }}</p>
+        </div>
+
+        <div>
+            <strong>GSTIN</strong>
+            <p>{{ customer.tax_number or "—" }}</p>
+        </div>
+
+        <div>
+            <strong>Payment Terms</strong>
+            <p>{{ customer.payment_terms_days }} days</p>
+        </div>
+
+        <div class="form-full">
+            <strong>Address</strong>
+            <p>{{ customer.address or "—" }}</p>
+        </div>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Subscriptions</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Subscription</th>
+                    <th>Plan</th>
+                    <th>Status</th>
+                    <th>Start Date</th>
+                    <th>Next Billing</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for sub in subscriptions %}
+                <tr>
+                    <td>{{ sub.subscription_number or ("SUB-" ~ sub.id) }}</td>
+                    <td>{{ sub.plan_name }}</td>
+                    <td>{{ sub.status }}</td>
+                    <td>{{ sub.start_date }}</td>
+                    <td>{{ sub.next_billing_date or "—" }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">No subscriptions found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Invoices</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Invoice</th>
+                    <th>Date</th>
+                    <th>Due Date</th>
+                    <th>Total</th>
+                    <th>Paid</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for invoice in invoices %}
+                <tr>
+                    <td>{{ invoice.invoice_number or ("INV-" ~ invoice.id) }}</td>
+                    <td>{{ invoice.invoice_date }}</td>
+                    <td>{{ invoice.due_date }}</td>
+                    <td>₹{{ "%.2f"|format(invoice.total_amount / 100) }}</td>
+                    <td>₹{{ "%.2f"|format(invoice.amount_paid / 100) }}</td>
+                    <td>{{ invoice.status }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No invoices found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

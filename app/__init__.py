@@ -3,7 +3,7 @@ import os
 from datetime import timedelta
 from decimal import Decimal, ROUND_HALF_UP
 
-from flask import Flask
+from flask import Flask,current_app
 from datetime import date
 
 from app.config import Config
@@ -15,6 +15,8 @@ from app.errors import register_error_handlers
 def create_app(test_config=None):
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-placeholder')
 
     if test_config:
         app.config.update(test_config)
@@ -32,6 +34,7 @@ def create_app(test_config=None):
             "company_name": app.config["COMPANY_NAME"],
             "current_user": current_user(),
             "current_year": date.today().year,
+            "available_endpoints": set(current_app.view_functions.keys()),
         }
 
     @app.template_filter("rupees")
@@ -47,9 +50,9 @@ def create_app(test_config=None):
 
     # Register blueprints here as they are implemented.
     from app.auth import auth_bp
-    # from app.blueprints.catalog import catalog_bp
-    # from app.blueprints.plans import plans_bp
-    # from app.blueprints.customers import customers_bp
+    from app.catalog import catalog_bp
+    from app.plans import plans_bp
+    from app.customers import customers_bp
     # from app.blueprints.subscriptions import subscriptions_bp
     # from app.blueprints.invoices import invoices_bp
     # from app.blueprints.payments import payments_bp
@@ -58,9 +61,9 @@ def create_app(test_config=None):
     # from app.blueprints.portal import portal_bp
 
     app.register_blueprint(auth_bp)
-    # app.register_blueprint(catalog_bp)
-    # app.register_blueprint(plans_bp)
-    # app.register_blueprint(customers_bp)
+    app.register_blueprint(catalog_bp)
+    app.register_blueprint(plans_bp)
+    app.register_blueprint(customers_bp)
     # app.register_blueprint(subscriptions_bp)
     # app.register_blueprint(invoices_bp)
     # app.register_blueprint(payments_bp)

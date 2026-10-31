@@ -1,0 +1,259 @@
+
+{% extends "base.html" %}
+
+{% block title %}Plans | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Subscription Plans</h1>
+        <p>Configure recurring plans and quotation templates.</p>
+    </div>
+</div>
+
+<section class="panel">
+    <h2>Create Plan</h2>
+
+    <form method="POST" action="{{ url_for('plans.create_plan') }}">
+        <div class="form-grid">
+            <div>
+                <label>Plan Name</label>
+                <input name="name" required>
+            </div>
+
+            <div>
+                <label>Billing Frequency</label>
+                <select name="billing_frequency" required>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly" selected>Monthly</option>
+                    <option value="yearly">Yearly</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Billing Interval</label>
+                <input name="billing_interval" type="number"
+                       min="1" value="1" required>
+            </div>
+
+            <div>
+                <label>Plan Price (₹)</label>
+                <input name="price" type="number" min="0"
+                       step="0.01" value="0" required>
+            </div>
+
+            <div>
+                <label>Minimum Quantity</label>
+                <input name="minimum_quantity" type="number"
+                       min="1" value="1" required>
+            </div>
+
+            <div>
+                <label>Available From</label>
+                <input name="available_from" type="date">
+            </div>
+
+            <div>
+                <label>Available Until</label>
+                <input name="available_until" type="date">
+            </div>
+        </div>
+
+        <div class="form-check">
+            <label>
+                <input type="checkbox" name="allow_pause" checked>
+                Allow Pause
+            </label>
+
+            <label>
+                <input type="checkbox"
+                       name="allow_early_cancellation" checked>
+                Allow Early Cancellation
+            </label>
+
+            <label>
+                <input type="checkbox" name="allow_renewal" checked>
+                Allow Renewal
+            </label>
+
+            <label>
+                <input type="checkbox" name="auto_close_on_expiry">
+                Auto Close on Expiry
+            </label>
+        </div>
+
+        <button class="btn btn-primary" type="submit">
+            Create Plan
+        </button>
+    </form>
+</section>
+
+<section class="panel">
+    <h2>Existing Plans</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Plan</th>
+                    <th>Billing</th>
+                    <th>Price</th>
+                    <th>Minimum Quantity</th>
+                    <th>Lines</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for plan in plans %}
+                <tr>
+                    <td>{{ plan.name }}</td>
+                    <td>
+                        Every {{ plan.billing_interval }}
+                        {{ plan.billing_frequency }}
+                    </td>
+                    <td>₹{{ "%.2f"|format(plan.price / 100) }}</td>
+                    <td>{{ plan.minimum_quantity }}</td>
+                    <td>{{ plan.line_count }}</td>
+                    <td>
+                        {% if plan.is_active %}
+                            Active
+                        {% else %}
+                            Inactive
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="POST"
+                              action="{{ url_for('plans.toggle_plan', plan_id=plan.id) }}">
+                            <button class="btn btn-secondary" type="submit">
+                                Toggle
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="7">
+                        <details>
+                            <summary>Manage Plan Lines — {{ plan.name }}</summary>
+
+                            <form method="POST"
+                                  action="{{ url_for('plans.create_plan_line', plan_id=plan.id) }}">
+                                <label>Product</label>
+                                <select name="product_id" required>
+                                    {% for product in products %}
+                                    <option value="{{ product.id }}">
+                                        {{ product.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+
+                                <label>Quantity</label>
+                                <input name="quantity" type="number"
+                                       min="1" value="1" required>
+
+                                <label>Unit Price (₹)</label>
+                                <input name="unit_price" type="number"
+                                       min="0" step="0.01" required>
+
+                                <button class="btn btn-primary" type="submit">
+                                    Add Line
+                                </button>
+                            </form>
+
+                            <p>
+                                Add variants through the product catalog.
+                                Variant selection can be added to this form
+                                in the next UI pass.
+                            </p>
+                        </details>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7">No plans created yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Create Quotation Template</h2>
+
+    <form method="POST"
+          action="{{ url_for('plans.create_template') }}">
+        <div class="form-grid">
+            <div>
+                <label>Template Name</label>
+                <input name="name" required>
+            </div>
+
+            <div>
+                <label>Plan</label>
+                <select name="plan_id" required>
+                    {% for plan in plans %}
+                    <option value="{{ plan.id }}">{{ plan.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label>Validity (Days)</label>
+                <input name="validity_days" type="number"
+                       min="1" value="30" required>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">
+            Create Template
+        </button>
+    </form>
+</section>
+
+<section class="panel">
+    <h2>Quotation Templates</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Plan</th>
+                    <th>Validity</th>
+                    <th>Lines</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for template in templates %}
+                <tr>
+                    <td>{{ template.name }}</td>
+                    <td>{{ template.plan_name }}</td>
+                    <td>{{ template.validity_days }} days</td>
+                    <td>{{ template.line_count }}</td>
+                    <td>{{ "Active" if template.is_active else "Inactive" }}</td>
+                    <td>
+                        <form method="POST"
+                              action="{{ url_for('plans.toggle_template', template_id=template.id) }}">
+                            <button class="btn btn-secondary" type="submit">
+                                Toggle
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No quotation templates created.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

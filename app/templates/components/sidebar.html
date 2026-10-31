@@ -1,103 +1,104 @@
+
 <aside class="sidebar" id="sidebar">
-    <a class="brand" href="{{ url_for('dashboard.index') }}">
+
+    <!-- Brand -->
+    <a class="brand" href="{{ url_for('plans.index') }}">
         <span class="brand-mark">S</span>
         <span class="brand-name">staxio</span>
         <span class="brand-label">BILLING</span>
     </a>
 
-    <div class="sidebar-workspace">
-        <span class="workspace-icon">B</span>
-        <span>
-            <strong>{{ company_name }}</strong>
-            <small>Business workspace</small>
-        </span>
-        <span class="workspace-chevron">⌄</span>
+    <!-- Workspace -->
+    <div class="sidebar-section">
+        <span class="sidebar-heading">WORKSPACE</span>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('plans.index') }}"
+               class="sidebar-link {% if request.endpoint and request.endpoint.startswith('plans.') %}active{% endif %}">
+                <span class="sidebar-icon">▦</span>
+                <span>Plans</span>
+            </a>
+
+            <a href="{{ url_for('catalog.index') }}"
+               class="sidebar-link {% if request.endpoint and request.endpoint.startswith('catalog.') %}active{% endif %}">
+                <span class="sidebar-icon">◈</span>
+                <span>Product Catalog</span>
+            </a>
+
+            <a href="{{ url_for('customers.index') }}"
+               class="sidebar-link {% if request.endpoint and request.endpoint.startswith('customers.') %}active{% endif %}">
+                <span class="sidebar-icon">♙</span>
+                <span>Customers</span>
+            </a>
+
+        </nav>
     </div>
 
-    <nav class="sidebar-nav">
-        <span class="nav-section-label">WORKSPACE</span>
+    <!-- Billing -->
+    <div class="sidebar-section">
+        <span class="sidebar-heading">BILLING</span>
 
-        <a href="{{ url_for('dashboard.index') }}"
-           class="nav-link {% if request.endpoint == 'dashboard.index' %}active{% endif %}">
-            <span class="nav-icon">▦</span>
-            <span>Overview</span>
-        </a>
+        <nav class="sidebar-nav">
+            {% if 'subscriptions.index' in available_endpoints %}
+            <a href="{{ url_for('subscriptions.index') }}"
+               class="sidebar-link {% if request.endpoint and request.endpoint.startswith('subscriptions.') %}active{% endif %}">
+                <span class="sidebar-icon">↻</span>
+                <span>Subscriptions</span>
+            </a>
+            {% endif %} 
 
-        {% if current_user.role in ['admin', 'staff'] %}
-        <a href="{{ url_for('customers.index') }}"
-           class="nav-link {% if request.endpoint and request.endpoint.startswith('customers.') %}active{% endif %}">
-            <span class="nav-icon">♙</span>
-            <span>Customers</span>
-        </a>
+            {% if 'invoices.index' in available_endpoints %}
+            <a href="{{ url_for('invoices.index') }}"
+               class="sidebar-link {% if request.endpoint and request.endpoint.startswith('invoices.') %}active{% endif %}">
+                <span class="sidebar-icon">▤</span>
+                <span>Invoices</span>
+            </a>
+            {% endif %}
 
-        <a href="{{ url_for('catalog.index') }}"
-           class="nav-link {% if request.endpoint and request.endpoint.startswith('catalog.') %}active{% endif %}">
-            <span class="nav-icon">◇</span>
-            <span>Products</span>
-        </a>
+            {% if 'payments.index' in available_endpoints %}
+            <a href="{{ url_for('payments.index') }}"
+               class="sidebar-link {% if request.endpoint and request.endpoint.startswith('payments.') %}active{% endif %}">
+                <span class="sidebar-icon">₹</span>
+                <span>Payments</span>
+            </a>
+            {% endif %}
 
-        <a href="{{ url_for('plans.index') }}"
-           class="nav-link {% if request.endpoint and request.endpoint.startswith('plans.') %}active{% endif %}">
-            <span class="nav-icon">▤</span>
-            <span>Plans</span>
-        </a>
+            {% if 'discounts.index' in available_endpoints %}
+            <a href="{{ url_for('discounts.index') }}"
+               class="sidebar-link {% if request.endpoint and request.endpoint.startswith('discounts.') %}active{% endif %}">
+                <span class="sidebar-icon">%</span>
+                <span>Discounts</span>
+            </a>
+            {% endif %}
+        </nav>
+    </div>
 
-        <a href="{{ url_for('subscriptions.index') }}"
-           class="nav-link {% if request.endpoint and request.endpoint.startswith('subscriptions.') %}active{% endif %}">
-            <span class="nav-icon">⟳</span>
-            <span>Subscriptions</span>
-        </a>
+    <!-- Account -->
+    <div class="sidebar-bottom">
 
-        <a href="{{ url_for('invoices.index') }}"
-           class="nav-link {% if request.endpoint and request.endpoint.startswith('invoices.') %}active{% endif %}">
-            <span class="nav-icon">▧</span>
-            <span>Invoices</span>
-        </a>
+        <div class="sidebar-user">
+            <div class="sidebar-avatar">
+                {{ (current_user.full_name or current_user.email or 'U')[0]|upper }}
+            </div>
 
-        <a href="{{ url_for('payments.index') }}"
-           class="nav-link {% if request.endpoint and request.endpoint.startswith('payments.') %}active{% endif %}">
-            <span class="nav-icon">₹</span>
-            <span>Payments</span>
-        </a>
-
-        <a href="{{ url_for('discounts.index') }}"
-           class="nav-link {% if request.endpoint and request.endpoint.startswith('discounts.') %}active{% endif %}">
-            <span class="nav-icon">%</span>
-            <span>Discounts</span>
-        </a>
-        {% endif %}
-
-        {% if current_user.role == 'customer' %}
-        <a href="{{ url_for('portal.index') }}"
-           class="nav-link {% if request.endpoint and request.endpoint.startswith('portal.') %}active{% endif %}">
-            <span class="nav-icon">⌂</span>
-            <span>My account</span>
-        </a>
-        {% endif %}
-
-        <div class="sidebar-divider"></div>
-        <span class="nav-section-label">ACCOUNT</span>
-
-        <a href="{{ url_for('auth.logout') }}"
-           class="nav-link"
-           onclick="event.preventDefault(); document.getElementById('sidebar-logout').submit();">
-            <span class="nav-icon">↗</span>
-            <span>Sign out</span>
-        </a>
-
-        <form id="sidebar-logout" method="POST"
-              action="{{ url_for('auth.logout') }}" hidden>
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        </form>
-    </nav>
-
-    <div class="sidebar-footer">
-        <div class="sidebar-footer-mark">S</div>
-        <div>
-            <strong>Staxio</strong>
-            <small>Subscription management</small>
+            <div class="sidebar-user-info">
+                <span class="sidebar-user-name">
+                    {{ current_user.full_name or 'User' }}
+                </span>
+                <span class="sidebar-user-role">
+                    {{ current_user.role|capitalize }}
+                </span>
+            </div>
         </div>
-    </div>
-</aside>
 
-<div class="sidebar-overlay" data-sidebar-toggle></div>
+        <form method="POST" action="{{ url_for('auth.logout') }}">
+            <button type="submit" class="sidebar-logout">
+                <span class="sidebar-icon">↪</span>
+                <span>Sign out</span>
+            </button>
+        </form>
+
+    </div>
+
+</aside>
