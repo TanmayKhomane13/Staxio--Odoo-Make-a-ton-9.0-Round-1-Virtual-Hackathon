@@ -1,8 +1,7 @@
 /* static/js/ai-chat.js : load with <script src=".../ai-chat.js" defer> in base.html */
 (() => {
   const $ = (id) => document.getElementById(id);
-  const sidebar = $('aiSidebar'), toggle = $('aiChatToggle') || $('aiToggle'), backdrop = $('aiBackdrop');
-  const list = $('aiMessages'), form = $('aiForm'), input = $('aiInput'), send = $('aiSend');
+  const sidebar = $('aiSidebar'), toggle = $('aiChatToggle'), backdrop = $('aiBackdrop');  const list = $('aiMessages'), form = $('aiForm'), input = $('aiInput'), send = $('aiSend');
   if (!sidebar || !toggle) return;
 
   const history = [];                                   // [{role:'user'|'assistant', content:'...'}]

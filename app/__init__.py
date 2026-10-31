@@ -9,10 +9,9 @@ from datetime import date
 
 from app.config import Config
 from app.db import init_app
-from app.security import current_user
 from app.errors import register_error_handlers
 
-from StaxioAI import handle_message
+from app.StaxioAI import handle_message
 
 def create_app(test_config=None):
     app = Flask(__name__)

@@ -1,39 +1,55 @@
 {# templates/_ai_sidebar.html
-   In base.html, just before </body> (same roles as the navbar button):
-   {% if current_user.role in ['admin', 'staff', 'finance_lead'] %}{% include "_ai_sidebar.html" %}{% endif %}
-   The navbar button (id="aiChatToggle") lives in _topbar.html.
+   Included in base.html for admin, staff and finance_lead.
+   Navbar toggle (id="aiChatToggle") lives in _topbar.html.
 #}
+
 <div class="ai-backdrop" id="aiBackdrop" hidden></div>
 
-<aside class="ai-sidebar" id="aiSidebar" role="complementary" aria-label="Staxio AI assistant" aria-hidden="true">
-  <header class="ai-header">
-    <div class="ai-title">
-      <span class="ai-dot" aria-hidden="true"></span>
-      <div>
-        <strong>Staxio AI</strong>
-        <small>Ask about subscriptions, invoices, payments</small>
-      </div>
-    </div>
-    <div class="ai-actions">
-      <button type="button" class="ai-icon-btn" id="aiClear" title="Clear chat" aria-label="Clear chat">⟲</button>
-      <button type="button" class="ai-icon-btn" id="aiClose" title="Close" aria-label="Close assistant">✕</button>
-    </div>
-  </header>
+<aside class="ai-sidebar"
+       id="aiSidebar"
+       role="complementary"
+       aria-label="Staxio AI assistant"
+       aria-hidden="true"
+       data-endpoint="{{ url_for('ai_chat') }}"
+       data-csrf="{{ csrf_token() if csrf_token is defined else '' }}">
 
-  <div class="ai-messages" id="aiMessages" role="log" aria-live="polite">
-    <div class="ai-msg ai-msg--bot">
-      <div class="ai-bubble">Hi {{ current_user.full_name.split(' ')[0] }}! How can I help you today?</div>
+    <header class="ai-header">
+        <div class="ai-title">
+            <span class="ai-dot" aria-hidden="true"></span>
+            <div>
+                <strong>Staxio AI</strong>
+                <small>Ask about subscriptions, invoices, payments</small>
+            </div>
+        </div>
+
+        <div class="ai-actions">
+            <button type="button" class="ai-icon-btn" id="aiClear"
+                    title="Clear chat" aria-label="Clear chat">⟲</button>
+            <button type="button" class="ai-icon-btn" id="aiClose"
+                    title="Close" aria-label="Close assistant">✕</button>
+        </div>
+    </header>
+
+    <div class="ai-messages" id="aiMessages" role="log" aria-live="polite">
+        <div class="ai-msg ai-msg--bot">
+            <div class="ai-bubble">
+                Hi {{ current_user.full_name.split(' ')[0] }}! How can I help you today?
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="ai-suggestions" id="aiSuggestions">
-    <button type="button" class="ai-chip">Which invoices are overdue?</button>
-    <button type="button" class="ai-chip">Show active subscriptions</button>
-    <button type="button" class="ai-chip">How much revenue this month?</button>
-  </div>
+    <div class="ai-suggestions" id="aiSuggestions">
+        <button type="button" class="ai-chip">Which invoices are overdue?</button>
+        <button type="button" class="ai-chip">Show active subscriptions</button>
+        <button type="button" class="ai-chip">How much revenue this month?</button>
+    </div>
 
-  <form class="ai-form" id="aiForm" autocomplete="off">
-    <textarea id="aiInput" rows="1" placeholder="Type your question…" aria-label="Message" maxlength="1000"></textarea>
-    <button type="submit" class="ai-send" id="aiSend" aria-label="Send">➤</button>
-  </form>
+    <form class="ai-form" id="aiForm" autocomplete="off">
+        <textarea id="aiInput" rows="1"
+                  placeholder="Type your question…"
+                  aria-label="Message" maxlength="1000"></textarea>
+        <button type="submit" class="ai-send" id="aiSend"
+                aria-label="Send">➤</button>
+    </form>
+
 </aside>
