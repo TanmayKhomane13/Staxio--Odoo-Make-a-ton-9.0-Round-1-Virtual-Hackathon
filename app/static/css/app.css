@@ -1667,6 +1667,57 @@ button {
     }
 }
 
+/* ===== Customer invoice page ===== */
+.main-content .details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.main-content .details-grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.main-content .detail-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.main-content .details-grid strong {
+    font-size: 15px;
+    color: var(--ink);
+}
+
+.main-content .invoice-totals p {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    min-width: 280px;
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.main-content .invoice-totals p strong {
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+.main-content .invoice-totals {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
 /* ===== Stats cards ===== */
 .stats-grid {
     display: grid;
