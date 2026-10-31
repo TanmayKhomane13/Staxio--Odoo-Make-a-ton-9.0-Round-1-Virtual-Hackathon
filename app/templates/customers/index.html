@@ -1,0 +1,106 @@
+
+{% extends "base.html" %}
+
+{% block title %}Customers | Staxio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Customers</h1>
+        <p>Manage customer accounts and billing information.</p>
+    </div>
+</div>
+
+<section class="panel">
+    <h2>Add Customer</h2>
+
+    <form method="POST"
+          action="{{ url_for('customers.create_customer') }}">
+        <div class="form-grid">
+            <div>
+                <label>Customer Name</label>
+                <input name="name" required>
+            </div>
+
+            <div>
+                <label>Company Name</label>
+                <input name="company_name">
+            </div>
+
+            <div>
+                <label>Email</label>
+                <input name="email" type="email" required>
+            </div>
+
+            <div>
+                <label>Phone</label>
+                <input name="phone">
+            </div>
+
+            <div>
+                <label>GSTIN / Tax Number</label>
+                <input name="tax_number">
+            </div>
+
+            <div>
+                <label>Payment Terms (Days)</label>
+                <input name="payment_terms_days" type="number"
+                       min="0" value="30" required>
+            </div>
+
+            <div class="form-full">
+                <label>Billing Address</label>
+                <textarea name="address" rows="3"></textarea>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">
+            Add Customer
+        </button>
+    </form>
+</section>
+
+<section class="panel">
+    <h2>Customer Directory</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Company</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Payment Terms</th>
+                    <th>Subscriptions</th>
+                    <th>Invoices</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.company_name or "—" }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.phone or "—" }}</td>
+                    <td>{{ customer.payment_terms_days }} days</td>
+                    <td>{{ customer.subscription_count }}</td>
+                    <td>{{ customer.invoice_count }}</td>
+                    <td>
+                        <a href="{{ url_for('customers.detail', customer_id=customer.id) }}">
+                            View
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8">No customers added yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
