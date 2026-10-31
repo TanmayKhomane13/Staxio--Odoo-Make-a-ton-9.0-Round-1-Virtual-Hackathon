@@ -8,11 +8,13 @@ Roles:
 """
 
 #========= IMPORTS & CONFIGURATION =========
-
+import os
 import json
 import torch
+import sqlite3
+from contextlib import closing
 
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForCausalLM,
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForCausalLM
 
 from peft import PeftModel
 
@@ -21,7 +23,9 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
 from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+DB_PATH = BASE_DIR / "instance" / "staxio.db"
 
 BASE_MODEL_NAME = "distilbert-base-uncased"
 GENLLM_MODEL_NAME = "Qwen/Qwen2.5-3B-Instruct"
@@ -31,9 +35,65 @@ GENLLM_LORA_PATH = BASE_DIR / "ai_models" / "StaxioAI_v1"
 
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
-VECTOR_STORE_DIR = "../vector_store"
+VECTOR_STORE_DIR = str(BASE_DIR / "vector_store")
 COLLECTION_NAME = "StaxioAI_KB"
 
+# ======================== SQLite3 ===================================
+def get_db_connection():
+    """Create a read-only SQLite connection."""
+
+    if not DB_PATH.exists():
+        raise FileNotFoundError(
+            f"Database not found: {DB_PATH}"
+        )
+
+    connection = sqlite3.connect(
+        DB_PATH.as_uri() + "?mode=ro",
+        uri=True
+    )
+
+    connection.row_factory = sqlite3.Row
+
+    return connection
+
+
+def fetch_one(cursor, query, params=()):
+    """Execute SQL and return one record."""
+
+    cursor.execute(query, params)
+
+    row = cursor.fetchone()
+
+    return dict(row) if row else None
+
+
+def fetch_all(cursor, query, params=()):
+    """Execute SQL and return multiple records."""
+
+    cursor.execute(query, params)
+
+    return [
+        dict(row)
+        for row in cursor.fetchall()
+    ]
+
+
+def format_result(data):
+    """Convert database results into readable JSON."""
+
+    if not data:
+        return "No matching records found."
+
+    return json.dumps(data, indent=2, default=str)
+
+
+def format_money(amount):
+    """Convert paise to INR."""
+
+    if amount is None:
+        return None
+
+    return f"₹{amount / 100:,.2f}"
 
 # ========================= DEVICE CONFIGURATION =================================
 
@@ -334,50 +394,385 @@ Format:
 
 @tool
 def get_subscription_details(subscription_number: str) -> str:
-    """Retrieve details of a subscription using its subscription number."""
+    """Retrieve subscription details using its subscription number."""
 
-    raise NotImplementedError(
-        "Connect this tool to the subscription database."
-    )
+    try:
+        with closing(get_db_connection()) as conn:
+            cursor = conn.cursor()
+
+            subscription = fetch_one(
+                cursor,
+                """
+                SELECT
+                    s.*,
+                    c.name AS customer_name,
+                    c.email AS customer_email,
+                    c.company_name,
+                    p.name AS plan_name,
+                    p.billing_frequency,
+                    p.billing_interval
+                FROM subscriptions s
+                JOIN customers c ON c.id = s.customer_id
+                JOIN plans p ON p.id = s.plan_id
+                WHERE s.subscription_number = ?
+                """,
+                (subscription_number,)
+            )
+
+            if not subscription:
+                return "Subscription not found."
+
+            subscription_id = subscription["id"]
+
+            # Subscription products
+            subscription["lines"] = fetch_all(
+                cursor,
+                """
+                SELECT
+                    description,
+                    quantity,
+                    unit_price,
+                    quantity * unit_price AS line_total,
+                    is_active
+                FROM subscription_lines
+                WHERE subscription_id = ?
+                """,
+                (subscription_id,)
+            )
+
+            for line in subscription["lines"]:
+                line["unit_price_inr"] = format_money(line["unit_price"])
+                line["line_total_inr"] = format_money(line["line_total"])
+
+            # Associated discounts
+            subscription["discounts"] = fetch_all(
+                cursor,
+                """
+                SELECT
+                    d.name,
+                    d.code,
+                    d.discount_type,
+                    d.discount_value,
+                    d.is_active
+                FROM subscription_discounts sd
+                JOIN discounts d ON d.id = sd.discount_id
+                WHERE sd.subscription_id = ?
+                """,
+                (subscription_id,)
+            )
+
+            for discount in subscription["discounts"]:
+                if discount["discount_type"] == "fixed":
+                    discount["discount_value_inr"] = format_money(
+                        discount["discount_value"]
+                    )
+
+            return format_result(subscription)
+
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
 
 
 @tool
 def get_customer_details(email: str) -> str:
     """Retrieve customer details using their email address."""
 
-    raise NotImplementedError(
-        "Connect this tool to the customer database."
-    )
+    try:
+        with closing(get_db_connection()) as conn:
+            cursor = conn.cursor()
+
+            customer = fetch_one(
+                cursor,
+                """
+                SELECT
+                    id,
+                    name,
+                    company_name,
+                    email,
+                    phone,
+                    tax_number,
+                    address,
+                    payment_terms_days,
+                    created_at
+                FROM customers
+                WHERE email = ? COLLATE NOCASE
+                """,
+                (email,)
+            )
+
+            if not customer:
+                return "Customer not found."
+
+            customer_id = customer["id"]
+
+            # Customer subscriptions
+            customer["subscriptions"] = fetch_all(
+                cursor,
+                """
+                SELECT
+                    s.subscription_number,
+                    s.status,
+                    s.start_date,
+                    s.expiry_date,
+                    s.next_billing_date,
+                    p.name AS plan_name
+                FROM subscriptions s
+                JOIN plans p ON p.id = s.plan_id
+                WHERE s.customer_id = ?
+                ORDER BY s.created_at DESC
+                """,
+                (customer_id,)
+            )
+
+            return format_result(customer)
+
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
 
 
 @tool
 def get_discount_details(subscription_number: str) -> str:
     """Retrieve discount details associated with a subscription."""
 
-    raise NotImplementedError(
-        "Connect this tool to the discount database."
-    )
+    try:
+        with closing(get_db_connection()) as conn:
+            cursor = conn.cursor()
+
+            subscription = fetch_one(
+                cursor,
+                """
+                SELECT id, subscription_number
+                FROM subscriptions
+                WHERE subscription_number = ?
+                """,
+                (subscription_number,)
+            )
+
+            if not subscription:
+                return "Subscription not found."
+
+            discounts = fetch_all(
+                cursor,
+                """
+                SELECT
+                    d.name,
+                    d.code,
+                    d.discount_type,
+                    d.discount_value,
+                    d.minimum_purchase,
+                    d.minimum_quantity,
+                    d.valid_from,
+                    d.valid_until,
+                    d.usage_limit,
+                    d.usage_count,
+                    d.is_active
+                FROM subscription_discounts sd
+                JOIN discounts d ON d.id = sd.discount_id
+                WHERE sd.subscription_id = ?
+                """,
+                (subscription["id"],)
+            )
+
+            if not discounts:
+                return "No discounts associated with this subscription."
+
+            for discount in discounts:
+
+                if discount["discount_type"] == "fixed":
+                    discount["discount_value_inr"] = format_money(
+                        discount["discount_value"]
+                    )
+                else:
+                    discount["discount_value_percent"] = (
+                        f"{discount['discount_value']}%"
+                    )
+
+                discount["minimum_purchase_inr"] = format_money(
+                    discount["minimum_purchase"]
+                )
+
+            return format_result({
+                "subscription_number": subscription_number,
+                "discounts": discounts
+            })
+
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
 
 
 @tool
 def get_invoice_details(
     invoice_number: str,
-    customer_email: str = None
+    customer_email: str | None = None
 ) -> str:
     """Retrieve invoice details using invoice number and optionally customer email."""
 
-    raise NotImplementedError(
-        "Connect this tool to the invoice database."
-    )
+    try:
+        with closing(get_db_connection()) as conn:
+            cursor = conn.cursor()
+
+            invoice = fetch_one(
+                cursor,
+                """
+                SELECT
+                    i.*,
+                    c.email AS customer_email,
+                    c.name AS registered_customer_name
+                FROM invoices i
+                JOIN customers c ON c.id = i.customer_id
+                WHERE i.invoice_number = ?
+                """,
+                (invoice_number,)
+            )
+
+            if not invoice:
+                return "Invoice not found."
+
+            # Verify customer ownership if email is provided
+            if customer_email:
+
+                if invoice["customer_email"].lower() != customer_email.lower():
+                    return "Invoice does not belong to the provided customer."
+
+            invoice_id = invoice["id"]
+
+            # Format invoice amounts
+            amount_fields = [
+                "subtotal",
+                "discount_total",
+                "tax_total",
+                "total_amount",
+                "amount_paid"
+            ]
+
+            for field in amount_fields:
+                invoice[f"{field}_inr"] = format_money(invoice[field])
+
+            # Outstanding balance
+            invoice["amount_due"] = (
+                invoice["total_amount"] - invoice["amount_paid"]
+            )
+
+            invoice["amount_due_inr"] = format_money(
+                invoice["amount_due"]
+            )
+
+            # Invoice line items
+            invoice["lines"] = fetch_all(
+                cursor,
+                """
+                SELECT
+                    description,
+                    quantity,
+                    unit_price,
+                    discount_amount,
+                    tax_name,
+                    tax_rate,
+                    tax_amount,
+                    line_total
+                FROM invoice_lines
+                WHERE invoice_id = ?
+                """,
+                (invoice_id,)
+            )
+
+            for line in invoice["lines"]:
+                line["unit_price_inr"] = format_money(line["unit_price"])
+                line["discount_amount_inr"] = format_money(
+                    line["discount_amount"]
+                )
+                line["tax_amount_inr"] = format_money(line["tax_amount"])
+                line["line_total_inr"] = format_money(line["line_total"])
+
+            # Applied invoice discounts
+            invoice["discounts"] = fetch_all(
+                cursor,
+                """
+                SELECT
+                    d.name,
+                    d.code,
+                    d.discount_type,
+                    idc.amount
+                FROM invoice_discounts idc
+                JOIN discounts d ON d.id = idc.discount_id
+                WHERE idc.invoice_id = ?
+                """,
+                (invoice_id,)
+            )
+
+            for discount in invoice["discounts"]:
+                discount["amount_inr"] = format_money(
+                    discount["amount"]
+                )
+
+            return format_result(invoice)
+
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
 
 
 @tool
 def get_payment_details(payment_number: str) -> str:
     """Retrieve payment details using the payment number."""
 
-    raise NotImplementedError(
-        "Connect this tool to the payment database."
-    )
+    try:
+        with closing(get_db_connection()) as conn:
+            cursor = conn.cursor()
+
+            payment = fetch_one(
+                cursor,
+                """
+                SELECT
+                    p.id,
+                    p.payment_number,
+                    p.method,
+                    p.amount,
+                    p.payment_date,
+                    p.note,
+                    p.created_at,
+
+                    i.invoice_number,
+                    i.status AS invoice_status,
+                    i.total_amount,
+                    i.amount_paid,
+                    i.due_date,
+
+                    c.name AS customer_name,
+                    c.email AS customer_email,
+                    c.company_name
+
+                FROM payments p
+                JOIN invoices i ON i.id = p.invoice_id
+                JOIN customers c ON c.id = p.customer_id
+
+                WHERE p.payment_number = ?
+                """,
+                (payment_number,)
+            )
+
+            if not payment:
+                return "Payment not found."
+
+            payment["amount_inr"] = format_money(payment["amount"])
+            payment["invoice_total_inr"] = format_money(
+                payment["total_amount"]
+            )
+            payment["invoice_paid_inr"] = format_money(
+                payment["amount_paid"]
+            )
+
+            payment["amount_due"] = (
+                payment["total_amount"] - payment["amount_paid"]
+            )
+
+            payment["amount_due_inr"] = format_money(
+                payment["amount_due"]
+            )
+
+            return format_result(payment)
+
+    except sqlite3.Error as e:
+        return f"Database error: {e}"
 
 
 # ==========================================================
@@ -415,7 +810,6 @@ ROLE_TOOL_NAMES = {
         "get_customer_details",
     ],
 }
-
 
 def get_authorized_tools(role: str) -> dict:
     """Return tools permitted for the authenticated user's role."""

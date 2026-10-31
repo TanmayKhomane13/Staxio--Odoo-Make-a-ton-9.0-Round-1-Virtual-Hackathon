@@ -3,7 +3,8 @@ import os
 from datetime import timedelta
 from decimal import Decimal, ROUND_HALF_UP
 
-from flask import Flask,current_app
+from flask import Flask, current_app, request, jsonify
+from app.security import current_user, login_required
 from datetime import date
 
 from app.config import Config
@@ -11,6 +12,7 @@ from app.db import init_app
 from app.security import current_user
 from app.errors import register_error_handlers
 
+from StaxioAI import handle_message
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -76,5 +78,43 @@ def create_app(test_config=None):
     app.register_blueprint(staff_bp)
     app.register_blueprint(finance_bp)
     app.register_blueprint(bp)
+
+    # StaxioAI Chat API
+    @app.route("/api/ai/chat", methods=["POST"])
+    @login_required
+    def ai_chat():
+        user = current_user()
+
+        if not user:
+            return jsonify({"error": "Authentication required"}), 401
+
+        user_role = user["role"]
+
+        if user_role not in ["admin", "finance_lead", "staff"]:
+            return jsonify({"error": "Unauthorized role"}), 403
+
+        data = request.get_json(silent=True) or {}
+        message = str(data.get("message", "")).strip()
+
+        if not message:
+            return jsonify({"error": "Message is required"}), 400
+
+        try:
+            result = handle_message(
+                message,
+                user_role=user_role
+            )
+
+        except Exception as e:
+            print(f"[StaxioAI] error: {e}")
+            return jsonify({
+                "error": "AI service temporarily unavailable"
+            }), 500
+
+        return jsonify({
+            "reply": result.get("answer", "No response received."),
+            "intent": result.get("intent"),
+            "tool": result.get("tool")
+        })
 
     return app
