@@ -1,0 +1,103 @@
+<aside class="sidebar" id="sidebar">
+    <a class="brand" href="{{ url_for('dashboard.index') }}">
+        <span class="brand-mark">S</span>
+        <span class="brand-name">staxio</span>
+        <span class="brand-label">BILLING</span>
+    </a>
+
+    <div class="sidebar-workspace">
+        <span class="workspace-icon">B</span>
+        <span>
+            <strong>{{ company_name }}</strong>
+            <small>Business workspace</small>
+        </span>
+        <span class="workspace-chevron">⌄</span>
+    </div>
+
+    <nav class="sidebar-nav">
+        <span class="nav-section-label">WORKSPACE</span>
+
+        <a href="{{ url_for('dashboard.index') }}"
+           class="nav-link {% if request.endpoint == 'dashboard.index' %}active{% endif %}">
+            <span class="nav-icon">▦</span>
+            <span>Overview</span>
+        </a>
+
+        {% if current_user.role in ['admin', 'staff'] %}
+        <a href="{{ url_for('customers.index') }}"
+           class="nav-link {% if request.endpoint and request.endpoint.startswith('customers.') %}active{% endif %}">
+            <span class="nav-icon">♙</span>
+            <span>Customers</span>
+        </a>
+
+        <a href="{{ url_for('catalog.index') }}"
+           class="nav-link {% if request.endpoint and request.endpoint.startswith('catalog.') %}active{% endif %}">
+            <span class="nav-icon">◇</span>
+            <span>Products</span>
+        </a>
+
+        <a href="{{ url_for('plans.index') }}"
+           class="nav-link {% if request.endpoint and request.endpoint.startswith('plans.') %}active{% endif %}">
+            <span class="nav-icon">▤</span>
+            <span>Plans</span>
+        </a>
+
+        <a href="{{ url_for('subscriptions.index') }}"
+           class="nav-link {% if request.endpoint and request.endpoint.startswith('subscriptions.') %}active{% endif %}">
+            <span class="nav-icon">⟳</span>
+            <span>Subscriptions</span>
+        </a>
+
+        <a href="{{ url_for('invoices.index') }}"
+           class="nav-link {% if request.endpoint and request.endpoint.startswith('invoices.') %}active{% endif %}">
+            <span class="nav-icon">▧</span>
+            <span>Invoices</span>
+        </a>
+
+        <a href="{{ url_for('payments.index') }}"
+           class="nav-link {% if request.endpoint and request.endpoint.startswith('payments.') %}active{% endif %}">
+            <span class="nav-icon">₹</span>
+            <span>Payments</span>
+        </a>
+
+        <a href="{{ url_for('discounts.index') }}"
+           class="nav-link {% if request.endpoint and request.endpoint.startswith('discounts.') %}active{% endif %}">
+            <span class="nav-icon">%</span>
+            <span>Discounts</span>
+        </a>
+        {% endif %}
+
+        {% if current_user.role == 'customer' %}
+        <a href="{{ url_for('portal.index') }}"
+           class="nav-link {% if request.endpoint and request.endpoint.startswith('portal.') %}active{% endif %}">
+            <span class="nav-icon">⌂</span>
+            <span>My account</span>
+        </a>
+        {% endif %}
+
+        <div class="sidebar-divider"></div>
+        <span class="nav-section-label">ACCOUNT</span>
+
+        <a href="{{ url_for('auth.logout') }}"
+           class="nav-link"
+           onclick="event.preventDefault(); document.getElementById('sidebar-logout').submit();">
+            <span class="nav-icon">↗</span>
+            <span>Sign out</span>
+        </a>
+
+        <form id="sidebar-logout" method="POST"
+              action="{{ url_for('auth.logout') }}" hidden>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        </form>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-footer-mark">S</div>
+        <div>
+            <strong>Staxio</strong>
+            <small>Subscription management</small>
+        </div>
+    </div>
+</aside>
+
+<div class="sidebar-overlay" data-sidebar-toggle></div>

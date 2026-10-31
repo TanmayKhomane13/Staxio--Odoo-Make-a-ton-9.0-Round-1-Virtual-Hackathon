@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Create account{% endblock %}
+{% block body_class %}auth-body{% endblock %}
+
+{% block public_content %}
+<div class="auth-layout">
+    <section class="auth-aside">
+        <a href="{{ url_for('auth.landing') }}" class="brand brand-light">
+            <span class="brand-mark">S</span>
+            <span class="brand-name">staxio</span>
+        </a>
+
+        <div class="auth-aside-content">
+            <span class="eyebrow">GET STARTED</span>
+            <h1>Build a better billing workflow.</h1>
+            <p>
+                Create your customer account and access your subscription
+                information, invoices and payment history.
+            </p>
+        </div>
+
+        <div class="auth-aside-footer">Your account. Your subscriptions.</div>
+    </section>
+
+    <section class="auth-main">
+        <div class="auth-card">
+            <div class="auth-mobile-brand">
+                <a href="{{ url_for('auth.landing') }}" class="brand">
+                    <span class="brand-mark">S</span>
+                    <span class="brand-name">staxio</span>
+                </a>
+            </div>
+
+            <span class="auth-kicker">CUSTOMER REGISTRATION</span>
+            <h2>Create your account</h2>
+            <p class="auth-subtitle">Fill in your details to get started.</p>
+
+            <form method="POST" class="auth-form">
+
+                {% from "components/form_field.html" import field %}
+
+                {{ field("full_name", "Full name", placeholder="Your name", required=true) }}
+                {{ field("company_name", "Company name", placeholder="Company or organisation") }}
+                {{ field("email", "Email address", "email", placeholder="you@company.com", required=true) }}
+                {{ field("phone", "Phone number", "tel", placeholder="+91 98765 43210") }}
+                {{ field("password", "Password", "password", placeholder="Create a strong password", required=true, autocomplete="new-password") }}
+                {{ field("confirm_password", "Confirm password", "password", placeholder="Re-enter your password", required=true, autocomplete="new-password") }}
+
+                <p class="form-hint">
+                    Use more than 8 characters, including uppercase,
+                    lowercase and a special character.
+                </p>
+
+                <button type="submit" class="button button-primary button-full">
+                    Create account <span>→</span>
+                </button>
+            </form>
+
+            <div class="auth-bottom">
+                Already registered?
+                <a href="{{ url_for('auth.login') }}">Sign in</a>
+            </div>
+
+            <a class="back-home" href="{{ url_for('auth.landing') }}">
+                ← Back to home
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}Subscription billing made simple{% endblock %}
+{% block body_class %}landing-body{% endblock %}
+
+{% block public_content %}
+<div class="landing-wrapper">
+    <nav class="landing-nav">
+        <a href="{{ url_for('auth.landing') }}" class="brand">
+            <span class="brand-mark">S</span>
+            <span class="brand-name">staxio</span>
+        </a>
+
+        <div class="landing-nav-links">
+            <a href="#features">Features</a>
+            <a href="#workflow">How it works</a>
+            <a href="{{ url_for('auth.login') }}" class="nav-login">Log in</a>
+            <a href="{{ url_for('auth.signup') }}" class="button button-primary button-small">
+                Get started
+            </a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-copy">
+            <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                SUBSCRIPTION MANAGEMENT PLATFORM
+            </div>
+
+            <h1>
+                Recurring revenue.<br>
+                <span>Without the chaos.</span>
+            </h1>
+
+            <p class="hero-description">
+                Manage customers, plans, subscriptions, invoices and payments
+                from one connected workspace. Spend less time chasing billing
+                tasks and more time growing your business.
+            </p>
+
+            <div class="hero-actions">
+                <a href="{{ url_for('auth.signup') }}"
+                   class="button button-primary">
+                    Create your account <span>→</span>
+                </a>
+
+                <a href="{{ url_for('auth.login') }}"
+                   class="button button-secondary">
+                    Sign in
+                </a>
+            </div>
+
+            <div class="hero-caption">
+                <span class="caption-check">✓</span>
+                Built for recurring billing and subscription operations
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="preview-window">
+                <div class="preview-topbar">
+                    <div class="preview-dots">
+                        <i></i><i></i><i></i>
+                    </div>
+                    <span>staxio / overview</span>
+                    <span class="preview-status">LIVE DEMO</span>
+                </div>
+
+                <div class="preview-content">
+                    <div class="preview-heading">
+                        <div>
+                            <small>MONDAY, BUSINESS OVERVIEW</small>
+                            <h3>Good morning.</h3>
+                        </div>
+                        <span class="preview-avatar">A</span>
+                    </div>
+
+                    <div class="preview-stats">
+                        <div class="preview-stat">
+                            <small>Monthly revenue</small>
+                            <strong>₹8,42,500</strong>
+                            <span>↑ Revenue collected</span>
+                        </div>
+                        <div class="preview-stat">
+                            <small>Active subscriptions</small>
+                            <strong>248</strong>
+                            <span>Across all plans</span>
+                        </div>
+                    </div>
+
+                    <div class="preview-chart">
+                        <div class="preview-chart-heading">
+                            <strong>Revenue overview</strong>
+                            <small>Last 6 months</small>
+                        </div>
+
+                        <div class="chart-bars">
+                            <span style="height:34%"></span>
+                            <span style="height:48%"></span>
+                            <span style="height:42%"></span>
+                            <span style="height:68%"></span>
+                            <span style="height:58%"></span>
+                            <span style="height:88%"></span>
+                        </div>
+
+                        <div class="chart-labels">
+                            <span>May</span><span>Jun</span><span>Jul</span>
+                            <span>Aug</span><span>Sep</span><span>Oct</span>
+                        </div>
+                    </div>
+
+                    <div class="preview-invoice">
+                        <div>
+                            <small>RECENT INVOICE</small>
+                            <strong>INV-00042</strong>
+                        </div>
+                        <strong>₹12,980.00</strong>
+                        <span class="preview-paid">Paid</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="floating-note">
+                <span class="floating-note-icon">✓</span>
+                <span>
+                    <strong>Payment recorded</strong>
+                    <small>Invoice successfully updated</small>
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <section class="feature-strip" id="features">
+        <div>
+            <span class="feature-number">01</span>
+            <strong>Subscription lifecycle</strong>
+            <p>Manage drafts, quotations, activation, renewals and expiry.</p>
+        </div>
+        <div>
+            <span class="feature-number">02</span>
+            <strong>Automated billing</strong>
+            <p>Generate recurring invoices with tax and discounts.</p>
+        </div>
+        <div>
+            <span class="feature-number">03</span>
+            <strong>Payment tracking</strong>
+            <p>Record payments and monitor outstanding balances.</p>
+        </div>
+        <div>
+            <span class="feature-number">04</span>
+            <strong>Business insights</strong>
+            <p>Track revenue, subscriptions and overdue invoices.</p>
+        </div>
+    </section>
+
+    <section class="workflow-section" id="workflow">
+        <div class="section-heading">
+            <span class="eyebrow">ONE CONNECTED WORKFLOW</span>
+            <h2>From plan to payment.</h2>
+            <p>Keep the complete subscription journey in one place.</p>
+        </div>
+
+        <div class="workflow-steps">
+            <div><span>01</span><strong>Create plans</strong><small>Products and pricing</small></div>
+            <i>→</i>
+            <div><span>02</span><strong>Start subscriptions</strong><small>Customers and contracts</small></div>
+            <i>→</i>
+            <div><span>03</span><strong>Generate invoices</strong><small>Recurring billing</small></div>
+            <i>→</i>
+            <div><span>04</span><strong>Collect payments</strong><small>Track revenue</small></div>
+        </div>
+    </section>
+
+    <footer class="landing-footer">
+        <a href="{{ url_for('auth.landing') }}" class="brand">
+            <span class="brand-mark">S</span>
+            <span class="brand-name">staxio</span>
+        </a>
+        <span>Subscription management, made clearer.</span>
+        <span>© {{ current_year }} Staxio</span>
+    </footer>
+</div>
+{% endblock %}

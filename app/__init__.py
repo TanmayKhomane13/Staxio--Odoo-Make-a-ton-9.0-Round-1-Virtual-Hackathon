@@ -1,0 +1,71 @@
+import os
+
+from datetime import timedelta
+from decimal import Decimal, ROUND_HALF_UP
+
+from flask import Flask
+from datetime import date
+
+from app.config import Config
+from app.db import init_app
+from app.security import current_user
+from app.errors import register_error_handlers
+
+
+def create_app(test_config=None):
+    app = Flask(__name__)
+    app.config.from_object(Config)
+
+    if test_config:
+        app.config.update(test_config)
+    os.makedirs(
+        os.path.dirname(app.config["DATABASE"]) or ".",
+        exist_ok=True
+    )
+
+    app.permanent_session_lifetime = timedelta(hours=1)
+    init_app(app)
+
+    @app.context_processor
+    def inject_globals():
+        return {
+            "company_name": app.config["COMPANY_NAME"],
+            "current_user": current_user(),
+            "current_year": date.today().year,
+        }
+
+    @app.template_filter("rupees")
+    def rupees(paise):
+        paise = int(paise or 0)
+        return f"₹{paise // 100:,}.{paise % 100:02d}"
+
+    @app.template_filter("percentage")
+    def percentage(value):
+        return f"{Decimal(str(value or 0)):.2f}%"
+
+    register_error_handlers(app)
+
+    # Register blueprints here as they are implemented.
+    from app.auth import auth_bp
+    # from app.blueprints.catalog import catalog_bp
+    # from app.blueprints.plans import plans_bp
+    # from app.blueprints.customers import customers_bp
+    # from app.blueprints.subscriptions import subscriptions_bp
+    # from app.blueprints.invoices import invoices_bp
+    # from app.blueprints.payments import payments_bp
+    # from app.blueprints.discounts import discounts_bp
+    # from app.blueprints.dashboard import dashboard_bp
+    # from app.blueprints.portal import portal_bp
+
+    app.register_blueprint(auth_bp)
+    # app.register_blueprint(catalog_bp)
+    # app.register_blueprint(plans_bp)
+    # app.register_blueprint(customers_bp)
+    # app.register_blueprint(subscriptions_bp)
+    # app.register_blueprint(invoices_bp)
+    # app.register_blueprint(payments_bp)
+    # app.register_blueprint(discounts_bp)
+    # app.register_blueprint(dashboard_bp)
+    # app.register_blueprint(portal_bp)
+
+    return app

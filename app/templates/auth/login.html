@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Sign in{% endblock %}
+{% block body_class %}auth-body{% endblock %}
+
+{% block public_content %}
+<div class="auth-layout">
+    <section class="auth-aside">
+        <a href="{{ url_for('auth.landing') }}" class="brand brand-light">
+            <span class="brand-mark">S</span>
+            <span class="brand-name">staxio</span>
+        </a>
+
+        <div class="auth-aside-content">
+            <span class="eyebrow">YOUR BILLING WORKSPACE</span>
+            <h1>Everything recurring, under control.</h1>
+            <p>
+                Manage your subscription business with a clear view of
+                customers, billing cycles, invoices and payments.
+            </p>
+        </div>
+
+        <div class="auth-aside-footer">Simple operations. Clearer revenue.</div>
+    </section>
+
+    <section class="auth-main">
+        <div class="auth-card">
+            <div class="auth-mobile-brand">
+                <a href="{{ url_for('auth.landing') }}" class="brand">
+                    <span class="brand-mark">S</span>
+                    <span class="brand-name">staxio</span>
+                </a>
+            </div>
+
+            <span class="auth-kicker">WELCOME BACK</span>
+            <h2>Sign in to Staxio</h2>
+            <p class="auth-subtitle">Enter your account details to continue.</p>
+
+            <form method="POST" class="auth-form">
+
+                {% from "components/form_field.html" import field %}
+
+                {{ field("email", "Email address", "email",
+                    placeholder="you@company.com", required=true,
+                    autocomplete="email") }}
+
+                {{ field("password", "Password", "password",
+                    placeholder="Enter your password", required=true,
+                    autocomplete="current-password") }}
+
+                <div class="form-options">
+                    <a href="{{ url_for('auth.forgot_password') }}">
+                        Forgot password?
+                    </a>
+                </div>
+
+                <button type="submit" class="button button-primary button-full">
+                    Sign in <span>→</span>
+                </button>
+            </form>
+
+            <div class="auth-bottom">
+                Don't have an account?
+                <a href="{{ url_for('auth.signup') }}">Create an account</a>
+            </div>
+
+            <a class="back-home" href="{{ url_for('auth.landing') }}">
+                ← Back to home
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}

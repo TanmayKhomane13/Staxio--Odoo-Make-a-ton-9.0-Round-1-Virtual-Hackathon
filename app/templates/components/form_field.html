@@ -1,0 +1,14 @@
+{% macro field(name, label, type="text", value="", placeholder="", required=false, autocomplete="off") %}
+<div class="form-group">
+    <label for="{{ name }}">{{ label }}</label>
+    <input
+        id="{{ name }}"
+        name="{{ name }}"
+        type="{{ type }}"
+        value="{{ value }}"
+        placeholder="{{ placeholder }}"
+        autocomplete="{{ autocomplete }}"
+        {% if required %}required{% endif %}
+    >
+</div>
+{% endmacro %}
