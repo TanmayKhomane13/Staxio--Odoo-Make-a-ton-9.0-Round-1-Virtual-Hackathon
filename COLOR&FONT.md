@@ -1,34 +1,69 @@
 :root {
-  --primary: #0077B6;   /* buttons, active nav, headings */
-  --accent: #E9EBFF;    /* selected rows, table badges, highlights (use #1B1B39 text on it) */
-  --bg: #EDEDED;        /* page background */
-  --surface: #FFFFFF;   /* cards, panels */
-  --text: #202020;      /* body text */
-  --on-primary: #FFFFFF;
-  --border: #DADADA;    /* derived neutral, the only color not from your list */
+  /* Core Brand & Theme Colors */
+  --green: #237b55;        /* Primary action color: buttons, active states, brand accent */
+  --green-dark: #185c3e;   /* Hover states, deep brand contrast */
+  --green-soft: #eaf4ee;   /* Subtle tint: table row hover, success badge backgrounds */
+  --navy: #192b25;         /* Deep dark surfaces, high-contrast headings */
 
-  --status-accepted: #0C447C;  /* chip bg #E6F1FB */
-  --status-preparing: #633806; /* chip bg #FAEEDA */
-  --status-ready: #27500A;     /* chip bg #EAF3DE */
-  --status-served: #444441;    /* chip bg #F1EFE8 */
-  --status-delayed: #791F1F;   /* chip bg #FCEBEB */
+  /* Neutral Base & Surfaces */
+  --page: #f6f8f6;         /* Global page body background */
+  --surface: #ffffff;      /* Cards, panels, modals, dropdowns */
+  --line: #e8ece8;         /* Borders, dividers, subtle separators */
+
+  /* Typography / Ink */
+  --ink: #202522;          /* Primary body text & prominent headings */
+  --muted: #778079;        /* Secondary/muted text, captions, metadata */
+
+  /* Functional Status & Alerts */
+  --danger: #b84242;       /* Errors, overdue invoices, destructive actions */
+  --warning: #a56b1d;      /* Warnings, partially paid invoices, pending notices */
+
+  /* Elevation */
+  --shadow: 0 16px 50px rgba(24, 48, 36, .08);
+
+  /* Role Badges & Chips */
+  --role-admin-bg: #ede9fe;       --role-admin-text: #6d28d9;
+  --role-staff-bg: #dbeafe;       --role-staff-text: #1d4ed8;
+  --role-customer-bg: #dcfce7;    --role-customer-text: #15803d;
 }
 
-Rules to keep it professional
-Use the 60-30-10 rule. About 60% of the screen is the neutral background and surface, 30% is text and borders, and 10% or less is primary and accent color.
-Use the accent for one thing only. Table numbers and highlights are enough, and it shouldn’t also appear on buttons.
-Don’t rely on color alone for status. Always pair it with a text label (“Preparing”, “Delayed”), as the chips above do. This helps color-blind users and the dim kitchen screen.
-Check contrast. Body text should reach 4.5:1 against its background (WCAG AA). You can test any pair on webaim.org/resources/contrastchecker.
-Use one palette across all four interfaces. Differentiate them by layout and density, not by color. The kitchen display can be larger and higher-contrast, and the customer view can be lighter.
-Consider a dark mode for the kitchen display. It reduces glare, but skip it for the hackathon unless you have spare time.
+---
 
+## Design System & Style Guidelines
 
+### 1. 60-30-10 Distribution Rule
+- **60% Dominant Neutral**: Light clean canvas using `--page` (`#f6f8f6`) for backgrounds and `--surface` (`#ffffff`) for cards, data tables, and modal containers.
+- **30% Structural & Content**: Sharp text contrast using `--ink` (`#202522`), muted metadata in `--muted` (`#778079`), and crisp dividing lines via `--line` (`#e8ece8`).
+- **10% Brand Accent & Focus**: Strategic focus color using `--green` (`#237b55`) and `--green-dark` (`#185c3e`) for primary CTA buttons, active sidebar links, and focused inputs (`box-shadow: 0 0 0 3px var(--green-soft)`).
 
-Fonts Used & Their Purposes
+### 2. Status Badges & Visual Semantics
+Never rely on color alone for critical status indication; always accompany colored chips with descriptive labels:
+- **Active / Success / Paid**: Background `--green-soft` (`#eaf4ee`), Text `--green-dark` (`#185c3e`).
+- **Inactive / Draft / Muted**: Background `--page` (`#f6f8f6`), Text `--muted` (`#778079`).
+- **Partially Paid / Pending**: Text `--warning` (`#a56b1d`).
+- **Overdue / Canceled / Error**: Text `--danger` (`#b84242`).
 
-Inter (Primary / Interface Font)
+### 3. Role Indicator Pills
+- **Admin**: Purple accent (`bg: #ede9fe`, `color: #6d28d9`)
+- **Staff**: Blue accent (`bg: #dbeafe`, `color: #1d4ed8`)
+- **Customer**: Green accent (`bg: #dcfce7`, `color: #15803d`)
 
-Where used: Entire application across all views (/login, /pos, /kitchen, /manager).
-Purpose: All core UI typography — buttons, inputs, tables, order cards, headings, stats, badges, and the AI Assistant panel.
-Weights loaded: 400, 500, 600, 700.
+---
 
+## Typography & Fonts
+
+### 1. Plus Jakarta Sans (Primary Interface Font)
+- **Where used**: Entire application UI across all routes (`/`, `/dashboard`, `/catalog`, `/plans`, `/subscriptions`, `/invoices`, `/payments`, `/portal`, `/login`, `/signup`).
+- **Purpose**: All core interface elements — body text, navigation items, buttons, form controls, tables, metrics, and cards.
+- **Weights loaded**: `400` (Regular), `500` (Medium), `600` (Semi-bold), `700` (Bold), `800` (Extra-bold).
+- **Import**: `https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap`
+
+### 2. Manrope (Brand & Logo Typography)
+- **Where used**: Sidebar brand logo (`.brand-mark`), brand name title (`.brand-name`), and auth brand titles.
+- **Purpose**: Display typography delivering modern geometric character to the Staxio identity.
+- **Weights loaded**: `400`, `500`, `600`, `700`, `800`.
+- **CSS Usage**: `font-family: 'Manrope', sans-serif; font-weight: 800; letter-spacing: -1px;`
+
+### 3. DM Sans (Secondary Display Font)
+- **Where used**: Preloaded in [`base.html`](app/templates/base.html) for secondary display and alternate headings.
+- **Weights loaded**: `400`, `500`, `600`, `700`.
