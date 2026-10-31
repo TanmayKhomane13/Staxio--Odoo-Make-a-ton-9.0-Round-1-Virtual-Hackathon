@@ -3,182 +3,283 @@
 {% block title %}Subscription billing made simple{% endblock %}
 {% block body_class %}landing-body{% endblock %}
 
+{% block head %}
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    ink:          'var(--ink)',
+                    muted:        'var(--muted)',
+                    line:         'var(--line)',
+                    surface:      'var(--surface)',
+                    page:         'var(--page)',
+                    green:        'var(--green)',
+                    'green-dark': 'var(--green-dark)',
+                    'green-soft': 'var(--green-soft)',
+                    navy:         'var(--navy)',
+                    danger:       'var(--danger)',
+                    warning:      'var(--warning)',
+                },
+                boxShadow: {
+                    theme: 'var(--shadow)',
+                }
+            }
+        }
+    }
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% endblock %}
+
 {% block public_content %}
-<div class="landing-wrapper">
-    <nav class="landing-nav">
-        <a href="{{ url_for('auth.landing') }}" class="brand">
-            <span class="brand-mark">S</span>
-            <span class="brand-name">staxio</span>
+<!-- Navigation Header -->
+<header class="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-line">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="{{ url_for('auth.landing') }}" class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-green flex items-center justify-center text-white text-xl shadow-md">
+                <i class="fa-solid fa-infinity"></i>
+            </div>
+            <span class="text-xl font-bold tracking-tight text-ink">staxio</span>
         </a>
 
-        <div class="landing-nav-links">
-            <a href="#features">Features</a>
-            <a href="#workflow">How it works</a>
-            <a href="{{ url_for('auth.login') }}" class="nav-login">Log in</a>
-            <a href="{{ url_for('auth.signup') }}" class="button button-primary button-small">
-                Get started
+        <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-ink">
+            <a href="#features" class="hover:text-green transition flex items-center gap-2"><i class="fa-solid fa-layer-group text-xs text-green"></i> Features</a>
+            <a href="#workflow" class="hover:text-green transition flex items-center gap-2"><i class="fa-solid fa-timeline text-xs text-green"></i> How it works</a>
+        </nav>
+
+        <div class="flex items-center space-x-3">
+            <a href="{{ url_for('auth.login') }}" class="bg-green text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow hover:bg-green-dark transition flex items-center gap-2">
+                <i class="fa-solid fa-user"></i> Log in
             </a>
         </div>
-    </nav>
+    </div>
+</header>
 
-    <section class="hero">
-        <div class="hero-copy">
-            <div class="eyebrow">
-                <span class="eyebrow-dot"></span>
-                SUBSCRIPTION MANAGEMENT PLATFORM
-            </div>
+<!-- Main Content -->
+<main class="flex-grow">
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden pt-16 md:pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="absolute top-10 left-1/4 w-80 h-80 bg-green-soft rounded-full blur-3xl animate-blob pointer-events-none"></div>
+        <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-green-soft rounded-full blur-3xl animate-blob animation-delay-2000 pointer-events-none"></div>
 
-            <h1>
-                Recurring revenue.<br>
-                <span>Without the chaos.</span>
-            </h1>
-
-            <p class="hero-description">
-                Manage customers, plans, subscriptions, invoices and payments
-                from one connected workspace. Spend less time chasing billing
-                tasks and more time growing your business.
-            </p>
-
-            <div class="hero-actions">
-                <a href="{{ url_for('auth.signup') }}"
-                   class="button button-primary">
-                    Create your account <span>→</span>
-                </a>
-
-                <a href="{{ url_for('auth.login') }}"
-                   class="button button-secondary">
-                    Sign in
-                </a>
-            </div>
-
-            <div class="hero-caption">
-                <span class="caption-check">✓</span>
-                Built for recurring billing and subscription operations
-            </div>
-        </div>
-
-        <div class="hero-visual">
-            <div class="preview-window">
-                <div class="preview-topbar">
-                    <div class="preview-dots">
-                        <i></i><i></i><i></i>
-                    </div>
-                    <span>staxio / overview</span>
-                    <span class="preview-status">LIVE DEMO</span>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+            <div class="space-y-6 fade-in-up">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-green-soft text-navy text-xs font-bold uppercase tracking-wider">
+                    <span class="w-2 h-2 rounded-full bg-green animate-pulse"></span> Subscription Management Platform
                 </div>
 
-                <div class="preview-content">
-                    <div class="preview-heading">
-                        <div>
-                            <small>MONDAY, BUSINESS OVERVIEW</small>
-                            <h3>Good morning.</h3>
-                        </div>
-                        <span class="preview-avatar">A</span>
-                    </div>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-ink leading-tight">
+                    Recurring revenue.<br>
+                    <span class="text-green">Without the chaos.</span>
+                </h1>
 
-                    <div class="preview-stats">
-                        <div class="preview-stat">
-                            <small>Monthly revenue</small>
-                            <strong>₹8,42,500</strong>
-                            <span>↑ Revenue collected</span>
-                        </div>
-                        <div class="preview-stat">
-                            <small>Active subscriptions</small>
-                            <strong>248</strong>
-                            <span>Across all plans</span>
-                        </div>
-                    </div>
+                <p class="text-lg text-muted leading-relaxed max-w-xl">
+                    Manage customers, plans, subscriptions, invoices and payments from one connected workspace. Spend less time chasing billing tasks and more time growing your business.
+                </p>
 
-                    <div class="preview-chart">
-                        <div class="preview-chart-heading">
-                            <strong>Revenue overview</strong>
-                            <small>Last 6 months</small>
-                        </div>
+                <div class="flex flex-col sm:flex-row gap-4 pt-2">
+                    <a href="{{ url_for('auth.signup') }}" class="bg-green text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-green-dark transition flex items-center justify-center gap-3">
+                        <span>Create your account</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="bg-surface border border-line font-bold px-8 py-4 rounded-xl hover:bg-page transition text-center flex items-center justify-center text-ink">
+                        Sign in
+                    </a>
+                </div>
 
-                        <div class="chart-bars">
-                            <span style="height:34%"></span>
-                            <span style="height:48%"></span>
-                            <span style="height:42%"></span>
-                            <span style="height:68%"></span>
-                            <span style="height:58%"></span>
-                            <span style="height:88%"></span>
-                        </div>
-
-                        <div class="chart-labels">
-                            <span>May</span><span>Jun</span><span>Jul</span>
-                            <span>Aug</span><span>Sep</span><span>Oct</span>
-                        </div>
-                    </div>
-
-                    <div class="preview-invoice">
-                        <div>
-                            <small>RECENT INVOICE</small>
-                            <strong>INV-00042</strong>
-                        </div>
-                        <strong>₹12,980.00</strong>
-                        <span class="preview-paid">Paid</span>
-                    </div>
+                <div class="flex items-center gap-2 text-xs font-semibold text-muted pt-2">
+                    <span class="w-5 h-5 rounded-full bg-green-soft text-green flex items-center justify-center text-xs">✓</span>
+                    Built for recurring billing and subscription operations
                 </div>
             </div>
 
-            <div class="floating-note">
-                <span class="floating-note-icon">✓</span>
-                <span>
-                    <strong>Payment recorded</strong>
-                    <small>Invoice successfully updated</small>
-                </span>
+            <!-- Hero Visual Preview Card -->
+            <div class="relative fade-in-up">
+                <div class="bg-surface p-6 rounded-2xl border border-line shadow-theme relative overflow-hidden">
+                    <div class="flex items-center justify-between pb-4 border-b border-line mb-6">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-danger"></div>
+                            <div class="w-3 h-3 rounded-full bg-warning"></div>
+                            <div class="w-3 h-3 rounded-full bg-green"></div>
+                        </div>
+                        <span class="text-xs font-semibold text-muted uppercase tracking-wider">staxio / overview</span>
+                        <span class="bg-green-soft text-navy text-xs font-bold px-2.5 py-1 rounded-md">LIVE DEMO</span>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="text-[10px] font-bold text-muted uppercase tracking-widest">MONDAY, BUSINESS OVERVIEW</div>
+                                <h3 class="text-lg font-bold text-ink">Good morning.</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-green text-white font-bold flex items-center justify-center shadow">A</div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-page p-4 rounded-xl border border-line">
+                                <div class="text-xs text-muted">Monthly revenue</div>
+                                <div class="text-xl font-extrabold text-ink mt-1">₹8,42,500</div>
+                                <div class="text-[11px] text-green font-semibold mt-1">↑ Revenue collected</div>
+                            </div>
+                            <div class="bg-page p-4 rounded-xl border border-line">
+                                <div class="text-xs text-muted">Active subscriptions</div>
+                                <div class="text-xl font-extrabold text-ink mt-1">248</div>
+                                <div class="text-[11px] text-muted font-semibold mt-1">Across all plans</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-page p-4 rounded-xl border border-line flex items-center justify-between">
+                            <div>
+                                <div class="text-[10px] font-bold text-muted">RECENT INVOICE</div>
+                                <div class="font-bold text-sm text-ink">INV-00042</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-bold text-sm text-ink">₹12,980.00</div>
+                                <span class="inline-block bg-green-soft text-green-dark text-[10px] font-bold px-2 py-0.5 rounded-full mt-0.5">Paid</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute -bottom-6 -left-6 bg-surface p-4 rounded-xl border border-line shadow-theme flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-green-soft text-green flex items-center justify-center font-bold">✓</div>
+                    <div>
+                        <div class="text-xs font-bold text-ink">Payment recorded</div>
+                        <div class="text-[11px] text-muted">Invoice successfully updated</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="feature-strip" id="features">
-        <div>
-            <span class="feature-number">01</span>
-            <strong>Subscription lifecycle</strong>
-            <p>Manage drafts, quotations, activation, renewals and expiry.</p>
-        </div>
-        <div>
-            <span class="feature-number">02</span>
-            <strong>Automated billing</strong>
-            <p>Generate recurring invoices with tax and discounts.</p>
-        </div>
-        <div>
-            <span class="feature-number">03</span>
-            <strong>Payment tracking</strong>
-            <p>Record payments and monitor outstanding balances.</p>
-        </div>
-        <div>
-            <span class="feature-number">04</span>
-            <strong>Business insights</strong>
-            <p>Track revenue, subscriptions and overdue invoices.</p>
-        </div>
-    </section>
-
-    <section class="workflow-section" id="workflow">
-        <div class="section-heading">
-            <span class="eyebrow">ONE CONNECTED WORKFLOW</span>
-            <h2>From plan to payment.</h2>
-            <p>Keep the complete subscription journey in one place.</p>
-        </div>
-
-        <div class="workflow-steps">
-            <div><span>01</span><strong>Create plans</strong><small>Products and pricing</small></div>
-            <i>→</i>
-            <div><span>02</span><strong>Start subscriptions</strong><small>Customers and contracts</small></div>
-            <i>→</i>
-            <div><span>03</span><strong>Generate invoices</strong><small>Recurring billing</small></div>
-            <i>→</i>
-            <div><span>04</span><strong>Collect payments</strong><small>Track revenue</small></div>
+    <!-- Feature Strip -->
+    <section id="features" class="py-16 bg-surface border-y border-line">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="p-6 rounded-2xl bg-page border border-line">
+                <span class="text-xs font-extrabold text-green tracking-wider">01</span>
+                <h3 class="font-bold text-base text-ink mt-2 mb-1">Subscription lifecycle</h3>
+                <p class="text-xs text-muted">Manage drafts, quotations, activation, renewals and expiry.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-page border border-line">
+                <span class="text-xs font-extrabold text-green tracking-wider">02</span>
+                <h3 class="font-bold text-base text-ink mt-2 mb-1">Automated billing</h3>
+                <p class="text-xs text-muted">Generate recurring invoices with tax and discounts.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-page border border-line">
+                <span class="text-xs font-extrabold text-green tracking-wider">03</span>
+                <h3 class="font-bold text-base text-ink mt-2 mb-1">Payment tracking</h3>
+                <p class="text-xs text-muted">Record payments and monitor outstanding balances.</p>
+            </div>
+            <div class="p-6 rounded-2xl bg-page border border-line">
+                <span class="text-xs font-extrabold text-green tracking-wider">04</span>
+                <h3 class="font-bold text-base text-ink mt-2 mb-1">Business insights</h3>
+                <p class="text-xs text-muted">Track revenue, subscriptions and overdue invoices.</p>
+            </div>
         </div>
     </section>
 
-    <footer class="landing-footer">
-        <a href="{{ url_for('auth.landing') }}" class="brand">
-            <span class="brand-mark">S</span>
-            <span class="brand-name">staxio</span>
+    <!-- Workflow Section -->
+    <section id="workflow" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-xs font-bold text-green uppercase tracking-widest">ONE CONNECTED WORKFLOW</span>
+            <h2 class="text-3xl font-extrabold tracking-tight text-ink mt-2">From plan to payment.</h2>
+            <p class="text-muted text-sm mt-1">Keep the complete subscription journey in one place.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div class="bg-surface p-5 rounded-2xl border border-line text-center shadow-sm">
+                <div class="w-10 h-10 mx-auto rounded-xl bg-green text-white flex items-center justify-center font-bold mb-3 shadow">1</div>
+                <h3 class="font-bold text-sm text-ink">Customer Signup</h3>
+                <p class="text-xs text-muted mt-1">Email & password rules</p>
+            </div>
+            <div class="bg-surface p-5 rounded-2xl border border-line text-center shadow-sm">
+                <div class="w-10 h-10 mx-auto rounded-xl bg-green text-white flex items-center justify-center font-bold mb-3 shadow">2</div>
+                <h3 class="font-bold text-sm text-ink">Choose Plan</h3>
+                <p class="text-xs text-muted mt-1">Intervals & variants</p>
+            </div>
+            <div class="bg-surface p-5 rounded-2xl border border-line text-center shadow-sm">
+                <div class="w-10 h-10 mx-auto rounded-xl bg-green text-white flex items-center justify-center font-bold mb-3 shadow">3</div>
+                <h3 class="font-bold text-sm text-ink">Activation</h3>
+                <p class="text-xs text-muted mt-1">Draft to active subscription</p>
+            </div>
+            <div class="bg-surface p-5 rounded-2xl border border-line text-center shadow-sm">
+                <div class="w-10 h-10 mx-auto rounded-xl bg-green text-white flex items-center justify-center font-bold mb-3 shadow">4</div>
+                <h3 class="font-bold text-sm text-ink">Invoice Generation</h3>
+                <p class="text-xs text-muted mt-1">Automatic tax calculation</p>
+            </div>
+            <div class="bg-surface p-5 rounded-2xl border border-line text-center shadow-sm">
+                <div class="w-10 h-10 mx-auto rounded-xl bg-green text-white flex items-center justify-center font-bold mb-3 shadow">5</div>
+                <h3 class="font-bold text-sm text-ink">Payment</h3>
+                <p class="text-xs text-muted mt-1">Reconciliation & tracking</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="bg-surface border-t border-line py-8 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted">
+        <a href="{{ url_for('auth.landing') }}" class="flex items-center space-x-2">
+            <span class="w-6 h-6 rounded bg-green text-white flex items-center justify-center font-bold">S</span>
+            <span class="font-bold text-ink">staxio</span>
         </a>
         <span>Subscription management, made clearer.</span>
         <span>© {{ current_year }} Staxio</span>
-    </footer>
+    </div>
+</footer>
+
+<!-- Toast Notification Banner -->
+<div id="toast" class="fixed bottom-6 right-6 bg-ink text-white px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 text-xs md:text-sm font-semibold flex items-center gap-3">
+    <i class="fa-solid fa-circle-check text-green-soft text-lg"></i>
+    <span id="toast-msg">Action completed successfully.</span>
 </div>
+
+<!-- Back-to-Top Button -->
+<button id="backToTop" class="fixed bottom-6 right-6 z-40 bg-green text-white p-3.5 rounded-full shadow-xl opacity-0 translate-y-10 pointer-events-none transition-all duration-300 hover:bg-green-dark flex items-center justify-center" aria-label="Back to top">
+    <i class="fa-solid fa-arrow-up text-sm"></i>
+</button>
+
+<script>
+    // Fade in the hero text and preview card after the first paint
+    document.addEventListener('DOMContentLoaded', () => {
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                document.querySelectorAll('.fade-in-up').forEach((el, i) => {
+                    setTimeout(() => el.classList.add('appear'), i * 150);
+                });
+            });
+        });
+    });
+
+    // Back-to-top button
+    const backToTopBtn = document.getElementById('backToTop');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+                backToTopBtn.classList.add('opacity-100', 'translate-y-0');
+            } else {
+                backToTopBtn.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+                backToTopBtn.classList.remove('opacity-100', 'translate-y-0');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // Toast helper (kept for future use)
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-msg');
+        if (!toast || !toastMsg) return;
+        toastMsg.innerText = msg;
+        toast.classList.remove('translate-y-20', 'opacity-0');
+        setTimeout(() => {
+            toast.classList.add('translate-y-20', 'opacity-0');
+        }, 3500);
+    }
+</script>
 {% endblock %}
