@@ -1,0 +1,1637 @@
+# BRIGHTLOOP SOFTWARE — COMPANY POLICIES AND BUSINESS RULES KNOWLEDGE BASE
+
+## 1. DOCUMENT OVERVIEW AND GOVERNANCE
+
+### Document Purpose
+
+This document is the official statement of how Brightloop Software runs its subscription business. It defines who may perform each action, which conditions must be satisfied, and what happens when circumstances change.
+
+The Staxio subscription management platform is built to implement these policies. When the system and this document differ, this document governs and the system must be corrected.
+
+### Scope of the Policy
+
+The policy covers the whole life of a subscription: setting up products, plans, taxes and discounts; preparing quotations; activating subscriptions; generating invoices; recording payments; chasing overdue amounts; customer self-service; and revenue reporting.
+
+### Policy Governance
+
+The Administrator owns this policy and is the only person who may approve a revision. The Finance Lead reviews any change that affects revenue or invoices before approval.
+
+Changes to billing, tax, discount or payment rules take effect only from a stated date. Changes are never retroactive, and issued invoices are never altered.
+
+Questions about interpretation go to the Administrator, whose written decision is final.
+
+### Order of Precedence
+
+When rules conflict, the order is: applicable law and tax regulation first, this document second, individual customer contracts third (where they do not conflict with the first two), and working procedures and training material last.
+
+### Conventions Used in This Document
+
+- Money is in Indian Rupees and stored in whole paise. Rs. 560.00 is stored as 56000.
+- Dates are written YYYY-MM-DD. Timestamps are stored in UTC.
+- Record numbers are SUB-00001 for subscriptions, INV-00001 for invoices and PAY-00001 for payments.
+- "Shall" and "must" mean mandatory. "Should" means strongly expected. "May" means permitted.
+- "(Database)" marks a rule the database itself guarantees. "(Application)" marks a rule the Flask application must guarantee.
+
+### Date and Time Standard
+
+The system evaluates date-based rules (due dates, overdue status, discount windows, plan availability and quotation validity) using the database date, which is UTC.
+
+For users in India (UTC+5:30), a date-based rule therefore changes at 05:30 IST rather than at midnight IST. This is accepted for this release and applies equally to all customers.
+
+Documents show calendar dates without time zones.
+
+---
+
+## 2. COMPANY OVERVIEW AND BUSINESS MODEL
+
+### About Brightloop Software
+
+Brightloop Software is a software company that sells everything on subscription: business software billed by the month or the year, add-ons that customers switch on and off, and a few products that come in variants.
+
+### Subscription-Based Business Model
+
+Brightloop earns revenue every billing cycle (daily, weekly, monthly or yearly) for as long as a subscription is Active.
+
+Recurring revenue is Brightloop's most important metric, and the platform must make it visible at any time.
+
+Every billing event is traceable through the chain Plan, Subscription, Invoice, Payment.
+
+### Customer Categories
+
+Small businesses are usually on monthly plans with a few seats and few add-ons.
+
+Large companies are usually on yearly contracts with custom quotations, negotiated discounts and longer payment terms.
+
+Both categories follow identical rules. Differences arise only from plan choice, quantities, discounts and payment terms.
+
+### Business Principles
+
+- Single source of truth: every subscription, invoice and payment lives in Staxio, and spreadsheets are not a system of record.
+- No manual invoices: recurring invoices are always generated from subscriptions.
+- Nothing is billed twice and nothing is skipped.
+- Issued financial documents are never silently changed.
+- Invoiced revenue and collected revenue are always reported separately.
+- Customers can serve themselves and only ever see their own data.
+
+### Problems This Policy Eliminates
+
+Before Staxio, Brightloop tracked subscriptions in a spreadsheet, remembered renewals by chance, typed invoices by hand, matched payments by scrolling through bank statements, and built revenue reports manually each quarter.
+
+As a result, renewals were missed, invoices went out wrong, and nobody could say how much recurring revenue the company had. This policy and the platform replace each of those practices.
+
+---
+
+# CATEGORY 1: PEOPLE, ACCOUNTS AND ACCESS
+
+## 3. ROLES AND PERMISSIONS
+
+### Roles in the System
+
+The system has exactly four roles:
+
+- Administrator (`admin`)
+- Finance Lead (`finance_lead`)
+- Staff (`staff`)
+- Customer (`customer`)
+
+Access is deny-by-default. An action not listed as permitted in this policy is not permitted. Permissions are enforced on the server for every request, because hiding a button on screen is not access control. (Application)
+
+### Administrator Permissions
+
+The Administrator controls the whole system.
+
+Only the Administrator may:
+
+- Create or deactivate Staff and Finance Lead accounts.
+- Create or edit plans.
+- Create or edit taxes.
+- Create or edit discount rules.
+- Create or edit quotation templates.
+- Create or edit products, variants and prices.
+- Change system configuration.
+- Authorise payment corrections, reversals and refunds, subject to the required Finance Lead approval.
+- Access all operational and financial records.
+- Review audit logs and manage system permissions.
+
+The Administrator is responsible for overall system governance and policy enforcement.
+
+Where the company has more than five staff, at least two active Administrator accounts shall exist so the company is never locked out. With five or fewer staff, one Administrator is sufficient and a recovery contact shall be documented.
+
+### Finance Lead Permissions
+
+Finance Lead is a separate role responsible for financial oversight, monitoring and review.
+
+The Finance Lead may:
+
+- Review active subscriptions for financial oversight.
+- View revenue and financial reports.
+- Review invoiced revenue and collected revenue.
+- View outstanding and overdue invoices.
+- Review invoice details and payment records.
+- Monitor partial payments and payment collection progress.
+- Review financial discrepancies.
+- Reconcile recorded payments with bank statements.
+- Review discount amounts and their financial impact.
+- Review billing run results and failures that affect financial reporting.
+- Approve payment corrections, reversals and refunds in writing.
+- Maintain the Finance correction register.
+- Coordinate with the Administrator on financial exceptions and corrective actions.
+
+The Finance Lead may not:
+
+- Create or deactivate application users.
+- Create or edit products, product variants or prices.
+- Create or edit plans.
+- Create or edit tax configurations.
+- Create or edit discount rules.
+- Create or edit quotation templates.
+- Change system configuration.
+- Execute protected payment corrections, reversals or refunds without Administrator execution.
+
+Finance Lead has read access to financial records and the authority to review and approve financial corrections as described in this policy. The Administrator remains responsible for executing protected corrections.
+
+### Staff Permissions
+
+Staff handle day-to-day operational work with limited access.
+
+Staff may:
+
+- Manage customers.
+- Create quotations and subscriptions.
+- Confirm quotations.
+- Manage subscription lines and add-ons.
+- Attach approved discounts to subscriptions.
+- Run and review billing.
+- Confirm, cancel, send and print invoices, subject to invoice rules.
+- Record payments.
+- View the dashboard and operational reports.
+- View products, plans, taxes and discounts.
+- Follow up with customers regarding outstanding payments.
+- Provide operational customer support.
+
+Staff may not:
+
+- Create Staff, Finance Lead or Administrator accounts.
+- Create or edit plans.
+- Create or edit taxes.
+- Create or edit discount rules.
+- Create or edit quotation templates.
+- Create or edit products, variants or prices.
+- View product cost prices or margins.
+- Change system configuration.
+- Authorise or independently perform payment corrections, reversals or refunds.
+
+Staff shall not act on their own personal account or on relatives' accounts. Where a conflict of interest exists, the work is handed to a colleague.
+
+### Customer Permissions
+
+A customer sees only their own subscriptions, invoices, payments and profile through the customer portal.
+
+Customers may:
+
+- View their own subscriptions.
+- View and download their own invoices.
+- View their own payment history.
+- Edit permitted profile information.
+- Change their password.
+- Switch add-ons on or off where permitted by the plan.
+- Pause, resume or cancel their own subscription where permitted by the plan.
+- Request renewal.
+- Request permitted subscription changes.
+
+Customers never see other customers' information, internal data, cost prices, margins or any administration screen.
+
+### Customer Data Isolation
+
+Every customer-facing request is filtered by the customer linked to the logged-in user. The customer identity comes from the session and never from a value the user can edit. (Application)
+
+A request for another customer's record behaves as "not found", and the attempt is logged. (Application)
+
+### Separation of Duties
+
+Only the Administrator creates discount rules, taxes, plans, products and quotation templates. Staff apply only what the Administrator has approved.
+
+Finance Lead reviews financial information and approves payment corrections, reversals and refunds in writing.
+
+Any correction or reversal of a recorded payment requires written Finance Lead approval and Administrator execution. It is never performed by Staff alone.
+
+No user may approve their own protected financial correction.
+
+### Staff and Finance Lead Account Lifecycle
+
+New Staff and Finance Lead accounts are created only by an Administrator. The system stores which administrator created each account. (Database)
+
+When Staff or Finance Lead personnel leave the company, their account is deactivated on their last working day. The account and all transactions they created are never deleted, so history stays intact. (Database)
+
+New Staff and Finance Lead users shall change their initial password at first login. (Application)
+
+---
+
+## 4. ACCOUNT REGISTRATION AND AUTHENTICATION
+
+### Customer Registration
+
+A customer registers with full name, email address and password.
+
+Each email address can belong to only one account, and uniqueness is case-insensitive. (Database)
+
+Emails are trimmed and stored in lowercase, and the database rejects any email that is not lowercase or is malformed. (Database)
+
+Self-registration always creates a Customer. A public registration form can never create a Staff, Finance Lead or Administrator account. (Application)
+
+Registration creates the linked customer record so the portal can show the customer's own data. If a customer record already exists with the same email because sales created it earlier, the new login is linked to it after email verification. (Application)
+
+### Password Policy
+
+A password must be more than 8 characters long, meaning at least 9.
+
+It must contain at least one uppercase letter, one lowercase letter and one special character.
+
+Passwords are stored only as a salted one-way hash. They are never stored, logged or emailed in plain text.
+
+The same rules apply at registration, password reset, password change and when an Administrator creates an internal account. The error message states which requirement was not met.
+
+### Login Policy
+
+Users must log in before accessing any protected page. Inactive accounts cannot log in.
+
+Login failure messages are identical whether the email exists or not, so account existence is never revealed.
+
+After five consecutive failed attempts for an account or from one address, further attempts are blocked for 15 minutes. (Application)
+
+### Password Reset
+
+A user who forgets their password can request a reset by entering their registered email. A reset link is sent to the registered email only.
+
+The emailed token is random. Only its SHA-256 hash is stored, together with an expiry time. (Database)
+
+The reset link expires after 30 minutes and can be used only once. After use or expiry, the stored token is cleared. A newly requested link replaces any earlier link.
+
+The reset page responds identically whether or not the email is registered. After a successful reset, the user receives an email notice.
+
+### Sessions
+
+Sessions use secure, HTTP-only cookies. Administrator, Finance Lead and Staff sessions end after 30 minutes of inactivity, and Customer sessions after 60 minutes.
+
+Logging out ends the session on the server. In production, all traffic uses HTTPS.
+
+### Account Deactivation
+
+Accounts are deactivated and never deleted, so history stays intact. Deactivation takes effect immediately and ends active sessions. Inactive accounts cannot log in.
+
+---
+
+## 5. CUSTOMER MANAGEMENT
+
+### Customer Record
+
+A customer record holds the customer's name, company name (optional), email, phone, tax number (GSTIN), address and payment terms in days.
+
+Both individuals and companies are supported.
+
+### Customer Record and Login Account
+
+A customer record and a login account are related but separate. A customer record can exist without a portal login, for example when sales onboard a customer before they register. (Database)
+
+One login can be linked to only one customer. (Database)
+
+### Creating and Maintaining Customers
+
+Administrators and Staff may create and edit customers. Name and email are mandatory. GSTIN, when given, shall be validated for format.
+
+Customer emails are stored in lowercase. Before creating a customer, staff shall search for an existing record to prevent duplicates.
+
+### Customer Payment Terms
+
+The default payment term is 30 days. Large customers may have longer terms approved by the Administrator.
+
+A new subscription copies the customer's payment terms, and the terms can be changed on that subscription.
+
+A change to a customer's payment terms applies only to subscriptions and invoices created afterwards.
+
+### Effect of Customer Detail Changes
+
+Changing a customer's name, address or GSTIN does not change existing invoices, because each invoice carries a copy of these details taken when it was generated. (Database)
+
+New invoices use the details that are current when they are generated.
+
+### Customer History
+
+Administrators and Staff can see customer history for operational purposes. Finance Lead can access customer information required for financial oversight.
+
+Authorised users can see, for each customer, their subscriptions, invoices, payments, outstanding balance and overdue amount.
+
+### Customer Deactivation and Deletion
+
+A customer with any subscription, invoice or payment cannot be deleted. (Database)
+
+Deactivating a customer's login blocks portal access only. Their subscriptions continue under their own status, and staff decide separately whether to cancel them.
+
+Unpaid invoices of such a customer remain payable and collectible and stay visible to authorised internal users.
+
+### Customer Privacy
+
+Customer personal data is accessible only to Administrators, Finance Lead, Staff and the customer concerned, according to their permissions.
+
+Staff shall not copy customer data out of the system except for authorised business purposes. Personal data shall not appear in URLs, logs or error messages.
+
+---
+
+## 6. APPLICATION SECURITY STANDARDS
+
+### Security Controls
+
+- Database access uses parameterised queries only, to prevent SQL injection.
+- Forms are protected against cross-site request forgery.
+- Output is escaped to prevent cross-site scripting.
+- Secrets such as keys and mail credentials are kept outside source code.
+- Error screens never show technical details to end users.
+
+### Security Logging
+
+The application keeps an activity log of logins and failed logins, password resets, internal account creation and deactivation, billing runs and their results, invoice confirmations and cancellations, changes to discounts, plans, taxes and products, payment corrections, and refused unauthorised access.
+
+Each log entry shows who, what and when. Logs are kept for at least 12 months and cannot be edited by users.
+
+---
+
+# CATEGORY 2: PRODUCTS, TAXES, PLANS AND QUOTATIONS
+
+## 7. PRODUCTS AND VARIANTS
+
+### Product Definition
+
+The Administrator creates each product with a name, type, sales price, cost price, notes, default tax and status.
+
+### Product Types
+
+The supported product types are Software, Service, Add-on and Other. (Database)
+
+### Product Pricing
+
+Sales price and cost price are stored separately in paise and are never negative. (Database)
+
+Cost price and margin are visible to Administrators only. Customers and Staff do not see cost prices or margins.
+
+### Product Variants
+
+A product may have several variants defined by an attribute (for example brand) and a value (for example Odoo).
+
+Each variant has a price adjustment that is added to the product's sales price. For example, a base price of Rs. 2,000 plus the Odoo adjustment of Rs. 560 gives Rs. 2,560.
+
+An adjustment may be zero or positive. A negative adjustment may be used for a discounted variant, but the final unit price must never be below zero.
+
+The same attribute and value cannot be repeated on one product. (Database)
+
+### Product Activation and Deactivation
+
+Inactive products cannot be added to new plans, templates, quotations or subscriptions.
+
+Existing subscriptions and invoices that use an inactive product remain valid and continue to bill.
+
+### Product Price Changes
+
+A change to a product's price applies only to lines created afterwards. Existing subscription lines keep their stored price.
+
+To apply a new price to an existing subscription, staff must edit the line, effective from the next invoice. Past invoices never change.
+
+### Product Deletion
+
+A product used on any plan line or quotation template line cannot be deleted. (Database)
+
+Invoice lines keep their text description even if the product is later removed. The correct way to retire a product is to deactivate it.
+
+### Product Default Tax
+
+A product may have a default tax rate that pre-fills new lines. Once a line exists, the line's own tax rate is the one that applies.
+
+---
+
+## 8. TAX MANAGEMENT
+
+### Tax Authority
+
+Only the Administrator creates, changes or deactivates tax rates.
+
+### Tax Rates
+
+A tax rate has a name and a percentage between 0 and 100. (Database)
+
+The standard rates are GST 18%, GST 5% and No tax (0%).
+
+Each line carries exactly one tax rate. Tax is a percentage added on top of the price, meaning it is exclusive of the price.
+
+### Which Tax Rate Applies to a Line
+
+A subscription line starts with its product's default tax and may be changed by authorised Staff. A line with no tax rate is treated as 0%.
+
+Inactive tax rates cannot be chosen for new lines.
+
+If an existing line uses a rate that was later deactivated, billing continues with that rate and the line is flagged for staff review. Tax is never changed silently.
+
+### Tax Calculation
+
+Taxes are calculated automatically from the rules the Administrator has set.
+
+The taxable amount of a line is its quantity multiplied by unit price, minus the line's discount. Tax is the taxable amount multiplied by the rate divided by 100, rounded to the nearest paisa with halves rounded up, calculated per line. The invoice tax total is the sum of the line taxes.
+
+Tax is therefore calculated after discounts.
+
+### Tax Snapshot on Invoices
+
+Each invoice line stores the tax name, rate and amount used when the invoice was generated. (Database)
+
+A later change to a tax rate never alters existing invoices. New rates apply only to invoices generated on or after the date the Administrator changes them.
+
+### GSTIN on Invoices
+
+The customer's GSTIN and address appear on each invoice where provided. Brightloop's own registration details appear on invoices as configured by the Administrator, and Staff cannot change them.
+
+---
+
+## 9. PLAN MANAGEMENT
+
+### Plan Authority
+
+Only the Administrator creates, edits, activates or deactivates plans.
+
+### Plan Definition
+
+A plan has a name, price, billing frequency, billing interval, minimum quantity, availability dates, lifecycle permissions and an active status.
+
+### Billing Frequency and Interval
+
+The billing frequency is daily, weekly, monthly or yearly. (Database)
+
+The billing interval is a whole number of at least 1. A monthly plan with interval 2 bills every two months. Frequency and interval are configured separately. (Database)
+
+### Plan Pricing
+
+The plan price is the standard price per billing cycle and is the reference when preparing an offer.
+
+Invoices are calculated from the subscription's own lines. What is billed is what the subscription lines say, so a customer's agreed prices never change unexpectedly.
+
+If the Administrator changes a plan price, existing subscriptions keep the prices on their lines, and new quotations use the new price.
+
+### Plan Minimum Quantity
+
+Each plan has a minimum quantity of at least 1. (Database)
+
+No subscription line on the plan may have a quantity below the minimum, and the system refuses it. (Application)
+
+### Plan Availability Dates
+
+A plan may have an availability start and end date. The end date cannot precede the start date. (Database)
+
+A plan can be used for new quotations and subscriptions only while it is active and today is within its availability window. (Application)
+
+The end of the availability window stops new sign-ups only. Existing subscriptions continue until their own expiry.
+
+### Plan Lifecycle Permissions
+
+The Administrator decides, plan by plan and independently, four lifecycle permissions:
+
+- Auto-close on expiry: when on, a subscription closes automatically after its expiry date. When off, it becomes Expired and waits for a staff decision.
+- Allow early cancellation: when on, a subscription may be cancelled or closed before its expiry date.
+- Allow pause: when on, a subscription may be paused.
+- Allow renewal: when on, a subscription may be renewed.
+
+The database refuses pausing, early cancellation or closure, and renewal when the plan does not allow them. (Database)
+
+### Plan Product Lines
+
+A plan holds product lines, each with a product, an optional variant, a quantity and a unit price.
+
+These lines are copied onto a new subscription. After copying, they are independent, so later edits to the plan do not change existing subscriptions.
+
+### Changes to Plans
+
+Changing a lifecycle permission applies from that moment to future actions on every subscription of the plan. It does not undo actions already taken.
+
+Deactivating a plan stops new use only. A plan used by any subscription or quotation template cannot be deleted. (Database)
+
+---
+
+## 10. QUOTATION TEMPLATES AND QUOTATIONS
+
+### Quotation Concept
+
+A quotation is a subscription whose status is Quotation. It is not a separate record type. A quotation template is a reusable starting point for building quotations.
+
+### Quotation Template Definition
+
+Only the Administrator creates and edits quotation templates.
+
+A template has a name, one plan, a validity period in days (at least 1), an active flag, and product lines made of a product, an optional variant, a quantity and a unit price. (Database)
+
+Inactive templates cannot be used for new quotations. Editing a template never changes quotations already created from it.
+
+### Preparing a Quotation
+
+A sales representative starts from a quotation template instead of building the offer from scratch. The plan and product lines are filled in automatically.
+
+A quotation must have a customer, a plan, a start date and payment terms.
+
+Before sending, the representative may adjust quantities, unit prices, tax rates and add-ons, subject to the plan's minimum quantity. Price reductions beyond approved discounts require the Administrator.
+
+A quotation without a template may be created for special cases, with a default validity of 30 days.
+
+### Quotation Validity
+
+The valid-until date equals the quotation date plus the template's validity days. (Application)
+
+An expired quotation, meaning today is after its valid-until date, is no longer a valid offer and cannot be confirmed.
+
+The system shows an Expired marker on such quotations. The stored status remains Quotation.
+
+### Expired Quotation Handling
+
+An expired quotation cannot simply be reactivated. Staff move it back to Draft, set a new validity date and issue it again, so that prices are reviewed.
+
+### Quotation Confirmation and Cancellation
+
+When the customer accepts, an authorised Staff member confirms the quotation, which moves it to Confirmed. The change and its time are recorded in the status history. (Database)
+
+A quotation may be cancelled at any time before confirmation, with a reason recorded.
+
+A quotation can move between Draft and Quotation while it is being negotiated. (Database)
+
+---
+
+# CATEGORY 3: SUBSCRIPTION LIFECYCLE, ADD-ONS AND DISCOUNTS
+
+## 11. SUBSCRIPTION MANAGEMENT
+
+### Subscription Creation
+
+Each subscription has a unique number in the form SUB-00001, assigned immediately on creation. (Database)
+
+A subscription requires a customer, a plan, a start date and payment terms. The expiry date is optional, and when present it cannot be before the start date. (Database)
+
+Subscription lines show the product, quantity, unit price, tax and amount. Line amount is quantity multiplied by unit price, before discount and tax. Quantities are whole numbers of at least 1.
+
+### Subscription Lifecycle
+
+The main subscription path is Draft, Quotation, Confirmed, Active, Closed. The additional statuses are Paused, Cancelled and Expired.
+
+Only the transitions listed in the Status Transitions section are allowed, and the database rejects all others. (Database)
+
+### Subscription Activation
+
+A Confirmed subscription becomes Active on its start date. A daily job activates any Confirmed subscription whose start date has arrived, and Staff may also activate it manually on or after that date.
+
+On activation, the next billing date is set to the start date, so the first invoice is raised at the beginning of the first period. Brightloop therefore bills in advance.
+
+Billing then follows the plan's frequency and interval.
+
+### Subscription Status Visibility
+
+Everyone on the team can see where a subscription stands and its complete status history, including the previous status, the new status and the time of each change. (Database)
+
+Customers see the status of their own subscriptions in the portal.
+
+### Changing a Live Subscription
+
+Changes to quantities, prices, taxes and add-ons are made by editing the subscription's lines and apply from the next invoice. Invoices already generated are never altered.
+
+Lines that have already been invoiced are not deleted. They are switched off so history is preserved.
+
+Quantity may not fall below the plan's minimum.
+
+### Changing the Plan of a Subscription
+
+A change of plan is not made in place. The existing subscription is closed or cancelled, where the plan allows it, and a new subscription is created for the new plan, starting when the old one ends.
+
+### Subscription Deletion
+
+A subscription that has invoices cannot be deleted. Use Cancelled or Closed instead. (Database)
+
+---
+
+## 12. PAUSE, CANCELLATION, EXPIRY AND RENEWAL
+
+### Subscription Pause and Resume
+
+A subscription can be paused only if its plan allows pausing. (Database)
+
+A paused subscription generates no invoices.
+
+On resume, the status returns to Active and the next billing date is set to the resume date, starting a new billing period. The paused time is not billed afterwards.
+
+A pause has no automatic end date. Staff review paused subscriptions every month, and the customer or Staff must resume or cancel them.
+
+A customer may pause or resume their own subscription only where the plan allows pausing.
+
+### Early Cancellation
+
+If the plan does not allow early cancellation, an Active or Paused subscription cannot be cancelled or closed before its expiry date. (Database)
+
+A cancellation reason is mandatory.
+
+Administrators and Staff may cancel any subscription. A customer may cancel their own subscription where the plan allows, and the customer's cancellation takes effect immediately without staff approval.
+
+### Effect of Cancellation on Billing
+
+Cancellation stops future invoices immediately, and no further billing period is started.
+
+Invoices already issued remain payable and are not cancelled or waived by cancelling the subscription.
+
+Amounts already paid for a period are not refunded automatically. Any goodwill refund or credit is handled under the Payment Corrections, Reversals and Refunds section.
+
+A cancelled subscription is closed by Staff once nothing further needs to happen with it.
+
+### Subscription Expiry
+
+No invoice shall start a billing period after the expiry date.
+
+After the expiry date, a daily job moves Active subscriptions to Expired.
+
+If the plan has auto-close on expiry, the job then moves the subscription from Expired to Closed. If auto-close is off, the subscription stays Expired until Staff renew or close it, and Staff review Expired subscriptions weekly.
+
+### Subscription Renewal
+
+Renewal is allowed only if the plan permits it. (Database)
+
+Renewal creates a new subscription that references the original subscription, and the original stays unchanged. (Database)
+
+The new subscription starts on the day after the original's expiry unless a different date is chosen. It then follows the normal lifecycle.
+
+Lines and prices are copied from the original's active lines and may be edited by Staff before confirmation. A customer can request renewal in the portal, and Staff prepare and confirm it.
+
+---
+
+## 13. ADD-ON MANAGEMENT
+
+### Add-on Definition
+
+An add-on is a product, usually of type Add-on, held as a line on a subscription. Switching an add-on on or off sets its line active or inactive. Only active lines are billed. (Database)
+
+### Who Can Change Add-ons
+
+Administrators and Staff can change add-ons on any subscription. A customer can change add-ons on their own subscription through the portal.
+
+### Add-on Change Timing
+
+Switching an add-on on or off takes effect from the next billing cycle.
+
+The current period, which is already invoiced, is not changed and not prorated. No credit is given for an add-on switched off part-way through a period.
+
+The portal shows the customer the date from which the change will apply.
+
+### Add-on Price, Quantity and Tax
+
+An add-on line has its own quantity, unit price and tax rate.
+
+The unit price is taken from the product and variant when the add-on is first added and is then fixed on the line. Quantity changes follow the same next-cycle rule.
+
+### Add-on History
+
+Switching an add-on off never deletes its line. The subscription keeps its record of what was included, and issued invoices show what was billed.
+
+---
+
+## 14. DISCOUNT MANAGEMENT
+
+### Discount Authority
+
+Only the Administrator creates, edits, activates and deactivates discount rules. Staff apply approved discounts but cannot create or alter rules.
+
+### Discount Rule Definition
+
+A discount rule has a name, an optional unique code, a type (fixed amount or percentage), a value, a minimum purchase amount, a minimum quantity, start and end dates, a usage limit, a usage count and an active flag.
+
+A fixed discount is stored in paise. A percentage discount is between 0 and 100. (Database)
+
+The end date cannot precede the start date. A usage limit, when set, is at least 1, and usage can never exceed it. Discount codes are unique. (Database)
+
+### Discount Applicability
+
+A discount applies either to one specific product or, when no product is set, to the whole subscription.
+
+A discount takes effect on a subscription once it has been attached to that subscription, by Staff or by entering its code on the quotation. A discount can be attached to the same subscription only once. (Database)
+
+### Automatic Discount Application
+
+Once attached and eligible, a discount appears on the next invoice on its own, so nobody has to remember it.
+
+At invoice generation, each attached discount is tested. It applies only if all of the following hold:
+
+- It is active.
+- Today is within its start and end dates.
+- Its usage count is below its usage limit.
+- The pre-discount amount of the qualifying lines meets the minimum purchase amount.
+- The quantity on the qualifying lines meets the minimum quantity.
+
+A discount that fails any test is left off that invoice, and the invoice is still generated. The discount is tested again on the next invoice.
+
+The database independently rejects applying an inactive, expired or used-up discount. (Database)
+
+### Discount Calculation
+
+A percentage discount is the qualifying amount multiplied by the percentage divided by 100. A fixed discount is the fixed amount, but never more than the qualifying amount.
+
+A product discount is allocated to the lines of that product. A whole-subscription discount is shared across all lines in proportion to their amounts, and any rounding remainder goes to the last line so the total discount equals the intended amount exactly.
+
+A line's discount can never exceed its amount. (Database) Tax is calculated on the amount after discount.
+
+### Multiple Discounts
+
+If several discounts qualify, they are applied in the order they were attached, each on the amount remaining after the previous one. Together they can never exceed the subtotal.
+
+### Discount Usage Tracking and Limits
+
+Each discount applied to an invoice is recorded with its amount, once per invoice. (Database)
+
+A discount's usage count increases by one for each invoice it is applied to. Usage is counted per invoice and not per customer. (Database)
+
+When the usage limit is reached, the discount stops applying.
+
+If an invoice is cancelled, the usage is not restored automatically. The Administrator may correct a discount's usage count and shall note the reason.
+
+### Discount Expiry and Deactivation
+
+A discount stops applying after its end date or when its usage limit is reached.
+
+Invoices already generated keep the discount they received. Deactivating a discount stops future use without affecting past invoices.
+
+A discount that has been used on any invoice cannot be deleted. (Database)
+
+### Negotiated Customer Discounts
+
+A discount negotiated for one customer is created by the Administrator as a rule, with a code and limits, and attached to that customer's subscription.
+
+Staff may not grant price cuts by editing line prices below the agreed plan price without Administrator approval.
+
+---
+
+# CATEGORY 4: BILLING, INVOICES AND PAYMENTS
+
+## 15. BILLING RUNS AND RECURRING BILLING
+
+### Billing Principle
+
+Nobody types invoices by hand. Each invoice is created from its subscription with the customer details, product lines, taxes and totals already filled in.
+
+### Which Subscriptions Are Billed
+
+A subscription is billed in a billing run only when all of these are true:
+
+- Its status is Active.
+- Its next billing date is today or earlier.
+- Its next billing date is not after its expiry date, if one is set.
+- It has at least one active line.
+- No live invoice already exists for the same billing period.
+
+Paused, Cancelled, Expired and Closed subscriptions are never billed.
+
+### Billing Period and Next Billing Date
+
+The billing period starts on the subscription's next billing date. It ends one cycle later minus one day, where a cycle is the plan's frequency multiplied by its interval.
+
+For example, a monthly plan with interval 1 starting 2026-11-01 has a period of 2026-11-01 to 2026-11-30.
+
+After an invoice is generated, the next billing date moves to the day after the period end. The invoice and the new date are saved together in one transaction, so both happen or neither does. (Application)
+
+When a day of the month does not exist, for example the 31st in a 30-day month, the last day of that month is used.
+
+If the expiry date falls inside a period, the final period is billed in full, and no part-period billing is done.
+
+### Duplicate Billing Prevention
+
+A subscription can have only one live (not cancelled) invoice for a given billing period. The database enforces this with a unique rule on subscription, period start and period end. (Database)
+
+If two billing runs happen at the same time, or a run is repeated, the second attempt for the same period is rejected by the database and reported as already billed. No duplicate can be created.
+
+A cancelled invoice releases its period, so a corrected invoice can be generated for it.
+
+### Missed Billing Prevention
+
+Nothing is skipped. The billing run selects every subscription whose next billing date has arrived, so a missed day is caught on the next run.
+
+If several periods were missed, they are billed one after another in order, oldest first.
+
+### Billing Run Operation
+
+The billing run executes automatically every day and may also be started manually by Administrators or Staff.
+
+Each subscription is processed in its own transaction. A failure in one subscription never stops or undoes the others.
+
+After every run, a result summary is shown with the invoices created, the subscriptions already billed and the failures, with a reason for each failure, such as no active lines or missing customer details.
+
+### Billing Failure Handling
+
+Failed subscriptions stay due and are picked up by the next run automatically. Staff may fix the cause and retry at any time, and a retry can never produce a duplicate invoice.
+
+Staff review the failure list on the same working day. Finance Lead may review billing failures that affect financial reporting.
+
+### Billing Day Volume
+
+On billing day, hundreds of subscriptions may be due at once. The billing run must handle them efficiently and must not require manual invoice entry.
+
+---
+
+## 16. INVOICE MANAGEMENT
+
+### Invoice Numbering and Dates
+
+The invoice number is INV- followed by the five-digit record number, and it is unique across the system. (Database)
+
+The invoice date is the date of generation. The due date is the invoice date plus the payment terms of the subscription in days, and it is never before the invoice date. (Database)
+
+### Invoice Content
+
+Every invoice shows the invoice number, Brightloop details, customer name, address and GSTIN, subscription number, invoice date, due date and billing period.
+
+For each line, the invoice shows the description, quantity, unit price, discount, tax name and rate, tax amount and line total.
+
+The invoice also shows the subtotal, total discount, total tax, final amount payable, amount paid and balance due.
+
+### Invoice Customer Snapshot
+
+The customer's name, address and GSTIN are copied onto the invoice when it is generated and do not change afterwards. (Database)
+
+### Invoice Totals
+
+Total payable equals subtotal minus total discount plus total tax. All figures are whole paise.
+
+### Invoice Lifecycle
+
+An invoice moves from Draft to Confirmed to Paid. Cancelled is an additional status. (Database)
+
+Billing runs create invoices as Draft. Staff review drafts and confirm them, singly or in bulk. Drafts not confirmed within three days are highlighted on the billing screen.
+
+Confirming an invoice locks it. After confirmation, its lines cannot be added, changed or removed. (Database)
+
+A Confirmed invoice receives payments and becomes Paid automatically when fully paid.
+
+### Invoice Cancellation
+
+A Draft invoice may be cancelled by Administrators or Staff.
+
+A Confirmed invoice with no payments may be cancelled with a reason, for example when issued in error. A new correct invoice may then be generated for the same period.
+
+A Confirmed invoice that has any payment cannot be cancelled. It must be corrected through the Administrator.
+
+Paid and Cancelled invoices are final. The cancellation time is recorded.
+
+### Sending, Printing and Downloading Invoices
+
+Staff can send a Confirmed invoice to the customer by email, and the send time is recorded. Re-sending is allowed. Draft invoices are never sent to customers.
+
+Administrators, Finance Lead, Staff and the owning customer can print or download an invoice, subject to record access permissions.
+
+### Discounts on Invoices
+
+Eligible discounts attached to the subscription are applied automatically at generation and shown on the invoice.
+
+### Invoice Correction Summary
+
+A Draft invoice is edited or cancelled. A Confirmed unpaid invoice is cancelled and regenerated. A part-paid or Paid invoice is corrected by the Administrator under the payment corrections procedure. Issued invoices are never overwritten.
+
+---
+
+## 17. PAYMENT MANAGEMENT
+
+### Payment Recording
+
+Administrators and Staff record payments. Finance Lead oversees payment recording and reviews payment records. Customers cannot record payments.
+
+Each payment is recorded against one invoice with its method, amount, payment date and a note.
+
+Each payment gets a unique number, PAY- followed by the five-digit record number. The system keeps who recorded it and when. (Database)
+
+For bank transfer, UPI and cheque payments, the note shall contain the bank or transaction reference or the cheque number.
+
+### Payment Methods
+
+The supported payment methods are cash, bank transfer, card, UPI, cheque and other. (Database)
+
+### Payment Validation
+
+A payment is refused unless the invoice is Confirmed, the payment's customer is the invoice's customer, the amount is greater than zero, and the amount does not exceed the balance due. (Database)
+
+In addition, the payment date must not be in the future and must not be before the invoice date. (Application)
+
+### Partial and Multiple Payments
+
+More than one payment may be made against an invoice.
+
+A partial payment keeps the invoice Confirmed and reduces the balance due. The invoice is displayed as Partially Paid.
+
+When payments total the invoice amount, the invoice becomes Paid automatically and the paid time is recorded. (Database)
+
+### Overpayment
+
+Overpayments are not accepted. The system refuses an amount above the balance due.
+
+If a customer has actually sent more money than owed, the excess is handled outside the system by Finance, either returned to the customer or held against the customer's next invoice by agreement, and a note is kept on the invoice.
+
+### Invoices That Cannot Receive Payments
+
+Draft, Cancelled and Paid invoices cannot receive payments. (Database)
+
+### Payment Reconciliation
+
+Staff can search payments by customer, invoice, date, method and amount to verify them against bank statements.
+
+Finance Lead is responsible for reviewing payment reconciliation. Recorded payments must be reconciled with bank statements at least weekly and always at month end.
+
+The payment screen shows the invoice total, paid amount and balance due before saving, to avoid recording against the wrong invoice.
+
+### Payment Records Are Permanent
+
+Payments cannot be edited or deleted through normal screens, and the database protects the link between payments and invoices. Every payment shows who recorded it.
+
+### Payment Corrections, Reversals and Refunds
+
+This procedure applies to a payment recorded against the wrong invoice, a wrong amount or method, a bounced cheque, and any refund or credit.
+
+Only the Administrator may execute a correction, with the written approval of the Finance Lead stating the reason.
+
+In this release, corrections are made by the Administrator through a controlled correction procedure performed as a single transaction that fixes the payment, the invoice's paid amount and its status together, and never leaves them inconsistent. The date, reason, approver and amounts are recorded in the Finance correction register kept by the Finance Lead.
+
+A reversal must not create a negative or inconsistent invoice balance.
+
+Brightloop does not refund subscription fees already paid for a period that has started, except by written decision of the Administrator. Approved refunds are paid outside the system and logged in the correction register.
+
+A dedicated reversal screen in Staxio is a planned improvement and does not change this procedure.
+
+---
+
+## 18. OUTSTANDING PAYMENTS, OVERDUE INVOICES AND COLLECTIONS
+
+### Outstanding Invoices
+
+An invoice is outstanding when it is Confirmed. The amount due is the total payable minus the amount paid.
+
+### Overdue Invoices
+
+An invoice is overdue when it is Confirmed, has a balance due and its due date is before today. Days overdue is today minus the due date.
+
+Overdue and Partially Paid are calculated when viewed. They are not stored statuses, so nothing has to run to mark them. (Database)
+
+### Invoice Display Statuses
+
+- Draft: not yet issued.
+- Confirmed: issued, no payment received, not yet late.
+- Partially Paid: issued, some payment received, not yet late.
+- Overdue: due date has passed and a balance remains, which applies even if the invoice is part-paid.
+- Paid: fully paid.
+- Cancelled: cancelled.
+
+### Outstanding and Overdue Visibility
+
+At any moment, the team can see which invoices are paid and which are outstanding, with filters by customer, age, amount and subscription.
+
+The overdue list shows the invoice, customer, due date, days overdue and amount due, and the total overdue amount, so overdue invoices can be chased before they turn into lost revenue.
+
+### Collections Procedure
+
+- Day 1 after the due date: an automatic email reminder is sent to the customer.
+- Day 7: Staff contact the customer by phone or email and note the result in the support log.
+- Day 15: a second reminder is emailed with the invoice attached.
+- Day 30: the Finance Lead reviews the case and decides next steps with the Administrator, which may include pausing the subscription where the plan allows.
+- Day 60: the Administrator decides on cancelling the subscription and further recovery action.
+
+No late fee, interest or automatic suspension is charged or applied. The Administrator may shorten payment terms for new subscriptions of customers with repeated overdue invoices.
+
+### Overdue Reporting
+
+Overdue count, overdue amount and ageing in the bands 1-30, 31-60, 61-90 and over 90 days appear on the dashboard and in reports.
+
+---
+
+## 19. FINANCIAL CALCULATION RULES AND WORKED EXAMPLES
+
+### Calculation Formulas
+
+All values are in paise.
+
+- Line amount = quantity x unit price.
+- Line discount = the line's share of applicable discounts.
+- Taxable amount = line amount minus line discount.
+- Line tax = taxable amount x rate / 100, rounded to the nearest paisa, halves up.
+- Line total = taxable amount + line tax.
+- Subtotal = sum of line amounts.
+- Total discount = sum of line discounts.
+- Total tax = sum of line taxes.
+- Total payable = subtotal - total discount + total tax.
+- Balance due = total payable - amount paid.
+- Due date = invoice date + payment terms days.
+- Next billing date = period end + 1 day.
+- Unit price with variant = product sales price + variant adjustment.
+
+### Rounding Rule
+
+Rounding is done per line, to the nearest paisa, with halves rounded up. Printed lines therefore always add up to the printed total.
+
+### Example: Variant Price
+
+Business Software at Rs. 2,000.00 (200,000 paise) plus the Odoo adjustment of Rs. 560.00 (56,000 paise) gives Rs. 2,560.00 (256,000 paise) per unit.
+
+### Example: Percentage Discount
+
+An invoice has 10 seats at Rs. 2,560.00 with GST 18% and a 10% whole-subscription discount (minimum quantity 10, which is met).
+
+Subtotal 2,560,000. Discount 256,000. Taxable amount 2,304,000. Tax 414,720. Total 2,718,720, which is Rs. 27,187.20.
+
+With invoice date 2026-11-01 and 30-day terms, the due date is 2026-12-01.
+
+### Example: Fixed Discount With Two Tax Rates
+
+Line A is 2 x Rs. 1,000 at GST 18%. Line B is 1 x Rs. 500 at GST 5%. A fixed discount of Rs. 200 applies to the whole subscription, shared by amount.
+
+Amounts: A 200,000 and B 50,000, total 250,000. Discount shares: A 16,000 and B 4,000. Taxable: A 184,000 and B 46,000. Tax: A 33,120 and B 2,300. Total 265,420, which is Rs. 2,654.20.
+
+### Example: Partial Payments
+
+An invoice of Rs. 27,187.20 is Confirmed. Payment 1 of Rs. 10,000.00 by UPI keeps it Confirmed, shown as Partially Paid, with Rs. 17,187.20 due. Payment 2 of Rs. 17,187.20 by bank transfer makes the invoice Paid.
+
+An attempt to pay Rs. 17,200.00 would be refused as above the balance due.
+
+### Example: Billing Periods
+
+- Monthly, interval 1, starting 2026-11-01: 11-01 to 11-30, then 12-01 to 12-31.
+- Monthly, interval 2, starting 2026-11-01: 11-01 to 12-31, then 2027-01-01 to 2027-02-28.
+- Weekly, interval 1: seven days from the start day.
+- Yearly, starting 2026-11-01: 2026-11-01 to 2027-10-31.
+
+### Example: Exhausted Discount
+
+A discount with usage limit 3 has been applied to 3 invoices. The fourth invoice for that subscription is generated without it. The invoice is still issued, and staff see a note that the discount is exhausted.
+
+---
+
+# CATEGORY 5: CUSTOMER EXPERIENCE, REPORTING AND SUPPORT
+
+## 20. CUSTOMER SELF-SERVICE PORTAL
+
+### Portal Purpose
+
+The customer portal lets customers see and manage their own subscriptions without emailing anyone at Brightloop.
+
+### What Customers Can View
+
+In the portal, a customer can view their dashboard with active subscriptions, outstanding balance and next billing date; their subscriptions with number, status, plan, start and expiry dates, products, quantities, add-ons and renewal information; their invoices with display status; their payment history; their outstanding and overdue balances; and their profile.
+
+Customers can print or download their own invoices.
+
+### What Customers Can Do
+
+- Edit their profile: name, phone, address and GSTIN.
+- Change their password, subject to the password policy.
+- Switch add-ons on or off on an active subscription, effective from the next cycle.
+- Pause and resume a subscription, only if the plan allows pausing.
+- Cancel a subscription, only if the plan allows early cancellation, with a reason required and immediate effect.
+- Request renewal, only if the plan allows renewal, after which Staff prepare it.
+- Request a quantity change, which is submitted to Staff.
+
+Customers confirm any pause, resume, cancel or add-on action on a confirmation screen that states its effect.
+
+### What Customers Cannot Do
+
+Customers cannot create or change plans, products, prices, taxes or discounts, record payments, confirm, cancel or edit invoices, see other customers, or use any Administrator, Finance Lead or Staff function.
+
+### Portal Data Isolation
+
+The portal never exposes another customer's subscriptions, invoices, payments or personal information.
+
+---
+
+## 21. DASHBOARD, REPORTING AND ANALYTICS
+
+### Dashboard Purpose
+
+The Finance Lead has one place to see active subscriptions, revenue, payments and overdue invoices, with filters and a summary view, without waiting days for manual reports.
+
+### Dashboard Contents
+
+The dashboard shows active subscriptions, revenue collected this month, total revenue collected, outstanding amount, overdue invoice count and overdue amount.
+
+It also shows subscriptions by status, invoices by status, and upcoming expiries and renewals in the next 30 days.
+
+### Fixed Reporting Definitions
+
+- Active subscriptions: subscriptions with status Active.
+- Invoiced revenue: total of Confirmed and Paid invoices, by invoice date.
+- Collected revenue: total of payments received, by payment date.
+- Outstanding: balance due on Confirmed invoices.
+- Overdue: outstanding amount whose due date has passed.
+- MRR (monthly recurring revenue): active lines of Active subscriptions converted to a monthly amount.
+- Discounts given: total of discount amounts on invoices.
+
+Invoiced revenue and collected revenue are always shown separately, because a generated invoice does not mean the money has been received.
+
+### Available Reports
+
+- Subscription reports: by status, by plan, nearing expiry, upcoming renewals and growth over time.
+- Revenue reports: monthly invoiced versus collected, by plan, by product, year to date, and comparison with an earlier period.
+- Payment reports: by date, by method, and partial payments.
+- Invoice reports: by status, overdue with ageing, and cancelled.
+- Discount reports: active, expired, usage and amounts.
+
+### Filters and Search
+
+Reports and lists can be filtered by date range, customer, subscription status, plan, invoice status, payment method and product. They can be searched by subscription, invoice or payment number and by customer name.
+
+### Dashboard Accuracy
+
+Every dashboard figure links to the list behind it, and the list totals must equal the figure shown.
+
+### Report Export and Access
+
+Lists and reports can be exported as CSV by Administrators and Staff. Finance Lead may view and export financial reports. Exports contain only what the user is permitted to see and are handled as confidential.
+
+Administrators and Finance Lead may view financial dashboards and reports. Staff may view operational dashboards and reports. Cost price and margin reports are Administrator-only. Customers have no access to company reports.
+
+---
+
+## 22. NOTIFICATIONS AND COMMUNICATIONS
+
+### Notification Channel
+
+Email is the only notification channel in this release. In-app notifications are not provided.
+
+### Emails the System Sends
+
+- Registration confirmation: on registration.
+- Password reset link: on request. This is required.
+- Password changed notice: after a reset or change.
+- Quotation sent: when Staff send the quotation.
+- Quotation expiring: 3 days before the valid-until date.
+- Subscription confirmed and active: on the status change.
+- Renewal reminder: 30 days and 7 days before expiry.
+- Invoice sent: when Staff send it. This is required.
+- Payment received: after each payment, including partial payments.
+- Overdue reminder: on Day 1 and Day 15 after the due date.
+- Subscription paused, resumed, cancelled or expired: on the status change.
+
+### Email Rules
+
+Emails go only to the registered email on record. They never contain passwords or another customer's information.
+
+A failed send is logged and retried and never blocks or reverses the business action that triggered it.
+
+Each email states Brightloop's name and a support contact.
+
+---
+
+## 23. CUSTOMER SUPPORT
+
+### Support Channels and Response Time
+
+Customers contact support by the support email and phone number published by Brightloop and in the portal. Support responds to every request within one business day.
+
+### Identity Verification
+
+Before disclosing or changing any account information, support shall verify the customer's identity, for example the registered email plus a recent invoice number or subscription number.
+
+Requests from an unverified person are not acted on. Support never asks for a customer's password.
+
+### Handling Support Requests
+
+Support first checks the customer's subscription, invoice and payment records in Staxio, then responds.
+
+Support may explain statuses, send invoice copies and guide customers through the portal.
+
+Actions needing authority, such as price changes, refunds and corrections, are passed to the Administrator or Finance Lead. Support does not promise discounts, refunds or terms.
+
+### Support Records and Escalation
+
+Each support case is recorded in the support mailbox or log with the date, customer, subject and outcome. Staxio does not store support notes in this release.
+
+A complaint unresolved after three business days goes to the Administrator, who replies in writing.
+
+---
+
+# CATEGORY 6: DATA, OPERATIONS AND COMPLIANCE
+
+## 24. DATA INTEGRITY AND AUDIT
+
+### Data Integrity Rules
+
+- Relationships between records are enforced, so a customer, plan or invoice cannot disappear while other records depend on them. (Database)
+- Subscription and invoice status changes are checked against the allowed transitions. (Database)
+- Money is stored as whole paise, and floating-point currency is not used.
+- Invoice creation, including header, lines, discounts and the next billing date, is atomic.
+- A payment and the resulting invoice balance and status change are saved together. (Database)
+- Issued financial documents are never overwritten or deleted.
+- Record numbers (SUB, INV, PAY) are unique and never reused. (Database)
+
+### Audit Trail
+
+Subscription status changes are logged automatically with the previous status, new status and time. (Database)
+
+Each payment records who entered it and when. Each internal account records who created it. Each subscription and discount records its creator. (Database)
+
+The application activity log described in the Application Security Standards section completes the audit trail.
+
+---
+
+## 25. RETENTION, BACKUP AND RECOVERY
+
+### Record Retention
+
+Invoices, payments, subscriptions, customer records and the Finance correction register are kept for at least eight years after the end of the financial year to which they relate.
+
+After the retention period, records may be archived or anonymised only on the Administrator's written instruction and only where law permits.
+
+Customer personal data is kept as long as there is a business or legal need.
+
+### Backup and Recovery
+
+The database is backed up automatically every day. Backups are kept for 30 days, and one backup per month is kept for 12 months.
+
+Backups are stored separately from the live system and protected from unauthorised access.
+
+A restore test is carried out every quarter and its result is recorded. After a restore, the billing run and payment records are checked for consistency before normal work resumes.
+
+### Error Handling
+
+Failed operations roll back completely and show a clear message. Failures in scheduled jobs are logged and reported to the Administrator the same day.
+
+---
+
+## 26. PERFORMANCE AND AVAILABILITY
+
+### Response Time Requirement
+
+Every page shall respond in under two seconds, including with thousands of subscriptions and tens of thousands of invoices on the books.
+
+### Performance Design Requirements
+
+- Lists are paginated (default 25 rows) and filtered and sorted in the database, never loaded in full and filtered afterwards.
+- Dashboard figures come from database aggregates on indexed fields.
+- Bulk billing selects only the subscriptions that are due, uses the billing-date index, and commits per subscription or in small batches.
+- Reports have mandatory date ranges with a sensible default, the current month.
+- Several billing runs at once are safe because duplicates are blocked by the database.
+
+### Performance Acceptance Test
+
+Before release, the system is loaded with at least 5,000 subscriptions, 20,000 invoices and 20,000 payments. The dashboard, lists, search, reports and a billing run of at least 500 due subscriptions are timed. Any page over two seconds is fixed before go-live.
+
+### Availability Target
+
+Target availability is 99% per month, excluding announced maintenance. Maintenance is scheduled outside billing run times.
+
+---
+
+## 27. SCHEDULED OPERATIONS CALENDAR
+
+### Daily System Jobs
+
+Early each day, in UTC and before the working day in India, the system:
+
+- Activates Confirmed subscriptions whose start date has arrived.
+- Moves Active subscriptions past their expiry date to Expired, and closes those whose plan has auto-close.
+- Runs billing and creates Draft invoices for all due subscriptions.
+- Sends reminders for expiring quotations, renewals (30 and 7 days) and overdue invoices (Day 1 and Day 15).
+- Records the result of every job in the activity log.
+
+### Daily Staff Tasks
+
+Staff review the billing summary and failed list, confirm Draft invoices, send confirmed invoices, and record payments received.
+
+### Weekly Tasks
+
+Staff review Expired subscriptions and decide to renew or close them. Finance Lead reconciles payments with bank statements. Staff follow up on invoices overdue by 7 days.
+
+### Monthly Tasks
+
+Finance Lead reviews paused subscriptions and overdue ageing. At month end, the dashboard is reviewed, invoiced and collected revenue are compared, reconciliation is signed off and CSV exports are kept. Discounts nearing expiry or exhaustion are reviewed.
+
+### Quarterly and Six-Monthly Tasks
+
+Each quarter, a backup restore test is done and internal accounts and permissions are reviewed, with unused accounts deactivated.
+
+Every six months, this policy is reviewed.
+
+---
+
+## 28. POLICY EXCEPTIONS, MISUSE AND TRAINING
+
+### Policy Exceptions
+
+Any exception to this policy needs the written approval of the Administrator, stating the reason, scope and duration.
+
+Exceptions never override legal requirements or the rule that issued invoices are not silently changed.
+
+### Misuse of the System
+
+Misuse includes sharing logins, viewing customer data without need, recording false payments, altering prices without approval, bypassing the system for billing, and attempting to access another customer's data.
+
+Suspected misuse is reported to the Administrator and investigated, and accounts may be deactivated during an investigation. Confirmed misuse may lead to disciplinary action.
+
+### Training and Review
+
+New Staff and Finance Lead users receive training on this policy before they receive system access, and again after any major revision.
+
+The Administrator and Finance Lead review this document every six months and after any significant incident.
+
+---
+
+# CATEGORY 7: QUICK REFERENCE
+
+## 29. STATUS DEFINITIONS AND ALLOWED TRANSITIONS
+
+### Subscription Statuses
+
+- Draft: being prepared and not yet offered.
+- Quotation: offered to the customer and valid until its valid-until date.
+- Confirmed: accepted by the customer and waiting for the start date.
+- Active: running and billed on schedule.
+- Paused: temporarily stopped and not billed.
+- Cancelled: ended early with a reason recorded.
+- Expired: past its expiry date.
+- Closed: finished, final, with no further change or billing.
+
+### Allowed Subscription Transitions
+
+The database rejects every transition not listed here. (Database)
+
+- Draft can move to Quotation, Confirmed or Cancelled.
+- Quotation can move to Draft, Confirmed or Cancelled.
+- Confirmed can move to Active or Cancelled.
+- Active can move to Paused, Cancelled, Expired or Closed.
+- Paused can move to Active, Cancelled or Closed.
+- Expired can move to Closed.
+- Cancelled can move to Closed.
+- Closed has no further transitions.
+
+Moving to Paused requires the plan to allow pausing. Moving to Cancelled or Closed from Active or Paused before the expiry date requires the plan to allow early cancellation.
+
+### Invoice Statuses
+
+- Draft: editable, and no payment is accepted.
+- Confirmed: issued and locked, and accepts payments.
+- Paid: fully paid and final.
+- Cancelled: void and final, and frees its billing period.
+
+### Allowed Invoice Transitions
+
+Draft can move to Confirmed or Cancelled. Confirmed can move to Paid or Cancelled. A Confirmed invoice can be cancelled only if no payment has been received. Paid and Cancelled are final. (Database)
+
+### Display-Only States
+
+Partially Paid, Overdue and Expired (for quotations) are calculated when viewed and are never stored.
+
+---
+
+## 30. ROLE AND PERMISSION SUMMARY
+
+### Administrator Only
+
+Create and deactivate Staff and Finance Lead accounts, manage taxes, manage plans, manage quotation templates, create discount rules, manage products, variants and prices, view cost price and margin, execute payment corrections and reversals with written Finance Lead approval, and view cost and margin reports.
+
+### Finance Lead
+
+Review active subscriptions, view financial dashboards and reports, review invoices and payment records, monitor outstanding and overdue amounts, reconcile payments, review billing results, approve payment corrections and refunds in writing, and maintain the Finance correction register.
+
+Finance Lead cannot independently execute protected payment corrections, reversals or refunds, create or edit system configurations, or manage internal user accounts.
+
+### Administrator and Staff
+
+Manage customers, create and confirm quotations, create and edit subscriptions, attach discounts, switch add-ons, pause, resume, cancel and renew subscriptions, run billing, confirm and cancel invoices, send and print invoices, record payments, view permitted dashboards and reports, export permitted CSV reports, and view products, plans and taxes.
+
+### Customer (Own Records Only)
+
+View and print own invoices, view own payments, switch own add-ons, pause, resume and cancel own subscriptions where the plan allows, request renewal, and edit own profile and password.
+
+### Everyone
+
+Edit own profile and change own password.
+
+---
+
+## 31. BUSINESS SCENARIOS AND EXCEPTION HANDLING
+
+### Customer Wants a Different Plan
+
+Close or cancel the old subscription, if the plan allows, and create a new subscription for the new plan.
+
+### Customer Wants More Seats
+
+Staff edit the quantity. It is billed from the next invoice, and the plan's minimum quantity is respected.
+
+### Add-on Switched On or Off
+
+An add-on switched on is billed from the next cycle. An add-on switched off is billed to the end of the paid period, with no credit, and is off from the next cycle.
+
+### Plan, Product or Tax Rate Changes
+
+If a plan price changes, existing subscriptions keep their prices. If a product price changes, existing lines keep their prices. If a tax rate changes, past invoices keep their snapshot and new invoices use the new rate.
+
+### Discount Expires or Is Used Up
+
+An expired discount stops applying on later invoices, and old invoices keep it. A used-up discount is skipped, and the invoice is still generated.
+
+### Quotation Expires
+
+The quotation cannot be confirmed. Staff move it back to Draft, set a new validity date and reissue it.
+
+### Subscription Reaches Expiry
+
+Billing stops. The subscription becomes Expired, and then Closed automatically if the plan says so.
+
+### Subscription Is Paused or Cancelled
+
+A paused subscription generates no invoices, and billing restarts from the resume date without back-billing. A cancelled subscription generates no new invoices, and its unpaid invoices stay due.
+
+### Plan Forbids Pause, Cancellation or Renewal
+
+The action is refused with a clear message.
+
+### Billing Run Runs Twice or Misses a Day
+
+If a billing run runs twice, the second run finds the periods already billed and creates no duplicates. If a run is missed, the next run catches up, oldest period first.
+
+### Invoice Generation Fails for One Subscription
+
+The failure is reported with its reason, other invoices are unaffected, the next run retries, and retrying is safe.
+
+### Invoice Has an Error
+
+A Draft invoice is edited or cancelled. A Confirmed unpaid invoice is cancelled with a reason and regenerated. A part-paid or Paid invoice needs an Administrator correction.
+
+### Payment Problems
+
+A payment above the balance due is refused. A payment on a Draft or Cancelled invoice is refused. A payment under the wrong customer is refused.
+
+A payment recorded wrongly needs an Administrator correction with Finance Lead approval, logged in the correction register. A bounced cheque is corrected the same way, the invoice is reopened and the customer is informed.
+
+### Invoice Becomes Overdue
+
+Reminder on Day 1, Staff follow-up on Day 7, second reminder on Day 15, Finance Lead review on Day 30, and an Administrator decision on Day 60.
+
+### Customer Login Deactivated
+
+Portal access is blocked, but subscriptions and unpaid invoices continue and remain collectible.
+
+### Customer Details Change
+
+New invoices use the new details, and old invoices keep their snapshot.
+
+### Customer Opens Another Customer's Record
+
+The request is shown as not found and the attempt is logged.
+
+### Invalid Discount Code on a Quotation
+
+The discount is not attached and Staff are informed.
+
+### Billing Start Day Does Not Exist in a Month
+
+The last day of the month is used.
+
+### Server Down on Billing Day
+
+The next billing run catches up, and due dates follow the invoice dates.
+
+---
+
+## 32. RECORD NUMBERING AND DATA STANDARDS
+
+### Record Numbers
+
+Subscription numbers are SUB-00001, invoice numbers are INV-00001 and payment numbers are PAY-00001. Each is the prefix plus the record id padded to five digits.
+
+Numbers are assigned immediately on creation, are unique, are never reused, and continue beyond five digits when needed.
+
+### Data Standards
+
+- Email: lowercase, trimmed and unique among accounts.
+- Money: whole paise, displayed as rupees with two decimals.
+- Dates: YYYY-MM-DD. Timestamps are UTC.
+- Percentages: tax is 0 to 100 and percentage discount is 0 to 100.
+- Quantity: a whole number of at least 1.
+- Statuses: only the values defined in the Status Definitions section.
+- Roles: `admin`, `finance_lead`, `staff` and `customer`.
+
+---
+
+## 33. GLOSSARY
+
+- Active: a subscription that is running and being billed.
+- Add-on: an optional product switched on or off on a subscription.
+- Administrator: the application role responsible for overall system administration.
+- Amount due: total payable minus amount paid.
+- Billing in advance: billing at the start of a period for that period.
+- Billing interval: the number of frequency units per billing cycle.
+- Billing frequency: daily, weekly, monthly or yearly.
+- Billing period: the date range an invoice covers.
+- Billing run: the automatic or manual creation of invoices for due subscriptions.
+- Collected revenue: money received through payments.
+- Customer: a user who can access only their own records.
+- Display status: a state calculated when viewing and not stored.
+- Finance Lead: a separate application role responsible for financial oversight, monitoring, reconciliation and approval of financial corrections.
+- GSTIN: the customer's GST identification number.
+- Invoiced revenue: the value of issued invoices, whether or not paid.
+- Internal Staff: users responsible for day-to-day operational work.
+- MRR: monthly recurring revenue.
+- Outstanding: the balance of an issued invoice that is not yet paid.
+- Overdue: outstanding after the due date.
+- Paise: one hundredth of a rupee, the unit in which money is stored.
+- Payment terms: the days allowed for payment after the invoice date.
+- Plan: a billing frequency, price, rules and starter lines.
+- Quotation: a subscription in Quotation status.
+- Quotation template: a reusable offer with a plan, lines and validity.
+- Snapshot: a value copied and frozen on a document.
+- Subscription: an agreement to supply products that are billed repeatedly.
+- Variant: a version of a product with a price adjustment.
+
+---
+
+## 34. DECISION REGISTER
+
+### Decisions Taken in This Policy
+
+All open questions have been decided and no item remains undefined.
+
+- Application roles: Administrator, Finance Lead, Staff and Customer.
+- Finance Lead: separate application role, not a Staff job function.
+- Failed login lockout: 5 attempts, then 15 minutes.
+- Staff access to cost price and margin: not allowed.
+- Audit log: application activity log kept for 12 months.
+- Refunds on cancellation: none, except by written Administrator decision.
+- Add-on and quantity change timing: next billing cycle, with no proration.
+- Customer cancellation: direct and immediate with a reason, if the plan allows.
+- Payment reversal and cheque bounce: Administrator correction with written Finance Lead approval, logged.
+- Overpayment: refused.
+- Payment gateway: out of scope.
+- Discount usage after invoice cancellation: not restored automatically.
+- Multiple discounts: stacked in order, capped at the subtotal.
+- Overdue follow-up: steps on Day 1, 7, 15 and 30, with an Administrator decision on Day 60, and no late fees.
+- Notification channel: email only.
+- Report export: CSV.
+- Record retention: eight years.
+- Backups: daily, kept 30 days, with monthly copies kept 12 months and a quarterly restore test.
+- Support interaction records: kept in the support log outside Staxio.
+- Pause end: no automatic end, with monthly review.
+- Cancelling a part-paid invoice: not allowed.
+- Restart after pause: a new period from the resume date.
+- Plan change on a live subscription: a new subscription is created.
+- Expired quotation: back to Draft and reissued.
+- Invoice creation: Draft first, then confirmed by Staff, in bulk if needed.
+- Billing timing: in advance, from the start date.
+- Date basis for rules: the database date (UTC).
+
+---
+
+## 35. IMPLEMENTATION PRIORITIES AND ACCEPTANCE CHECKLIST
+
+### P0 Core Requirements
+
+These must work for the demonstration: registration, login and four roles; Staff and Finance Lead account creation by Administrator only; customers; products and variants; taxes; plans with frequency, interval, minimum quantity, availability and lifecycle permissions; quotation templates and quotations; the subscription lifecycle; a billing run with duplicate prevention; tax and discount calculation; the invoice lifecycle; payments with partial payment; outstanding and overdue tracking; the Finance Lead dashboard with filters; and response time under two seconds.
+
+### P1 Important Requirements
+
+Customer portal (view, add-on switch, pause, cancel, renewal request); renewal; pause and cancellation restrictions; invoice sending and printing; status and payment history; search and filters; and password reset by email.
+
+### P2 Additional Polish
+
+Email notifications and reminders, CSV export, activity log screens, a payment correction screen, revenue comparison charts and backup automation.
+
+### Acceptance Checklist
+
+- A second registration with the same email in a different case is refused.
+- Passwords of 8 characters, or without upper, lower or special characters, are refused.
+- Staff cannot create internal accounts, and customers cannot open internal pages.
+- Finance Lead has a separate role and cannot access Administrator-only configuration.
+- Staff cannot view cost prices or margins.
+- A customer cannot open another customer's invoice.
+- A product variant adds its adjustment to the unit price.
+- A plan that disallows pause, cancellation or renewal refuses that action.
+- A quotation from a template carries the plan and lines, with validity.
+- An expired quotation cannot be confirmed.
+- A subscription moves only along allowed transitions, and its history is visible.
+- The billing run creates one invoice per due subscription with correct lines, taxes, discounts and totals.
+- Running billing twice creates no duplicates.
+- A failed subscription is listed with a reason and can be retried.
+- A Draft invoice can be confirmed, and a confirmed invoice's lines are locked.
+- A discount applies automatically and stops at expiry and at its usage limit.
+- A tax change does not alter old invoices.
+- A partial and then a final payment moves the invoice to Paid, and overpayment is refused.
+- A payment on a Draft or Cancelled invoice is refused.
+- Finance Lead can review payment records and financial reports.
+- Payment corrections require written Finance Lead approval and Administrator execution.
+- The overdue list shows days overdue and amount, and its totals match the dashboard.
+- The Finance Lead dashboard shows active subscriptions, revenue, outstanding and overdue amounts.
+- Every page loads in under two seconds with the volume described in the performance acceptance test.
+
+---
+
+## 36. POLICY SUMMARY
+
+Brightloop Software is a subscription business whose revenue depends on accurate, timely and traceable billing.
+
+Staxio has four separate application roles: the Administrator, Finance Lead, Staff and Customer.
+
+The Administrator controls products, plans, taxes, discounts, internal accounts and system configuration. The Finance Lead is a separate role responsible for financial oversight, revenue monitoring, payment reconciliation, outstanding and overdue invoice review, and approval of financial corrections. Staff handle day-to-day customer, subscription, quotation, invoice and payment operations. Customers see and manage only their own subscriptions and invoices.
+
+Subscriptions move through a controlled lifecycle from Draft to Closed, with plan-level rules deciding whether they can be paused, cancelled early, renewed or closed automatically. Quotations are subscriptions in Quotation status, built from reusable templates with a validity period.
+
+Invoices are generated automatically from active subscriptions, once per billing period, with taxes and discounts calculated by rule and frozen on the invoice. Invoices move from Draft to Confirmed to Paid, and can be cancelled only before payment. Payments are recorded against one invoice each, can be partial or multiple, and can never exceed the amount due.
+
+Overdue and partially paid are calculated views, collections follow a defined schedule, and the Finance Lead dashboard reports active subscriptions, invoiced and collected revenue, outstanding amounts and overdue invoices separately.
+
+The platform protects data through role-based access, hashed passwords, customer data isolation, atomic transactions, database-enforced status rules and an activity log, and it is designed to respond to every page request in under two seconds.
