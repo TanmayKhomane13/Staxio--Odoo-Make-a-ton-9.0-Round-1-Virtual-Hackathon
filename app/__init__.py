@@ -97,15 +97,19 @@ def create_app(test_config=None):
             return jsonify({"error": "Message is required"}), 400
 
         try:
-            result = handle_message(
-                message,
-                user_role=user_role
-            )
+            result = handle_message(message, user_role=user_role)
 
-        except Exception as e:
-            print(f"[StaxioAI] error: {e}")
+        except Exception:
+            import traceback
+            traceback.print_exc()
+
             return jsonify({
                 "error": "AI service temporarily unavailable"
+            }), 500
+
+        if result.get("intent") == "ERROR":
+            return jsonify({
+                "error": result.get("answer", "AI service temporarily unavailable")
             }), 500
 
         return jsonify({

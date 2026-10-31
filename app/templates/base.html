@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +14,7 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/ai-chat.css') }}">
+
     {% block head %}{% endblock %}
 </head>
 
@@ -23,29 +25,30 @@
 
         <div class="app-shell">
             {% include "components/navbar.html" %}
-            {% include "_ai_sidebar.html" %}
 
             <main class="main-content">
                 {% include "components/flash.html" %}
                 {% block content %}{% endblock %}
             </main>
         </div>
+
+        {% if current_user.role in ['admin', 'staff', 'finance_lead'] %}
+            {% include "_ai_sidebar.html" %}
+        {% endif %}
+
     {% else %}
         {% include "components/flash.html" %}
         {% block public_content %}{% endblock %}
     {% endif %}
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/ai-chat.js')}}"></script>
+
+    {% if current_user and current_user.role in ['admin', 'staff', 'finance_lead'] %}
+        <script src="{{ url_for('static', filename='js/ai-chat.js') }}" defer></script>
+    {% endif %}
+
     {% block scripts %}{% endblock %}
 
-    {% if current_user %}
-    {% include "_ai_sidebar.html" %}
-
-    <script
-        src="{{ url_for('static', filename='js/ai-chat.js') }}"
-        defer>
-    </script>
-{% endif %}
 </body>
 </html>
+```
